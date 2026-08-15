@@ -31,8 +31,8 @@ data class Sefer(
     val donusSaati: String,
     val toplamKm: Int,
     val toplamSure: String
+    val not: String
 )
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +56,7 @@ val prefs = remember {
     var donusKm by remember { mutableStateOf("") }
     var cikisSaati by remember { mutableStateOf("") }
     var baslangic by remember { mutableStateOf(0L) }
+    var not by remember { mutableStateOf("") }
 
     var seferler by remember { mutableStateOf(listOf<Sefer>()) }
     LaunchedEffect(Unit) {
@@ -63,7 +64,7 @@ val prefs = remember {
         ?.mapNotNull { kayit ->
             val parcalar = kayit.split("|")
 
-            if (parcalar.size == 7) {
+            if (parcalar.size == 7 || parcalar.size == 8) {
                 Sefer(
                     guzergah = parcalar[0],
                     cikisKm = parcalar[1].toIntOrNull() ?: return@mapNotNull null,
@@ -72,6 +73,7 @@ val prefs = remember {
                     donusSaati = parcalar[4],
                     toplamKm = parcalar[5].toIntOrNull() ?: return@mapNotNull null,
                     toplamSure = parcalar[6]
+                    not = if (parcalar.size == 8) parcalar[7] else ""
                 )
             } else {
                 null
@@ -345,6 +347,14 @@ val prefs = remember {
                                     color = Color(0xFF1769AA),
                                     fontWeight = FontWeight.Bold
                                 )
+                                if (sefer.not.isNotBlank()) {
+    Spacer(Modifier.height(8.dp))
+    Text(
+        "Not: ${sefer.not}",
+        color = Color.Gray,
+        fontWeight = FontWeight.Medium
+    )
+                                }
                             }
                         }
                     }
@@ -467,6 +477,22 @@ val prefs = remember {
                         },
                         singleLine = true
                     )
+                    Spacer(Modifier.height(10.dp))
+
+OutlinedTextField(
+    value = not,
+    onValueChange = {
+        not = it
+    },
+    modifier = Modifier.fillMaxWidth(),
+    label = {
+        Text("Not")
+    },
+    placeholder = {
+        Text("Örn. Evrak teslim edilecek")
+    },
+    minLines = 3
+)
                 }
             },
             confirmButton = {
@@ -496,6 +522,7 @@ val prefs = remember {
                                     baslangic,
                                     bitis
                                 )
+                                not = not
                             )
 
                             seferler =
