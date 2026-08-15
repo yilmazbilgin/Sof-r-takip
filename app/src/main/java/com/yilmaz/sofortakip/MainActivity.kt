@@ -334,6 +334,11 @@ val prefs = remember {
                                     "${sefer.cikisSaati} → ${sefer.donusSaati}",
                                     color = Color.Gray
                                 )
+                                Text(
+    "${sefer.cikisKm} KM → ${sefer.donusKm} KM",
+    color = Color.Gray,
+    fontWeight = FontWeight.Medium
+)
                                 Spacer(Modifier.height(5.dp))
                                 Text(
                                     "${sefer.toplamKm} KM • ${sefer.toplamSure}",
