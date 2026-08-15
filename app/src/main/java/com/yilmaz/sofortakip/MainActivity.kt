@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.sp
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
 
 data class Sefer(
     val guzergah: String,
@@ -45,6 +47,10 @@ class MainActivity : ComponentActivity() {
 fun SoforTakip() {
 
     var aktif by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+val prefs = remember {
+    context.getSharedPreferences("sofor_takip", 0)
+}
     var guzergah by remember { mutableStateOf("") }
     var cikisKm by remember { mutableStateOf("") }
     var donusKm by remember { mutableStateOf("") }
@@ -52,6 +58,29 @@ fun SoforTakip() {
     var baslangic by remember { mutableStateOf(0L) }
 
     var seferler by remember { mutableStateOf(listOf<Sefer>()) }
+    LaunchedEffect(Unit) {
+    val kayitlar = prefs.getStringSet("seferler", emptySet())
+        ?.mapNotNull { kayit ->
+            val parcalar = kayit.split("|")
+
+            if (parcalar.size == 7) {
+                Sefer(
+                    guzergah = parcalar[0],
+                    cikisKm = parcalar[1].toIntOrNull() ?: return@mapNotNull null,
+                    donusKm = parcalar[2].toIntOrNull() ?: return@mapNotNull null,
+                    cikisSaati = parcalar[3],
+                    donusSaati = parcalar[4],
+                    toplamKm = parcalar[5].toIntOrNull() ?: return@mapNotNull null,
+                    toplamSure = parcalar[6]
+                )
+            } else {
+                null
+            }
+        }
+        ?: emptyList()
+
+    seferler = kayitlar
+    }
     var baslatAcik by remember { mutableStateOf(false) }
     var bitirAcik by remember { mutableStateOf(false) }
 
@@ -61,6 +90,15 @@ fun SoforTakip() {
     fun sureHesapla(basla: Long, bitir: Long): String {
         val dakika = ((bitir - basla) / 60000).coerceAtLeast(0)
         return "${dakika / 60} saat ${dakika % 60} dakika"
+    }
+    fun seferleriKaydet(liste: List<Sefer>) {
+    val kayitlar = liste.map {
+        "${it.guzergah}|${it.cikisKm}|${it.donusKm}|${it.cikisSaati}|${it.donusSaati}|${it.toplamKm}|${it.toplamSure}"
+    }.toSet()
+
+    prefs.edit()
+        .putStringSet("seferler", kayitlar)
+        .apply()
     }
 
     MaterialTheme(
@@ -457,6 +495,7 @@ fun SoforTakip() {
 
                             seferler =
                                 listOf(yeniSefer) + seferler
+                            seferleriKaydet(seferler)
 
                             aktif = false
                             bitirAcik = false
