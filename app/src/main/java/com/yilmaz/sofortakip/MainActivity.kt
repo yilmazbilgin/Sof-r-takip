@@ -72,7 +72,7 @@ val prefs = remember {
                     cikisSaati = parcalar[3],
                     donusSaati = parcalar[4],
                     toplamKm = parcalar[5].toIntOrNull() ?: return@mapNotNull null,
-                    toplamSure = parcalar[6]
+                    toplamSure = parcalar[6],
                     notMetni = if (parcalar.size == 8) parcalar[7] else ""
                 )
             } else {
@@ -523,8 +523,7 @@ onValueChange = {
                                     bitis
                                 )
                                 notMetni = notMetni
-                            ),
-
+                            )
                             seferler =
                                 listOf(yeniSefer) + seferler
                             seferleriKaydet(seferler)
