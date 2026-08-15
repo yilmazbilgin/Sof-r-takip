@@ -522,7 +522,7 @@ onValueChange = {
                                     bitis
                                 )
                                 notMetni = notMetni
-                            )
+                            ),
 
                             seferler =
                                 listOf(yeniSefer) + seferler
