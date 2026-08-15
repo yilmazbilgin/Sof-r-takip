@@ -4,13 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DirectionsCar
-import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.Route
 import androidx.compose.material.icons.filled.Speed
+import androidx.compose.material.icons.filled.Route
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -36,7 +34,9 @@ data class Sefer(
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { SoforTakip() }
+        setContent {
+            SoforTakip()
+        }
     }
 }
 
@@ -49,37 +49,36 @@ fun SoforTakip() {
     var cikisKm by remember { mutableStateOf("") }
     var donusKm by remember { mutableStateOf("") }
     var cikisSaati by remember { mutableStateOf("") }
-    var cikisZamani by remember { mutableStateOf(0L) }
+    var baslangic by remember { mutableStateOf(0L) }
 
     var seferler by remember { mutableStateOf(listOf<Sefer>()) }
-    var baslatDialog by remember { mutableStateOf(false) }
-    var bitirDialog by remember { mutableStateOf(false) }
+    var baslatAcik by remember { mutableStateOf(false) }
+    var bitirAcik by remember { mutableStateOf(false) }
 
     fun saat(): String =
         SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
 
-    fun sure(baslangic: Long, bitis: Long): String {
-        val dakika = ((bitis - baslangic) / 60000L).coerceAtLeast(0)
-        val saat = dakika / 60
-        val dk = dakika % 60
-        return "$saat saat $dk dakika"
+    fun sureHesapla(basla: Long, bitir: Long): String {
+        val dakika = ((bitir - basla) / 60000).coerceAtLeast(0)
+        return "${dakika / 60} saat ${dakika % 60} dakika"
     }
 
     MaterialTheme(
         colorScheme = lightColorScheme(
-            primary = Color(0xFF1769AA),
-            background = Color(0xFFF4F6F8)
+            primary = Color(0xFF1769AA)
         )
     ) {
         Scaffold(
-            containerColor = Color(0xFFF4F6F8),
             topBar = {
                 TopAppBar(
                     title = {
                         Column {
-                            Text("Şoför Takip", fontWeight = FontWeight.Bold)
                             Text(
-                                "Sefer yönetim paneli",
+                                "Şoför Takip",
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                "Sefer yönetimi",
                                 fontSize = 12.sp,
                                 color = Color.Gray
                             )
@@ -89,217 +88,240 @@ fun SoforTakip() {
             }
         ) { padding ->
 
-            LazyColumn(
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding),
-                contentPadding = PaddingValues(16.dp),
+                    .padding(padding)
+                    .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
 
-                item {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(22.dp),
-                        colors = CardDefaults.cardColors(Color.White)
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(22.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(20.dp)
                     ) {
-                        Column(Modifier.padding(20.dp)) {
 
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(
-                                    Icons.Default.DirectionsCar,
-                                    contentDescription = null,
-                                    tint = Color(0xFF1769AA),
-                                    modifier = Modifier.size(34.dp)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                Icons.Default.DirectionsCar,
+                                contentDescription = null,
+                                modifier = Modifier.size(36.dp)
+                            )
+
+                            Spacer(Modifier.width(12.dp))
+
+                            Column {
+                                Text(
+                                    if (aktif) "Aktif Sefer"
+                                    else "Yeni Sefer",
+                                    fontSize = 22.sp,
+                                    fontWeight = FontWeight.Bold
                                 )
 
-                                Spacer(Modifier.width(12.dp))
+                                Text(
+                                    if (aktif) guzergah
+                                    else "Sefer başlatmak için aşağıdaki butona basın",
+                                    color = Color.Gray
+                                )
+                            }
+                        }
+
+                        Spacer(Modifier.height(20.dp))
+
+                        if (!aktif) {
+
+                            Button(
+                                onClick = {
+                                    baslatAcik = true
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(55.dp),
+                                shape = RoundedCornerShape(15.dp)
+                            ) {
+                                Icon(
+                                    Icons.Default.Route,
+                                    contentDescription = null
+                                )
+
+                                Spacer(Modifier.width(8.dp))
+
+                                Text(
+                                    "SEFERİ BAŞLAT",
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+
+                        } else {
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement =
+                                    Arrangement.SpaceBetween
+                            ) {
+                                Column {
+                                    Text(
+                                        "Çıkış KM",
+                                        color = Color.Gray,
+                                        fontSize = 12.sp
+                                    )
+                                    Text(
+                                        "$cikisKm KM",
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
 
                                 Column {
                                     Text(
-                                        if (aktif) "Aktif Sefer" else "Yeni Sefer",
-                                        fontSize = 22.sp,
-                                        fontWeight = FontWeight.Bold
+                                        "Çıkış Saati",
+                                        color = Color.Gray,
+                                        fontSize = 12.sp
                                     )
                                     Text(
-                                        if (aktif) guzergah
-                                        else "Yeni bir sefer başlatabilirsiniz",
-                                        color = Color.Gray
+                                        cikisSaati,
+                                        fontWeight = FontWeight.Bold
                                     )
                                 }
                             }
 
                             Spacer(Modifier.height(18.dp))
 
-                            if (!aktif) {
-                                Button(
-                                    onClick = { baslatDialog = true },
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(56.dp),
-                                    shape = RoundedCornerShape(16.dp)
-                                ) {
-                                    Icon(
-                                        Icons.Default.Route,
-                                        contentDescription = null
-                                    )
-                                    Spacer(Modifier.width(8.dp))
-                                    Text(
-                                        "SEFERİ BAŞLAT",
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                }
-                            } else {
-                                Row(
-                                    Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween
-                                ) {
-                                    Bilgi("Çıkış KM", "$cikisKm KM")
-                                    Bilgi("Çıkış Saati", cikisSaati)
-                                }
-
-                                Spacer(Modifier.height(18.dp))
-
-                                Button(
-                                    onClick = { bitirDialog = true },
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(56.dp),
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = Color(0xFFC62828)
-                                    ),
-                                    shape = RoundedCornerShape(16.dp)
-                                ) {
-                                    Text(
-                                        "🔴  SEFERİ BİTİR",
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                }
+                            Button(
+                                onClick = {
+                                    bitirAcik = true
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(55.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFFC62828)
+                                ),
+                                shape = RoundedCornerShape(15.dp)
+                            ) {
+                                Text(
+                                    "🔴 SEFERİ BİTİR",
+                                    fontWeight = FontWeight.Bold
+                                )
                             }
                         }
                     }
                 }
 
-                item {
-                    Row(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Istatistik(
-                            Modifier.weight(1f),
-                            Icons.Default.DirectionsCar,
-                            seferler.size.toString(),
-                            "Toplam Sefer"
-                        )
-                        Istatistik(
-                            Modifier.weight(1f),
-                            Icons.Default.Speed,
-                            "${seferler.sumOf { it.toplamKm }} KM",
-                            "Toplam KM"
-                        )
-                    }
-                                    item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement =
+                        Arrangement.spacedBy(12.dp)
+                ) {
+
                     Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(20.dp),
-                        colors = CardDefaults.cardColors(Color.White)
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(18.dp)
                     ) {
-                        Column(Modifier.padding(18.dp)) {
+                        Column(
+                            modifier = Modifier.padding(18.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.DirectionsCar,
+                                contentDescription = null
+                            )
+                            Spacer(Modifier.height(8.dp))
+                            Text(
+                                seferler.size.toString(),
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                "Toplam Sefer",
+                                color = Color.Gray
+                            )
+                        }
+                    }
 
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
+                    Card(
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(18.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(18.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.Speed,
+                                contentDescription = null
+                            )
+                            Spacer(Modifier.height(8.dp))
+                            Text(
+                                "${seferler.sumOf { it.toplamKm }} KM",
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                "Toplam KM",
+                                color = Color.Gray
+                            )
+                        }
+                    }
+                }
+
+                Text(
+                    "Sefer Geçmişi",
+                    fontSize = 21.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                if (seferler.isEmpty()) {
+                    Text(
+                        "Henüz tamamlanmış sefer yok.",
+                        color = Color.Gray
+                    )
+                } else {
+                    seferler.forEach { sefer ->
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(16.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(16.dp)
                             ) {
-                                Icon(
-                                    Icons.Default.History,
-                                    contentDescription = null
-                                )
-
-                                Spacer(Modifier.width(10.dp))
-
                                 Text(
-                                    "Sefer Geçmişi",
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold
+                                    sefer.guzergah,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 17.sp
                                 )
-                            }
-
-                            Spacer(Modifier.height(12.dp))
-
-                            if (seferler.isEmpty()) {
-
                                 Text(
-                                    "Henüz kayıtlı sefer bulunmuyor.",
+                                    "${sefer.cikisSaati} → ${sefer.donusSaati}",
                                     color = Color.Gray
                                 )
-
-                            } else {
-
-                                seferler.forEach { sefer ->
-
-                                    HorizontalDivider()
-
-                                    Spacer(Modifier.height(12.dp))
-
-                                    Text(
-                                        sefer.guzergah,
-                                        fontSize = 17.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-
-                                    Spacer(Modifier.height(4.dp))
-
-                                    Text(
-                                        "${sefer.cikisSaati} → ${sefer.donusSaati}",
-                                        color = Color.Gray
-                                    )
-
-                                    Spacer(Modifier.height(6.dp))
-
-                                    Row(
-                                        horizontalArrangement =
-                                            Arrangement.spacedBy(16.dp)
-                                    ) {
-                                        Text(
-                                            "${sefer.toplamKm} KM",
-                                            color = Color(0xFF1769AA),
-                                            fontWeight = FontWeight.Bold
-                                        )
-
-                                        Text(
-                                            sefer.toplamSure,
-                                            color = Color(0xFF1769AA),
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    }
-
-                                    Spacer(Modifier.height(12.dp))
-                                }
+                                Spacer(Modifier.height(5.dp))
+                                Text(
+                                    "${sefer.toplamKm} KM • ${sefer.toplamSure}",
+                                    color = Color(0xFF1769AA),
+                                    fontWeight = FontWeight.Bold
+                                )
                             }
                         }
                     }
                 }
             }
-        }
-    }
+        }    }
 
-    // SEFER BAŞLAT PENCERESİ
-    if (baslatDialog) {
-
+    if (baslatAcik) {
         AlertDialog(
             onDismissRequest = {
-                baslatDialog = false
+                baslatAcik = false
             },
-
             title = {
                 Text(
                     "Seferi Başlat",
                     fontWeight = FontWeight.Bold
                 )
             },
-
             text = {
                 Column {
-
                     OutlinedTextField(
                         value = guzergah,
                         onValueChange = {
@@ -310,12 +332,12 @@ fun SoforTakip() {
                             Text("Güzergâh")
                         },
                         placeholder = {
-                            Text("Örn. Akseki → Alanya")
+                            Text("Örn. Akseki → Antalya")
                         },
                         singleLine = true
                     )
 
-                    Spacer(Modifier.height(12.dp))
+                    Spacer(Modifier.height(10.dp))
 
                     OutlinedTextField(
                         value = cikisKm,
@@ -332,32 +354,27 @@ fun SoforTakip() {
                     )
                 }
             },
-
             confirmButton = {
-
                 Button(
                     onClick = {
-
                         if (
                             guzergah.isNotBlank() &&
                             cikisKm.isNotBlank()
                         ) {
                             cikisSaati = saat()
-                            cikisZamani = System.currentTimeMillis()
+                            baslangic = System.currentTimeMillis()
                             aktif = true
-                            baslatDialog = false
+                            baslatAcik = false
                         }
                     }
                 ) {
-                    Text("SEFERİ BAŞLAT")
+                    Text("BAŞLAT")
                 }
             },
-
             dismissButton = {
-
                 TextButton(
                     onClick = {
-                        baslatDialog = false
+                        baslatAcik = false
                     }
                 ) {
                     Text("Vazgeç")
@@ -365,38 +382,34 @@ fun SoforTakip() {
             }
         )
     }
-        // SEFERİ BİTİR PENCERESİ
-    if (bitirDialog) {
 
+    if (bitirAcik) {
         AlertDialog(
             onDismissRequest = {
-                bitirDialog = false
+                bitirAcik = false
             },
-
             title = {
                 Text(
                     "Seferi Bitir",
                     fontWeight = FontWeight.Bold
                 )
             },
-
             text = {
                 Column {
-
                     Text(
                         guzergah,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
 
-                    Spacer(Modifier.height(10.dp))
+                    Spacer(Modifier.height(8.dp))
 
                     Text(
                         "Çıkış: $cikisKm KM • $cikisSaati",
                         color = Color.Gray
                     )
 
-                    Spacer(Modifier.height(12.dp))
+                    Spacer(Modifier.height(10.dp))
 
                     OutlinedTextField(
                         value = donusKm,
@@ -409,16 +422,11 @@ fun SoforTakip() {
                         label = {
                             Text("Dönüş KM")
                         },
-                        placeholder = {
-                            Text("Örn. 125850")
-                        },
                         singleLine = true
                     )
                 }
             },
-
             confirmButton = {
-
                 Button(
                     onClick = {
 
@@ -431,53 +439,43 @@ fun SoforTakip() {
                             donus >= cikis
                         ) {
 
-                            val bitisZamani =
+                            val bitis =
                                 System.currentTimeMillis()
-
-                            val donusSaati = saat()
-
-                            val toplamKm =
-                                donus - cikis
-
-                            val toplamSure =
-                                sure(
-                                    cikisZamani,
-                                    bitisZamani
-                                )
 
                             val yeniSefer = Sefer(
                                 guzergah = guzergah,
                                 cikisKm = cikis,
                                 donusKm = donus,
                                 cikisSaati = cikisSaati,
-                                donusSaati = donusSaati,
-                                toplamKm = toplamKm,
-                                toplamSure = toplamSure
+                                donusSaati = saat(),
+                                toplamKm = donus - cikis,
+                                toplamSure = sureHesapla(
+                                    baslangic,
+                                    bitis
+                                )
                             )
 
                             seferler =
                                 listOf(yeniSefer) + seferler
 
                             aktif = false
-                            bitirDialog = false
+                            bitirAcik = false
 
                             guzergah = ""
                             cikisKm = ""
                             donusKm = ""
                             cikisSaati = ""
-                            cikisZamani = 0L
+                            baslangic = 0L
                         }
                     }
                 ) {
                     Text("SEFERİ TAMAMLA")
                 }
             },
-
             dismissButton = {
-
                 TextButton(
                     onClick = {
-                        bitirDialog = false
+                        bitirAcik = false
                     }
                 ) {
                     Text("Vazgeç")
@@ -486,69 +484,3 @@ fun SoforTakip() {
         )
     }
 }
-
-// BİLGİ KARTINDAKİ VERİLER
-@Composable
-fun Bilgi(
-    baslik: String,
-    deger: String
-) {
-
-    Column {
-
-        Text(
-            baslik,
-            color = Color.Gray,
-            fontSize = 12.sp
-        )
-
-        Text(
-            deger,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
-        )
-    }
-}
-
-// İSTATİSTİK KARTLARI
-@Composable
-fun Istatistik(
-    modifier: Modifier,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    deger: String,
-    baslik: String
-) {
-
-    Card(
-        modifier = modifier,
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(Color.White)
-    ) {
-
-        Column(
-            modifier = Modifier.padding(18.dp)
-        ) {
-
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = Color(0xFF1769AA)
-            )
-
-            Spacer(Modifier.height(10.dp))
-
-            Text(
-                deger,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold
-            )
-
-            Text(
-                baslik,
-                color = Color.Gray,
-                fontSize = 12.sp
-            )
-        }
-    }
-}
-                }
