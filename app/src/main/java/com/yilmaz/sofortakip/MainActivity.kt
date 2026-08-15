@@ -31,8 +31,7 @@ data class Sefer(
     val donusSaati: String,
     val toplamKm: Int,
     val toplamSure: String
-    val not: String
-)
+    val notMetni: String
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +55,7 @@ val prefs = remember {
     var donusKm by remember { mutableStateOf("") }
     var cikisSaati by remember { mutableStateOf("") }
     var baslangic by remember { mutableStateOf(0L) }
-    var not by remember { mutableStateOf("") }
+    var notMetni by remember { mutableStateOf("") }
 
     var seferler by remember { mutableStateOf(listOf<Sefer>()) }
     LaunchedEffect(Unit) {
@@ -347,10 +346,10 @@ val prefs = remember {
                                     color = Color(0xFF1769AA),
                                     fontWeight = FontWeight.Bold
                                 )
-                                if (sefer.not.isNotBlank()) {
+                                if (sefer.notMetni.isNotBlank()) {
     Spacer(Modifier.height(8.dp))
     Text(
-        "Not: ${sefer.not}",
+        "Not: ${sefer.notMetni}",
         color = Color.Gray,
         fontWeight = FontWeight.Medium
     )
@@ -480,10 +479,10 @@ val prefs = remember {
                     Spacer(Modifier.height(10.dp))
 
 OutlinedTextField(
-    value = not,
-    onValueChange = {
-        not = it
-    },
+    value = notMetni,
+onValueChange = {
+    notMetni = it
+},
     modifier = Modifier.fillMaxWidth(),
     label = {
         Text("Not")
@@ -522,7 +521,7 @@ OutlinedTextField(
                                     baslangic,
                                     bitis
                                 )
-                                not = not
+                                notMetni = notMetni
                             )
 
                             seferler =
