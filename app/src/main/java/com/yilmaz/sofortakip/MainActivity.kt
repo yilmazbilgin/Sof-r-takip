@@ -30,7 +30,7 @@ data class Sefer(
     val cikisSaati: String,
     val donusSaati: String,
     val toplamKm: Int,
-    val toplamSure: String
+    val toplamSure: String,
     val notMetni: String
     )
 class MainActivity : ComponentActivity() {
@@ -73,7 +73,7 @@ val prefs = remember {
                     donusSaati = parcalar[4],
                     toplamKm = parcalar[5].toIntOrNull() ?: return@mapNotNull null,
                     toplamSure = parcalar[6]
-                    not = if (parcalar.size == 8) parcalar[7] else ""
+                    notMetni = if (parcalar.size == 8) parcalar[7] else ""
                 )
             } else {
                 null
