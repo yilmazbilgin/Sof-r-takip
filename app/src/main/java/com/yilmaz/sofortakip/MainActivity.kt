@@ -116,7 +116,7 @@ fun SoforTakip() {
     }
 
     var seferler by remember {
-        mutableStateOf(yukleSeferler(context))
+    mutableStateOf<List<Sefer>>(yukleSeferler(context))
     }
 
     var aktif by remember {
