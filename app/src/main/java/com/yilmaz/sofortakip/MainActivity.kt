@@ -554,10 +554,12 @@ private fun DashboardHeader(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             MiniMetric(
+                modifier = Modifier.weight(1f),
                 value = seferSayisi.toString(),
                 label = "Sefer"
             )
             MiniMetric(
+                modifier = Modifier.weight(1f),
                 value = "$toplamKm",
                 label = "KM"
             )
@@ -567,11 +569,12 @@ private fun DashboardHeader(
 
 @Composable
 private fun MiniMetric(
+    modifier: Modifier = Modifier,
     value: String,
     label: String
 ) {
     Surface(
-        modifier = Modifier.weight(1f),
+        modifier = modifier,
         shape = RoundedCornerShape(14.dp),
         color = Color.White.copy(alpha = 0.12f)
     ) {
