@@ -171,7 +171,44 @@ var yeniNot by remember {
 }
 
 val toplamKm = seferler.sumOf { it.toplamKm }
+MaterialTheme(
+    colorScheme = when (seciliTema) {
+        AppTheme.GECE_MORU -> darkColorScheme(
+            primary = Color(0xFF7C4DFF),
+            secondary = Color(0xFFB39DDB),
+            background = Color(0xFF121212),
+            surface = Color(0xFF1E1E1E)
+        )
 
+        AppTheme.OKYANUS -> lightColorScheme(
+            primary = Color(0xFF0077B6),
+            secondary = Color(0xFF48CAE4),
+            background = Color(0xFFEFFAFF),
+            surface = Color(0xFFE0F7FA)
+        )
+
+        AppTheme.ZUMRUT -> lightColorScheme(
+            primary = Color(0xFF00897B),
+            secondary = Color(0xFF4DB6AC),
+            background = Color(0xFFF2FBF8),
+            surface = Color(0xFFE0F2F1)
+        )
+
+        AppTheme.GRAFIT -> darkColorScheme(
+            primary = Color(0xFF78909C),
+            secondary = Color(0xFFB0BEC5),
+            background = Color(0xFF17191C),
+            surface = Color(0xFF25282C)
+        )
+
+        AppTheme.ACIK -> lightColorScheme(
+            primary = Color(0xFF6750A4),
+            secondary = Color(0xFF7E57C2),
+            background = Color(0xFFFFF8FF),
+            surface = Color(0xFFF0EAF2)
+        )
+    }
+) {
     Scaffold(
         topBar = {
             TopAppBar(
