@@ -33,16 +33,13 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.lightColorScheme
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,11 +55,6 @@ import androidx.compose.ui.platform.LocalContext
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-
-
-// ------------------------------------------------------------
-// VERİ MODELLERİ
-// ------------------------------------------------------------
 
 data class Sefer(
     val id: Long,
@@ -89,1325 +81,329 @@ enum class AppTheme {
     ACIK
 }
 
-
-// ------------------------------------------------------------
-// ANA ACTIVITY
-// ------------------------------------------------------------
-
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             SoforTakip()
         }
     }
 }
 
-
-// ------------------------------------------------------------
-// ANA EKRAN
-// ------------------------------------------------------------
-
-@OptIn(
-    ExperimentalFoundationApi::class,
-    ExperimentalMaterial3Api::class
-)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SoforTakip() {
-
     val context = LocalContext.current
 
-    var seciliTema by remember {
-        mutableStateOf(AppTheme.GECE_MORU)
-    }
-
-    var temaMenusuAcik by remember {
-        mutableStateOf(false)
-    }
-
-    var seferler by remember {
-        mutableStateOf(yukleSeferler(context))
-    }
-
-    var aktif by remember {
-        mutableStateOf(false)
-    }
-
-    var bitirAcik by remember {
-        mutableStateOf(false)
-    }
-
-    var silinecekSefer by remember {
-        mutableStateOf<Sefer?>(null)
-    }
-
-    var guzergah by remember {
-        mutableStateOf("")
-    }
-
-    var cikisKm by remember {
-        mutableStateOf("")
-    }
-
-    var donusKm by remember {
-        mutableStateOf("")
-    }
-
-    var notMetni by remember {
-        mutableStateOf("")
-    }
-
-    var cikisSaati by remember {
-        mutableStateOf("")
-    }
-
-    var baslangicZamani by remember {
-        mutableStateOf(0L)
-    }
-
-    var hataMesaji by remember {
-        mutableStateOf("")
-    }
-
-    var notlarAcik by remember {
-        mutableStateOf(false)
-    }
-
-    var notlar by remember {
-        mutableStateOf(listOf<NotKaydi>())
-    }
-
-    var yeniNot by remember {
-        mutableStateOf("")
-    }
+    var seciliTema by remember { mutableStateOf(AppTheme.GECE_MORU) }
+    var temaMenusuAcik by remember { mutableStateOf(false) }
+    var seferler by remember { mutableStateOf(yukleSeferler(context)) }
+    var aktif by remember { mutableStateOf(false) }
+    var bitirAcik by remember { mutableStateOf(false) }
+    var silinecekSefer by remember { mutableStateOf<Sefer?>(null) }
+    var guzergah by remember { mutableStateOf("") }
+    var cikisKm by remember { mutableStateOf("") }
+    var donusKm by remember { mutableStateOf("") }
+    var notMetni by remember { mutableStateOf("") }
+    var cikisSaati by remember { mutableStateOf("") }
+    var baslangicZamani by remember { mutableStateOf(0L) }
+    var hataMesaji by remember { mutableStateOf("") }
+    var notlarAcik by remember { mutableStateOf(false) }
+    var notlar by remember { mutableStateOf(listOf<NotKaydi>()) }
+    var yeniNot by remember { mutableStateOf("") }
 
     val toplamKm = seferler.sumOf { it.toplamKm }
 
-
-    MaterialTheme(
-        colorScheme = when (seciliTema) {
-
-            AppTheme.GECE_MORU -> darkColorScheme(
-                primary = Color(0xFF7C4DFF),
-                secondary = Color(0xFFB39DDB),
-                background = Color(0xFF121212),
-                surface = Color(0xFF1E1E1E)
-            )
-
-            AppTheme.OKYANUS -> lightColorScheme(
-                primary = Color(0xFF0077B6),
-                secondary = Color(0xFF48CAE4),
-                background = Color(0xFFEFFAFF),
-                surface = Color(0xFFE0F7FA)
-            )
-
-            AppTheme.ZUMRUT -> lightColorScheme(
-                primary = Color(0xFF00897B),
-                secondary = Color(0xFF4DB6AC),
-                background = Color(0xFFF2FBF8),
-                surface = Color(0xFFE0F2F1)
-            )
-
-            AppTheme.GRAFIT -> darkColorScheme(
-                primary = Color(0xFF78909C),
-                secondary = Color(0xFFB0BEC5),
-                background = Color(0xFF17191C),
-                surface = Color(0xFF25282C)
-            )
-
-            AppTheme.ACIK -> lightColorScheme(
-                primary = Color(0xFF6750A4),
-                secondary = Color(0xFF7E57C2),
-                background = Color(0xFFFFF8FF),
-                surface = Color(0xFFF0EAF2)
-            )
-        }
-    ) {
-
+    MaterialTheme {
         Scaffold(
-
             topBar = {
-
                 TopAppBar(
-
                     title = {
-
                         Column {
-
-                            Text(
-                                text = "Şoför Takip",
-                                fontWeight = FontWeight.Bold
-                            )
-
-                            Text(
-                                text = "Sefer yönetimi",
-                                fontSize = 12.sp,
-                                color = Color.Gray
-                            )
+                            Text("艦of枚r Takip", fontWeight = FontWeight.Bold)
+                            Text("Sefer y枚netimi", fontSize = 12.sp, color = Color.Gray)
                         }
                     },
-
                     actions = {
-
-                        TextButton(
-                            onClick = {
-                                temaMenusuAcik = true
-                            }
-                        ) {
-                            Text("Tema")
-                        }
-
+                        TextButton(onClick = { temaMenusuAcik = true }) { Text("Tema") }
                         DropdownMenu(
                             expanded = temaMenusuAcik,
-                            onDismissRequest = {
-                                temaMenusuAcik = false
-                            }
+                            onDismissRequest = { temaMenusuAcik = false }
                         ) {
-
-                            DropdownMenuItem(
-                                text = {
-                                    Text("🌙 Gece Moru")
-                                },
-                                onClick = {
-                                    seciliTema = AppTheme.GECE_MORU
-                                    temaMenusuAcik = false
-                                }
-                            )
-
-                            DropdownMenuItem(
-                                text = {
-                                    Text("🌊 Okyanus")
-                                },
-                                onClick = {
-                                    seciliTema = AppTheme.OKYANUS
-                                    temaMenusuAcik = false
-                                }
-                            )
-
-                            DropdownMenuItem(
-                                text = {
-                                    Text("💚 Zümrüt")
-                                },
-                                onClick = {
-                                    seciliTema = AppTheme.ZUMRUT
-                                    temaMenusuAcik = false
-                                }
-                            )
-
-                            DropdownMenuItem(
-                                text = {
-                                    Text("🩶 Grafit")
-                                },
-                                onClick = {
-                                    seciliTema = AppTheme.GRAFIT
-                                    temaMenusuAcik = false
-                                }
-                            )
-
-                            DropdownMenuItem(
-                                text = {
-                                    Text("☀️ Açık")
-                                },
-                                onClick = {
-                                    seciliTema = AppTheme.ACIK
-                                    temaMenusuAcik = false
-                                }
-                            )
+                            DropdownMenuItem(text = { Text("馃寵 Gece Moru") }, onClick = { seciliTema = AppTheme.GECE_MORU; temaMenusuAcik = false })
+                            DropdownMenuItem(text = { Text("馃寠 Okyanus") }, onClick = { seciliTema = AppTheme.OKYANUS; temaMenusuAcik = false })
+                            DropdownMenuItem(text = { Text("馃挌 Z眉mr眉t") }, onClick = { seciliTema = AppTheme.ZUMRUT; temaMenusuAcik = false })
+                            DropdownMenuItem(text = { Text("馃┒ Grafit") }, onClick = { seciliTema = AppTheme.GRAFIT; temaMenusuAcik = false })
+                            DropdownMenuItem(text = { Text("鈽€锔� A莽谋k") }, onClick = { seciliTema = AppTheme.ACIK; temaMenusuAcik = false })
                         }
-
-                        TextButton(
-                            onClick = {
-                                notlarAcik = true
-                            }
-                        ) {
-                            Text("Notlar")
-                        }
+                        TextButton(onClick = { notlarAcik = true }) { Text("Notlar") }
                     }
                 )
             }
-
         ) { padding ->
-
             LazyColumn(
-
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(horizontal = 16.dp),
-
-                verticalArrangement =
-                    Arrangement.spacedBy(12.dp)
-
+                modifier = Modifier.fillMaxSize().padding(padding).padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
+                item { Spacer(modifier = Modifier.height(8.dp)) }
 
                 item {
-
-                    Spacer(
-                        modifier = Modifier.height(8.dp)
-                    )
-                }
-
-
-                // ------------------------------------------------
-                // AKTİF SEFER KARTI
-                // ------------------------------------------------
-
-                item {
-
                     Card(
-
                         modifier = Modifier.fillMaxWidth(),
-
                         shape = RoundedCornerShape(24.dp),
-
                         colors = CardDefaults.cardColors(
-
-                            containerColor =
-                                if (aktif)
-                                    Color(0xFFE8F5E9)
-                                else
-                                    Color(0xFFEDE9EF)
+                            containerColor = if (aktif) Color(0xFFE8F5E9) else Color(0xFFEDE9EF)
                         )
-
                     ) {
-
-                        Column(
-                            modifier = Modifier.padding(20.dp)
-                        ) {
-
-                            Row(
-                                verticalAlignment =
-                                    Alignment.CenterVertically
-                            ) {
-
-                                Icon(
-                                    imageVector =
-                                        Icons.Default.DirectionsCar,
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .width(48.dp)
-                                        .height(48.dp)
-                                )
-
-                                Spacer(
-                                    modifier =
-                                        Modifier.width(14.dp)
-                                )
-
+                        Column(modifier = Modifier.padding(20.dp)) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(Icons.Default.DirectionsCar, null, Modifier.width(48.dp).height(48.dp))
+                                Spacer(modifier = Modifier.width(14.dp))
                                 Column {
-
+                                    Text(if (aktif) "Aktif Sefer" else "Yeni Sefer", fontSize = 24.sp, fontWeight = FontWeight.Bold)
                                     Text(
-                                        text =
-                                            if (aktif)
-                                                "Aktif Sefer"
-                                            else
-                                                "Yeni Sefer",
-                                        fontSize = 24.sp,
-                                        fontWeight =
-                                            FontWeight.Bold
-                                    )
-
-                                    Text(
-                                        text =
-                                            if (aktif)
-                                                "$guzergah • $cikisKm KM"
-                                            else
-                                                "Yeni bir sefer başlatın",
+                                        if (aktif) "$guzergah 鈥� $cikisKm KM" else "Yeni bir sefer ba艧lat谋n",
                                         fontSize = 16.sp,
                                         color = Color.Gray
                                     )
                                 }
                             }
-
-                            Spacer(
-                                modifier =
-                                    Modifier.height(18.dp)
-                            )
-
+                            Spacer(modifier = Modifier.height(18.dp))
 
                             if (!aktif) {
-
                                 Button(
-
                                     onClick = {
-
                                         hataMesaji = ""
-
                                         if (guzergah.isBlank()) {
-
-                                            hataMesaji =
-                                                "Güzergâh girin."
-
+                                            hataMesaji = "G眉zerg芒h girin."
                                             return@Button
                                         }
-
-                                        if (
-                                            cikisKm.toIntOrNull()
-                                                == null
-                                        ) {
-
-                                            hataMesaji =
-                                                "Geçerli bir çıkış KM girin."
-
+                                        if (cikisKm.toIntOrNull() == null) {
+                                            hataMesaji = "Ge莽erli bir 莽谋k谋艧 KM girin."
                                             return@Button
                                         }
-
                                         aktif = true
-
                                         cikisSaati = saat()
-
-                                        baslangicZamani =
-                                            System.currentTimeMillis()
+                                        baslangicZamani = System.currentTimeMillis()
                                     },
-
-                                    modifier =
-                                        Modifier.fillMaxWidth(),
-
-                                    shape =
-                                        RoundedCornerShape(18.dp)
-
+                                    modifier = Modifier.fillMaxWidth(),
+                                    shape = RoundedCornerShape(18.dp)
                                 ) {
-
-                                    Icon(
-                                        Icons.Default.PlayArrow,
-                                        contentDescription = null
-                                    )
-
-                                    Spacer(
-                                        modifier =
-                                            Modifier.width(8.dp)
-                                    )
-
-                                    Text(
-                                        "SEFERİ BAŞLAT",
-                                        fontWeight =
-                                            FontWeight.Bold
-                                    )
+                                    Icon(Icons.Default.PlayArrow, null)
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text("SEFER陌 BA艦LAT", fontWeight = FontWeight.Bold)
                                 }
-
                             } else {
-
-                                Text(
-                                    text =
-                                        "Sefer devam ediyor",
-                                    fontWeight =
-                                        FontWeight.Bold,
-                                    color =
-                                        Color(0xFF2E7D32)
-                                )
-
-                                Spacer(
-                                    modifier =
-                                        Modifier.height(8.dp)
-                                )
-
-                                Text(
-                                    "Çıkış: $cikisKm KM • $cikisSaati",
-                                    color = Color.Gray
-                                )
-
-                                Spacer(
-                                    modifier =
-                                        Modifier.height(12.dp)
-                                )
-
+                                Text("Sefer devam ediyor", fontWeight = FontWeight.Bold, color = Color(0xFF2E7D32))
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text("脟谋k谋艧: $cikisKm KM 鈥� $cikisSaati", color = Color.Gray)
+                                Spacer(modifier = Modifier.height(12.dp))
                                 Button(
-
-                                    onClick = {
-                                        bitirAcik = true
-                                    },
-
-                                    modifier =
-                                        Modifier.fillMaxWidth(),
-
-                                    shape =
-                                        RoundedCornerShape(18.dp)
-
+                                    onClick = { bitirAcik = true },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    shape = RoundedCornerShape(18.dp)
                                 ) {
-
-                                    Icon(
-                                        Icons.Default.Stop,
-                                        contentDescription = null
-                                    )
-
-                                    Spacer(
-                                        modifier =
-                                            Modifier.width(8.dp)
-                                    )
-
-                                    Text(
-                                        "SEFERİ BİTİR",
-                                        fontWeight =
-                                            FontWeight.Bold
-                                    )
+                                    Icon(Icons.Default.Stop, null)
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text("SEFER陌 B陌T陌R", fontWeight = FontWeight.Bold)
                                 }
                             }
                         }
                     }
                 }
-
-
-                // ------------------------------------------------
-                // GÜZERGAH
-                // ------------------------------------------------
 
                 if (!aktif) {
-
                     item {
-
                         OutlinedTextField(
-
                             value = guzergah,
-
-                            onValueChange = {
-                                guzergah = it
-                            },
-
-                            modifier =
-                                Modifier.fillMaxWidth(),
-
-                            label = {
-                                Text("Güzergâh")
-                            },
-
-                            placeholder = {
-                                Text(
-                                    "Örn. Akseki - Antalya"
-                                )
-                            },
-
-                            leadingIcon = {
-
-                                Icon(
-                                    Icons.Default.Route,
-                                    contentDescription = null
-                                )
-                            },
-
+                            onValueChange = { guzergah = it },
+                            modifier = Modifier.fillMaxWidth(),
+                            label = { Text("G眉zerg芒h") },
+                            placeholder = { Text("脰rn. Akseki - Antalya") },
+                            leadingIcon = { Icon(Icons.Default.Route, null) },
                             singleLine = true,
-
-                            shape =
-                                RoundedCornerShape(16.dp)
+                            shape = RoundedCornerShape(16.dp)
                         )
                     }
-
-
-                    // ------------------------------------------------
-                    // ÇIKIŞ KM
-                    // ------------------------------------------------
-
                     item {
-
                         OutlinedTextField(
-
                             value = cikisKm,
-
-                            onValueChange = {
-
-                                cikisKm =
-                                    it.filter { karakter ->
-                                        karakter.isDigit()
-                                    }
-                            },
-
-                            modifier =
-                                Modifier.fillMaxWidth(),
-
-                            label = {
-                                Text("Çıkış KM")
-                            },
-
-                            placeholder = {
-                                Text("Örn. 125430")
-                            },
-
-                            leadingIcon = {
-
-                                Icon(
-                 }  
-    }
-
-@OptIn(
-    ExperimentalFoundationApi::class,
-    ExperimentalMaterial3Api::class
-)
-@Composable
-fun SoforTakip() {
-    val context = LocalContext.current
-    var seciliTema by remember {
-    mutableStateOf(AppTheme.GECE_MORU)
-    }
-    var temaMenusuAcik by remember {
-    mutableStateOf(false)
-    }
-
-    var seferler by remember {
-    mutableStateOf<List<Sefer>>(yukleSeferler(context))
-    }
-
-    var aktif by remember {
-        mutableStateOf(false)
-    }
-
-    var bitirAcik by remember {
-        mutableStateOf(false)
-    }
-
-    var silinecekSefer by remember {
-        mutableStateOf<Sefer?>(null)
-    }
-
-    var guzergah by remember {
-        mutableStateOf("")
-    }
-
-    var cikisKm by remember {
-        mutableStateOf("")
-    }
-
-    var donusKm by remember {
-        mutableStateOf("")
-    }
-
-    var notMetni by remember {
-        mutableStateOf("")
-    }
-
-    var cikisSaati by remember {
-        mutableStateOf("")
-    }
-
-    var baslangicZamani by remember {
-        mutableStateOf(0L)
-    }
-
-    var hataMesaji by remember {
-    mutableStateOf("")
-}
-
-var notlarAcik by remember {
-    mutableStateOf(false)
-}
-var notlar by remember {
-    mutableStateOf(listOf<NotKaydi>())
-}
-
-var yeniNot by remember {
-    mutableStateOf("")
-}
-
-val toplamKm = seferler.sumOf { it.toplamKm }
-MaterialTheme(
-    colorScheme = when (seciliTema) {
-        AppTheme.GECE_MORU -> darkColorScheme(
-            primary = Color(0xFF7C4DFF),
-            secondary = Color(0xFFB39DDB),
-            background = Color(0xFF121212),
-            surface = Color(0xFF1E1E1E)
-        )
-
-        AppTheme.OKYANUS -> lightColorScheme(
-            primary = Color(0xFF0077B6),
-            secondary = Color(0xFF48CAE4),
-            background = Color(0xFFEFFAFF),
-            surface = Color(0xFFE0F7FA)
-        )
-
-        AppTheme.ZUMRUT -> lightColorScheme(
-            primary = Color(0xFF00897B),
-            secondary = Color(0xFF4DB6AC),
-            background = Color(0xFFF2FBF8),
-            surface = Color(0xFFE0F2F1)
-        )
-
-        AppTheme.GRAFIT -> darkColorScheme(
-            primary = Color(0xFF78909C),
-            secondary = Color(0xFFB0BEC5),
-            background = Color(0xFF17191C),
-            surface = Color(0xFF25282C)
-        )
-
-        AppTheme.ACIK -> lightColorScheme(
-            primary = Color(0xFF6750A4),
-            secondary = Color(0xFF7E57C2),
-            background = Color(0xFFFFF8FF),
-            surface = Color(0xFFF0EAF2)
-        )
-    }
-) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-    title = {
-        Column {
-            Text(
-                text = "Şoför Takip",
-                fontWeight = FontWeight.Bold
-            )
-
-            Text(
-                text = "Sefer yönetimi",
-                fontSize = 12.sp,
-                color = Color.Gray
-            )
-        }
-    },
-    actions = {
-    TextButton(
-        onClick = {
-            temaMenusuAcik = true
-        }
-    ) {
-        Text("Tema")
-    }
-
-    DropdownMenu(
-        expanded = temaMenusuAcik,
-        onDismissRequest = {
-            temaMenusuAcik = false
-        }
-    ) {
-        DropdownMenuItem(
-            text = { Text("🌙 Gece Moru") },
-            onClick = {
-                seciliTema = AppTheme.GECE_MORU
-                temaMenusuAcik = false
-            }
-        )
-
-        DropdownMenuItem(
-            text = { Text("🌊 Okyanus") },
-            onClick = {
-                seciliTema = AppTheme.OKYANUS
-                temaMenusuAcik = false
-            }
-        )
-
-        DropdownMenuItem(
-            text = { Text("💚 Zümrüt") },
-            onClick = {
-                seciliTema = AppTheme.ZUMRUT
-                temaMenusuAcik = false
-            }
-        )
-
-        DropdownMenuItem(
-            text = { Text("🩶 Grafit") },
-            onClick = {
-                seciliTema = AppTheme.GRAFIT
-                temaMenusuAcik = false
-            }
-        )
-
-        DropdownMenuItem(
-            text = { Text("☀️ Açık") },
-            onClick = {
-                seciliTema = AppTheme.ACIK
-                temaMenusuAcik = false
-            }
-        )
-    }
-
-    TextButton(
-        onClick = {
-            notlarAcik = true
-        }
-    ) {
-        Text("Notlar")
-    }
-    }
-)
-        }
-    ) { padding ->
-
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-
-            item {
-
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(24.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = if (aktif)
-                            Color(0xFFE8F5E9)
-                        else
-                            Color(0xFFEDE9EF)
-                    )
-                ) {
-
-                    Column(
-                        modifier = Modifier.padding(20.dp)
-                    ) {
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-
-                            Icon(
-                                imageVector = Icons.Default.DirectionsCar,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .width(48.dp)
-                                    .height(48.dp)
-                            )
-
-                            Spacer(modifier = Modifier.width(14.dp))
-
-                            Column {
-
-                                Text(
-                                    text = if (aktif)
-                                        "Aktif Sefer"
-                                    else
-                                        "Yeni Sefer",
-                                    fontSize = 24.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-
-                                Text(
-                                    text = if (aktif)
-                                        "$guzergah • $cikisKm KM"
-                                    else
-                                        "Yeni bir sefer başlatın",
-                                    fontSize = 16.sp,
-                                    color = Color.Gray
-                                )
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(18.dp))
-
-                        if (!aktif) {
-
-                            Button(
-                                onClick = {
-
-                                    hataMesaji = ""
-
-                                    if (guzergah.isBlank()) {
-                                        hataMesaji = "Güzergâh girin."
-                                        return@Button
-                                    }
-
-                                    if (cikisKm.toIntOrNull() == null) {
-                                        hataMesaji = "Geçerli bir çıkış KM girin."
-                                        return@Button
-                                    }
-
-                                    aktif = true
-                                    cikisSaati = saat()
-                                    baslangicZamani =
-                                        System.currentTimeMillis()
-                                },
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(18.dp)
-                            ) {
-
-                                Icon(
-                                    Icons.Default.PlayArrow,
-                                    contentDescription = null
-                                )
-
-                                Spacer(modifier = Modifier.width(8.dp))
-
-                                Text(
-                                    "SEFERİ BAŞLAT",
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-
-                        } else {
-
-                            Text(
-                                text = "Sefer devam ediyor",
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF2E7D32)
-                            )
-
-                            Spacer(modifier = Modifier.height(8.dp))
-
-                            Text(
-                                "Çıkış: $cikisKm KM  •  $cikisSaati",
-                                color = Color.Gray
-                            )
-
-                            Spacer(modifier = Modifier.height(12.dp))
-
-                            Button(
-                                onClick = {
-                                    bitirAcik = true
-                                },
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(18.dp)
-                            ) {
-
-                                Icon(
-                                    Icons.Default.Stop,
-                                    contentDescription = null
-                                )
-
-                                Spacer(modifier = Modifier.width(8.dp))
-
-                                Text(
-                                    "SEFERİ BİTİR",
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (!aktif) {
-
-                item {
-
-                    OutlinedTextField(
-                        value = guzergah,
-                        onValueChange = {
-                            guzergah = it
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        label = {
-                            Text("Güzergâh")
-                        },
-                        placeholder = {
-                            Text("Örn. Akseki - Antalya")
-                        },
-                        leadingIcon = {
-                            Icon(
-                                Icons.Default.Route,
-                                contentDescription = null
-                            )
-                        },
-                        singleLine = true,
-                        shape = RoundedCornerShape(16.dp)
-                    )
-                }
-
-                item {
-
-                    OutlinedTextField(
-                        value = cikisKm,
-                        onValueChange = {
-                            cikisKm = it.filter { karakter ->
-                                karakter.isDigit()
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        label = {
-                            Text("Çıkış KM")
-                        },
-                        placeholder = {
-                            Text("Örn. 125430")
-                        },
-                        leadingIcon = {
-                            Icon(
-                                Icons.Default.Speed,
-                                contentDescription = null
-                            )
-                        },
-                        singleLine = true,
-                        shape = RoundedCornerShape(16.dp)
-                    )
-                }
-            }
-
-            item {
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-
-                    BilgiKarti(
-                        modifier = Modifier.weight(1f),
-                        ikon = Icons.Default.DirectionsCar,
-                        baslik = seferler.size.toString(),
-                        altBaslik = "Toplam Sefer"
-                    )
-
-                    BilgiKarti(
-                        modifier = Modifier.weight(1f),
-                        ikon = Icons.Default.Speed,
-                        baslik = "$toplamKm KM",
-                        altBaslik = "Toplam KM"
-                    )
-                }
-            }
-
-            item {
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
-                    Icon(
-                        Icons.Default.History,
-                        contentDescription = null
-                    )
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    Text(
-                        text = "Sefer Geçmişi",
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-
-            if (seferler.isEmpty()) {
-
-                item {
-
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(18.dp)
-                    ) {
-
-                        Column(
-                            modifier = Modifier.padding(24.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-
-                            Icon(
-                                Icons.Default.History,
-                                contentDescription = null
-                            )
-
-                            Spacer(
-                                modifier = Modifier.height(8.dp)
-                            )
-
-                            Text(
-                                "Henüz tamamlanmış sefer yok.",
-                                color = Color.Gray
-                            )
-                        }
+                            onValueChange = { cikisKm = it.filter(Char::isDigit) },
+                            modifier = Modifier.fillMaxWidth(),
+                            label = { Text("脟谋k谋艧 KM") },
+                            placeholder = { Text("脰rn. 125430") },
+                            leadingIcon = { Icon(Icons.Default.Speed, null) },
+                            singleLine = true,
+                            shape = RoundedCornerShape(16.dp)
+                        )
                     }
                 }
 
-            } else {
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        BilgiKarti(
+                            modifier = Modifier.weight(1f),
+                            ikon = Icons.Default.DirectionsCar,
+                            baslik = seferler.size.toString(),
+                            altBaslik = "Toplam Sefer"
+                        )
+                        BilgiKarti(
+                            modifier = Modifier.weight(1f),
+                            ikon = Icons.Default.Speed,
+                            baslik = "$toplamKm KM",
+                            altBaslik = "Toplam KM"
+                        )
+                    }
+                }
 
-                items(
-                    items = seferler,
-                    key = { it.id }
-                ) { sefer ->
+                item {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.History, null)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Sefer Ge莽mi艧i", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                    }
+                }
 
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .combinedClickable(
+                if (seferler.isEmpty()) {
+                    item {
+                        Card(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp)) {
+                            Column(
+                                modifier = Modifier.padding(24.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(Icons.Default.History, null)
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text("Hen眉z tamamlanm谋艧 sefer yok.", color = Color.Gray)
+                            }
+                        }
+                    }
+                } else {
+                    items(items = seferler, key = { it.id }) { sefer ->
+                        Card(
+                            modifier = Modifier.fillMaxWidth().combinedClickable(
                                 onClick = {},
-                                onLongClick = {
-                                    silinecekSefer = sefer
-                                }
+                                onLongClick = { silinecekSefer = sefer }
                             ),
-                        shape = RoundedCornerShape(20.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFFEDE9EF)
-                        )
-                    ) {
-
-                        Column(
-                            modifier = Modifier.padding(18.dp)
+                            shape = RoundedCornerShape(20.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color(0xFFEDE9EF))
                         ) {
-
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-
-                                Column(
-                                    modifier = Modifier.weight(1f)
-                                ) {
-
-                                    Text(
-                                        sefer.guzergah,
-                                        fontSize = 19.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-
-                                    Spacer(
-                                        modifier = Modifier.height(6.dp)
-                                    )
-
-                                    Row(
-                                        verticalAlignment =
-                                            Alignment.CenterVertically
-                                    ) {
-
-                                        Icon(
-                                            Icons.Default.AccessTime,
-                                            contentDescription = null,
-                                            modifier = Modifier
-                                                .width(18.dp)
-                                                .height(18.dp)
-                                        )
-
-                                        Spacer(
-                                            modifier = Modifier.width(5.dp)
-                                        )
-
-                                        Text(
-                                            "${sefer.cikisSaati} → ${sefer.donusSaati}",
-                                            color = Color.Gray
-                                        )
+                            Column(modifier = Modifier.padding(18.dp)) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(sefer.guzergah, fontSize = 19.sp, fontWeight = FontWeight.Bold)
+                                        Spacer(modifier = Modifier.height(6.dp))
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Icon(Icons.Default.AccessTime, null, Modifier.width(18.dp).height(18.dp))
+                                            Spacer(modifier = Modifier.width(5.dp))
+                                            Text("${sefer.cikisSaati} 鈫� ${sefer.donusSaati}", color = Color.Gray)
+                                        }
                                     }
+                                    Text("${sefer.toplamKm} KM", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color(0xFF1769AA))
                                 }
-
-                                Text(
-                                    "${sefer.toplamKm} KM",
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color(0xFF1769AA)
-                                )
+                                Spacer(modifier = Modifier.height(10.dp))
+                                Text("${sefer.cikisKm} KM 鈫� ${sefer.donusKm} KM", color = Color.Gray)
+                                Spacer(modifier = Modifier.height(5.dp))
+                                Text("${sefer.toplamKm} KM 鈥� ${sefer.toplamSure}", color = Color(0xFF1769AA), fontWeight = FontWeight.Bold)
+                                if (sefer.notMetni.isNotBlank()) {
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Text("Not: ${sefer.notMetni}", color = Color.Gray)
+                                }
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text("Silmek i莽in uzun bas谋n", fontSize = 11.sp, color = Color.Gray)
                             }
-
-                            Spacer(
-                                modifier = Modifier.height(10.dp)
-                            )
-
-                            Divider()
-
-                            Spacer(
-                                modifier = Modifier.height(10.dp)
-                            )
-
-                            Text(
-                                "${sefer.cikisKm} KM → ${sefer.donusKm} KM",
-                                color = Color.Gray
-                            )
-
-                            Spacer(
-                                modifier = Modifier.height(5.dp)
-                            )
-
-                            Text(
-                                "${sefer.toplamKm} KM • ${sefer.toplamSure}",
-                                color = Color(0xFF1769AA),
-                                fontWeight = FontWeight.Bold
-                            )
-
-                            if (sefer.notMetni.isNotBlank()) {
-
-                                Spacer(
-                                    modifier = Modifier.height(8.dp)
-                                )
-
-                                Text(
-                                    "Not: ${sefer.notMetni}",
-                                    color = Color.Gray
-                                )
-                            }
-
-                            Spacer(
-                                modifier = Modifier.height(8.dp)
-                            )
-
-                            Text(
-                                "Silmek için uzun basın",
-                                fontSize = 11.sp,
-                                color = Color.Gray
-                            )
                         }
                     }
                 }
-            }
 
-            item {
-                Spacer(modifier = Modifier.height(30.dp))
+                item { Spacer(modifier = Modifier.height(30.dp)) }
             }
         }
-    }
-    
-if (notlarAcik) {
-    AlertDialog(
-        onDismissRequest = {
-            notlarAcik = false
-        },
-        title = {
-            Text(
-                text = "Notlar",
-                fontWeight = FontWeight.Bold
-            )
-        },
-        text = {
-            Column {
-                OutlinedTextField(
-                    value = yeniNot,
-                    onValueChange = {
-                        yeniNot = it
-                    },
-                    label = {
-                        Text("Yeni not")
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
 
-                Spacer(
-                    modifier = Modifier.height(12.dp)
-                )
-
-                notlar.forEach { not ->
-                    Text(
-                        text = "• ${not.metin}",
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
-                }
-            }
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    if (yeniNot.isNotBlank()) {
-                        notlar = notlar + NotKaydi(
-                            id = System.currentTimeMillis(),
-                            metin = yeniNot.trim()
+        if (notlarAcik) {
+            AlertDialog(
+                onDismissRequest = { notlarAcik = false },
+                title = { Text("Notlar", fontWeight = FontWeight.Bold) },
+                text = {
+                    Column {
+                        OutlinedTextField(
+                            value = yeniNot,
+                            onValueChange = { yeniNot = it },
+                            label = { Text("Yeni not") },
+                            modifier = Modifier.fillMaxWidth()
                         )
-                        yeniNot = ""
+                        Spacer(modifier = Modifier.height(12.dp))
+                        notlar.forEach { not ->
+                            Text("鈥� ${not.metin}", modifier = Modifier.padding(vertical = 4.dp))
+                        }
                     }
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        if (yeniNot.isNotBlank()) {
+                            notlar = notlar + NotKaydi(System.currentTimeMillis(), yeniNot.trim())
+                            yeniNot = ""
+                        }
+                    }) { Text("Ekle") }
+                },
+                dismissButton = {
+                    TextButton(onClick = { notlarAcik = false }) { Text("Kapat") }
                 }
-            ) {
-                Text("Ekle")
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    notlarAcik = false
-                }
-            ) {
-                Text("Kapat")
-            }
+            )
         }
-    )
-}
-    if (hataMesaji.isNotBlank()) {
 
-        AlertDialog(
-            onDismissRequest = {
-                hataMesaji = ""
-            },
-            title = {
-                Text("Bilgi")
-            },
-            text = {
-                Text(hataMesaji)
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        hataMesaji = ""
+        if (hataMesaji.isNotBlank()) {
+            AlertDialog(
+                onDismissRequest = { hataMesaji = "" },
+                title = { Text("Bilgi") },
+                text = { Text(hataMesaji) },
+                confirmButton = {
+                    TextButton(onClick = { hataMesaji = "" }) { Text("Tamam") }
+                }
+            )
+        }
+
+        if (bitirAcik) {
+            AlertDialog(
+                onDismissRequest = { bitirAcik = false },
+                title = { Text("Seferi Tamamla", fontWeight = FontWeight.Bold) },
+                text = {
+                    Column {
+                        Text("G眉zerg芒h: $guzergah", fontWeight = FontWeight.Bold)
+                        Spacer(modifier = Modifier.height(12.dp))
+                        OutlinedTextField(
+                            value = donusKm,
+                            onValueChange = { donusKm = it.filter(Char::isDigit) },
+                            modifier = Modifier.fillMaxWidth(),
+                            label = { Text("D枚n眉艧 KM") },
+                            singleLine = true
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                        OutlinedTextField(
+                            value = notMetni,
+                            onValueChange = { notMetni = it },
+                            modifier = Modifier.fillMaxWidth(),
+                            label = { Text("Not") },
+                            placeholder = { Text("脰rn. Evrak teslim edildi") },
+                            minLines = 3
+                        )
                     }
-                ) {
-                    Text("Tamam")
-                }
-            }
-        )
-    }
-
-    if (bitirAcik) {
-
-        AlertDialog(
-            onDismissRequest = {
-                bitirAcik = false
-            },
-            title = {
-                Text(
-                    "Seferi Tamamla",
-                    fontWeight = FontWeight.Bold
-                )
-            },
-            text = {
-
-                Column {
-
-                    Text(
-                        "Güzergâh: $guzergah",
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    Spacer(
-                        modifier = Modifier.height(12.dp)
-                    )
-
-                    OutlinedTextField(
-                        value = donusKm,
-                        onValueChange = {
-                            donusKm = it.filter { karakter ->
-                                karakter.isDigit()
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        label = {
-                            Text("Dönüş KM")
-                        },
-                        singleLine = true
-                    )
-
-                    Spacer(
-                        modifier = Modifier.height(10.dp)
-                    )
-
-                    OutlinedTextField(
-                        value = notMetni,
-                        onValueChange = {
-                            notMetni = it
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        label = {
-                            Text("Not")
-                        },
-                        placeholder = {
-                            Text("Örn. Evrak teslim edildi")
-                        },
-                        minLines = 3
-                    )
-                }
-            },
-            confirmButton = {
-
-                Button(
-                    onClick = {
-
-                        val cikis =
-                            cikisKm.toIntOrNull()
-
-                        val donus =
-                            donusKm.toIntOrNull()
-
-                        if (cikis == null ||
-                            donus == null
-                        ) {
-
-                            hataMesaji =
-                                "Çıkış ve dönüş KM bilgilerini girin."
+                },
+                confirmButton = {
+                    Button(onClick = {
+                        val cikis = cikisKm.toIntOrNull()
+                        val donus = donusKm.toIntOrNull()
+                        if (cikis == null || donus == null) {
+                            hataMesaji = "脟谋k谋艧 ve d枚n眉艧 KM bilgilerini girin."
                             return@Button
                         }
-
                         if (donus < cikis) {
-
-                            hataMesaji =
-                                "Dönüş KM, çıkış KM'den küçük olamaz."
+                            hataMesaji = "D枚n眉艧 KM, 莽谋k谋艧 KM'den k眉莽眉k olamaz."
                             return@Button
                         }
-
-                        val bitis =
-                            System.currentTimeMillis()
-
+                        val bitis = System.currentTimeMillis()
                         val yeniSefer = Sefer(
                             id = bitis,
                             guzergah = guzergah,
@@ -1416,104 +412,47 @@ if (notlarAcik) {
                             cikisSaati = cikisSaati,
                             donusSaati = saat(),
                             toplamKm = donus - cikis,
-                            toplamSure = sureHesapla(
-                                baslangicZamani,
-                                bitis
-                            ),
-                            notMetni = notMetni
+                            toplamSure = sureHesapla(baslangicZamani, bitis),
+                            notMetni = notMetni.trim()
                         )
-
-                        seferler =
-                            listOf(yeniSefer) + seferler
-
-                        kaydetSeferler(
-                            context,
-                            seferler
-                        )
-
+                        seferler = listOf(yeniSefer) + seferler
+                        kaydetSeferler(context, seferler)
                         aktif = false
                         bitirAcik = false
-
                         guzergah = ""
                         cikisKm = ""
                         donusKm = ""
                         notMetni = ""
                         cikisSaati = ""
                         baslangicZamani = 0L
-                    }
-                ) {
-
-                    Text("SEFERİ TAMAMLA")
+                    }) { Text("SEFER陌 TAMAMLA") }
+                },
+                dismissButton = {
+                    TextButton(onClick = { bitirAcik = false }) { Text("Vazge莽") }
                 }
-            },
-            dismissButton = {
+            )
+        }
 
-                TextButton(
-                    onClick = {
-                        bitirAcik = false
-                    }
-                ) {
-
-                    Text("Vazgeç")
-                }
-            }
-        )
-    }
-
-    if (silinecekSefer != null) {
-
-        AlertDialog(
-            onDismissRequest = {
-                silinecekSefer = null
-            },
-            title = {
-                Text("Sefer silinsin mi?")
-            },
-            text = {
-                Text(
-                    "Bu sefer geçmişten kalıcı olarak silinecek."
-                )
-            },
-            confirmButton = {
-
-                Button(
-                    onClick = {
-
-                        val silinecek =
-                            silinecekSefer
-
+        if (silinecekSefer != null) {
+            AlertDialog(
+                onDismissRequest = { silinecekSefer = null },
+                title = { Text("Sefer silinsin mi?") },
+                text = { Text("Bu sefer ge莽mi艧ten kal谋c谋 olarak silinecek.") },
+                confirmButton = {
+                    Button(onClick = {
+                        val silinecek = silinecekSefer
                         if (silinecek != null) {
-
-                            seferler =
-                                seferler.filter {
-                                    it.id != silinecek.id
-                                }
-
-                            kaydetSeferler(
-                                context,
-                                seferler
-                            )
+                            seferler = seferler.filter { it.id != silinecek.id }
+                            kaydetSeferler(context, seferler)
                         }
-
                         silinecekSefer = null
-                    }
-                ) {
-
-                    Text("SİL")
+                    }) { Text("S陌L") }
+                },
+                dismissButton = {
+                    TextButton(onClick = { silinecekSefer = null }) { Text("VAZGE脟") }
                 }
-            },
-            dismissButton = {
-
-                TextButton(
-                    onClick = {
-                        silinecekSefer = null
-                    }
-                ) {
-
-                    Text("VAZGEÇ")
-                }
-            }
-        )
+            )
+        }
     }
 }
 
@@ -1524,78 +463,34 @@ fun BilgiKarti(
     baslik: String,
     altBaslik: String
 ) {
-
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFEDE9EF)
-        )
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFEDE9EF))
     ) {
-
-        Column(
-            modifier = Modifier.padding(18.dp)
-        ) {
-
-            Icon(
-                imageVector = ikon,
-                contentDescription = null
-            )
-
-            Spacer(
-                modifier = Modifier.height(8.dp)
-            )
-
-            Text(
-                baslik,
-                fontSize = 23.sp,
-                fontWeight = FontWeight.Bold
-            )
-
-            Text(
-                altBaslik,
-                color = Color.Gray
-            )
+        Column(modifier = Modifier.padding(18.dp)) {
+            Icon(imageVector = ikon, contentDescription = null)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(baslik, fontSize = 23.sp, fontWeight = FontWeight.Bold)
+            Text(altBaslik, color = Color.Gray)
         }
     }
 }
 
 fun saat(): String {
-
-    return SimpleDateFormat(
-        "HH:mm",
-        Locale.getDefault()
-    ).format(Date())
+    return SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
 }
 
-fun sureHesapla(
-    baslangic: Long,
-    bitis: Long
-): String {
-
-    if (baslangic <= 0L) {
-        return "0 saat 0 dakika"
-    }
-
-    val dakika =
-        ((bitis - baslangic) / 60000L)
-            .coerceAtLeast(0L)
-
+fun sureHesapla(baslangic: Long, bitis: Long): String {
+    if (baslangic <= 0L) return "0 saat 0 dakika"
+    val dakika = ((bitis - baslangic) / 60000L).coerceAtLeast(0L)
     val saat = dakika / 60
     val kalan = dakika % 60
-
     return "$saat saat $kalan dakika"
 }
 
-fun kaydetSeferler(
-    context: Context,
-    seferler: List<Sefer>
-) {
-
-    val veri = seferler.joinToString(
-        separator = "\u001E"
-    ) {
-
+fun kaydetSeferler(context: Context, seferler: List<Sefer>) {
+    val veri = seferler.joinToString(separator = "\u001E") {
         listOf(
             it.id,
             it.guzergah,
@@ -1608,68 +503,35 @@ fun kaydetSeferler(
             it.notMetni
         ).joinToString("\u001F")
     }
-
-    context
-        .getSharedPreferences(
-            "sofor_takip",
-            Context.MODE_PRIVATE
-        )
+    context.getSharedPreferences("sofor_takip", Context.MODE_PRIVATE)
         .edit()
         .putString("seferler", veri)
         .apply()
 }
 
-fun yukleSeferler(
-    context: Context
-): List<Sefer> {
+fun yukleSeferler(context: Context): List<Sefer> {
+    val veri = context.getSharedPreferences("sofor_takip", Context.MODE_PRIVATE)
+        .getString("seferler", "") ?: ""
 
-    val veri =
-        context
-            .getSharedPreferences(
-                "sofor_takip",
-                Context.MODE_PRIVATE
+    if (veri.isBlank()) return emptyList()
+
+    return veri.split("\u001E").mapNotNull { satir ->
+        val p = satir.split("\u001F")
+        if (p.size != 9) return@mapNotNull null
+        try {
+            Sefer(
+                id = p[0].toLong(),
+                guzergah = p[1],
+                cikisKm = p[2].toInt(),
+                donusKm = p[3].toInt(),
+                cikisSaati = p[4],
+                donusSaati = p[5],
+                toplamKm = p[6].toInt(),
+                toplamSure = p[7],
+                notMetni = p[8]
             )
-            .getString(
-                "seferler",
-                ""
-            )
-            ?: ""
-
-    if (veri.isBlank()) {
-        return emptyList()
-    }
-
-    return veri
-        .split("\u001E")
-        .mapNotNull { satir ->
-
-            val p =
-                satir.split("\u001F")
-
-            if (p.size != 9) {
-                return@mapNotNull null
-            }
-
-            try {
-
-                Sefer(
-                    id = p[0].toLong(),
-                    guzergah = p[1],
-                    cikisKm = p[2].toInt(),
-                    donusKm = p[3].toInt(),
-                    cikisSaati = p[4],
-                    donusSaati = p[5],
-                    toplamKm = p[6].toInt(),
-                    toplamSure = p[7],
-                    notMetni = p[8]
-                )
-
-            } catch (
-                e: Exception
-            ) {
-
-                null
-            }
+        } catch (_: Exception) {
+            null
         }
-}
+    }
 }
