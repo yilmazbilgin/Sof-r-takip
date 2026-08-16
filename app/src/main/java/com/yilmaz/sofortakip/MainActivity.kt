@@ -153,8 +153,16 @@ fun SoforTakip() {
                         }
                     },
                     actions = {
-                        IconButton(onClick = { notlarAcik = true }) {
-                            Icon(Icons.Default.Note, contentDescription = "Notlar")
+                        TextButton(onClick = { notlarAcik = true }) {
+    Icon(
+        Icons.Default.Note,
+        contentDescription = null
+    )
+    Spacer(modifier = Modifier.width(6.dp))
+    Text(
+        "Notlar",
+        fontWeight = FontWeight.Bold
+    )
                         }
 
                         Box {
