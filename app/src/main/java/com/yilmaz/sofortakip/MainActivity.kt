@@ -356,15 +356,15 @@ fun SoforTakip() {
                                         Row(verticalAlignment = Alignment.CenterVertically) {
                                             Icon(Icons.Default.AccessTime, null, Modifier.width(18.dp).height(18.dp))
                                             Spacer(modifier = Modifier.width(5.dp))
-                                            Text("${sefer.cikisSaati} 鈫� ${sefer.donusSaati}", color = Color.Gray)
+                                            Text("${sefer.cikisSaati} - ${sefer.donusSaati}", color = Color.Gray)
                                         }
                                     }
                                     Text("${sefer.toplamKm} KM", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color(0xFF1769AA))
                                 }
                                 Spacer(modifier = Modifier.height(10.dp))
-                                Text("${sefer.cikisKm} KM 鈫� ${sefer.donusKm} KM", color = Color.Gray)
+                                Text("${sefer.cikisKm} KM - ${sefer.donusKm} KM", color = Color.Gray)
                                 Spacer(modifier = Modifier.height(5.dp))
-                                Text("${sefer.toplamKm} KM 鈥� ${sefer.toplamSure}", color = Color(0xFF1769AA), fontWeight = FontWeight.Bold)
+                                Text("${sefer.toplamKm} KM / ${sefer.toplamSure}", color = Color(0xFF1769AA), fontWeight = FontWeight.Bold)
                                 if (sefer.notMetni.isNotBlank()) {
                                     Spacer(modifier = Modifier.height(8.dp))
                                     Text("Not: ${sefer.notMetni}", color = Color.Gray)
@@ -394,7 +394,7 @@ fun SoforTakip() {
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         notlar.forEach { not ->
-                            Text("鈥� ${not.metin}", modifier = Modifier.padding(vertical = 4.dp))
+                            Text("- ${not.metin}", modifier = Modifier.padding(vertical = 4.dp))
                         }
                     }
                 },
