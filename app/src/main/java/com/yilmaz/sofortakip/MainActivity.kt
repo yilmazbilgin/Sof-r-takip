@@ -589,7 +589,69 @@ val toplamKm = seferler.sumOf { it.toplamKm }
             }
         }
     }
+    
+if (notlarAcik) {
+    AlertDialog(
+        onDismissRequest = {
+            notlarAcik = false
+        },
+        title = {
+            Text(
+                text = "Notlar",
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = yeniNot,
+                    onValueChange = {
+                        yeniNot = it
+                    },
+                    label = {
+                        Text("Yeni not")
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
+                Spacer(
+                    modifier = Modifier.height(12.dp)
+                )
+
+                notlar.forEach { not ->
+                    Text(
+                        text = "• ${not.metin}",
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    if (yeniNot.isNotBlank()) {
+                        notlar = notlar + NotKaydi(
+                            id = System.currentTimeMillis(),
+                            metin = yeniNot.trim()
+                        )
+                        yeniNot = ""
+                    }
+                }
+            ) {
+                Text("Ekle")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    notlarAcik = false
+                }
+            ) {
+                Text("Kapat")
+            }
+        }
+    )
+}
     if (hataMesaji.isNotBlank()) {
 
         AlertDialog(
