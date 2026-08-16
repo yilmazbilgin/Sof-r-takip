@@ -148,21 +148,30 @@ fun SoforTakip() {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {
-                    Column {
-                        Text(
-                            text = "Şoför Takip",
-                            fontWeight = FontWeight.Bold
-                        )
-
-                        Text(
-                            text = "Sefer yönetimi",
-                            fontSize = 12.sp,
-                            color = Color.Gray
-                        )
-                    }
-                }
+    title = {
+        Column {
+            Text(
+                text = "Şoför Takip",
+                fontWeight = FontWeight.Bold
             )
+
+            Text(
+                text = "Sefer yönetimi",
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
+        }
+    },
+    actions = {
+        TextButton(
+            onClick = {
+                notlarAcik = true
+            }
+        ) {
+            Text("Notlar")
+        }
+    }
+)
         }
     ) { padding ->
 
