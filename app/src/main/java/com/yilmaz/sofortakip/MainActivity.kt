@@ -140,10 +140,14 @@ fun SoforTakip() {
     }
 
     var hataMesaji by remember {
-        mutableStateOf("")
-    }
+    mutableStateOf("")
+}
 
-    val toplamKm = seferler.sumOf { it.toplamKm }
+var notlarAcik by remember {
+    mutableStateOf(false)
+}
+
+val toplamKm = seferler.sumOf { it.toplamKm }
 
     Scaffold(
         topBar = {
