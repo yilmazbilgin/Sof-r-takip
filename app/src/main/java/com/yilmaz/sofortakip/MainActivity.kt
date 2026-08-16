@@ -72,6 +72,10 @@ data class Sefer(
     val toplamSure: String,
     val notMetni: String
 )
+data class NotKaydi(
+    val id: Long,
+    val metin: String
+)
 
 class MainActivity : ComponentActivity() {
 
