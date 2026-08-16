@@ -186,12 +186,12 @@ fun SoforTakip() {
                 item {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(24.dp),
+                        shape = RoundedCornerShape(28.dp),
                         colors = CardDefaults.cardColors(
                             containerColor = if (aktif) Color(0xFFE8F5E9) else Color(0xFFEDE9EF)
                         )
                     ) {
-                        Column(modifier = Modifier.padding(20.dp)) {
+                        Column(modifier = Modifier.padding(22.dp)) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(Icons.Default.DirectionsCar, null, Modifier.width(48.dp).height(48.dp))
                                 Spacer(modifier = Modifier.width(14.dp))
@@ -261,7 +261,7 @@ fun SoforTakip() {
                                 keyboardType = KeyboardType.Text,
                                 imeAction = ImeAction.Next
                             ),
-                            shape = RoundedCornerShape(16.dp)
+                            shape = RoundedCornerShape(18.dp)
                         )
                     }
                 
@@ -281,7 +281,7 @@ fun SoforTakip() {
                                 keyboardType = KeyboardType.Number,
                                 imeAction = ImeAction.Done
                             ),
-                            shape = RoundedCornerShape(16.dp)
+                            shape = RoundedCornerShape(18.dp)
                         )
                     }
                 }
@@ -523,7 +523,7 @@ fun BilgiKarti(
 ) {
     Card(
         modifier = modifier,
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(22.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFEDE9EF))
     ) {
         Column(modifier = Modifier.padding(18.dp)) {
