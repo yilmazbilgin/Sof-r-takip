@@ -20,8 +20,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.PlayArrow
@@ -29,27 +27,23 @@ import androidx.compose.material.icons.filled.Route
 import androidx.compose.material.icons.filled.Speed
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.lightColorScheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,6 +59,11 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+
+// ------------------------------------------------------------
+// VERİ MODELLERİ
+// ------------------------------------------------------------
+
 data class Sefer(
     val id: Long,
     val guzergah: String,
@@ -76,10 +75,12 @@ data class Sefer(
     val toplamSure: String,
     val notMetni: String
 )
+
 data class NotKaydi(
     val id: Long,
     val metin: String
 )
+
 enum class AppTheme {
     GECE_MORU,
     OKYANUS,
@@ -88,17 +89,544 @@ enum class AppTheme {
     ACIK
 }
 
+
+// ------------------------------------------------------------
+// ANA ACTIVITY
+// ------------------------------------------------------------
+
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-    MaterialTheme {
-        SoforTakip()
-      }
+            SoforTakip()
+        }
     }
-    }  
+}
+
+
+// ------------------------------------------------------------
+// ANA EKRAN
+// ------------------------------------------------------------
+
+@OptIn(
+    ExperimentalFoundationApi::class,
+    ExperimentalMaterial3Api::class
+)
+@Composable
+fun SoforTakip() {
+
+    val context = LocalContext.current
+
+    var seciliTema by remember {
+        mutableStateOf(AppTheme.GECE_MORU)
+    }
+
+    var temaMenusuAcik by remember {
+        mutableStateOf(false)
+    }
+
+    var seferler by remember {
+        mutableStateOf(yukleSeferler(context))
+    }
+
+    var aktif by remember {
+        mutableStateOf(false)
+    }
+
+    var bitirAcik by remember {
+        mutableStateOf(false)
+    }
+
+    var silinecekSefer by remember {
+        mutableStateOf<Sefer?>(null)
+    }
+
+    var guzergah by remember {
+        mutableStateOf("")
+    }
+
+    var cikisKm by remember {
+        mutableStateOf("")
+    }
+
+    var donusKm by remember {
+        mutableStateOf("")
+    }
+
+    var notMetni by remember {
+        mutableStateOf("")
+    }
+
+    var cikisSaati by remember {
+        mutableStateOf("")
+    }
+
+    var baslangicZamani by remember {
+        mutableStateOf(0L)
+    }
+
+    var hataMesaji by remember {
+        mutableStateOf("")
+    }
+
+    var notlarAcik by remember {
+        mutableStateOf(false)
+    }
+
+    var notlar by remember {
+        mutableStateOf(listOf<NotKaydi>())
+    }
+
+    var yeniNot by remember {
+        mutableStateOf("")
+    }
+
+    val toplamKm = seferler.sumOf { it.toplamKm }
+
+
+    MaterialTheme(
+        colorScheme = when (seciliTema) {
+
+            AppTheme.GECE_MORU -> darkColorScheme(
+                primary = Color(0xFF7C4DFF),
+                secondary = Color(0xFFB39DDB),
+                background = Color(0xFF121212),
+                surface = Color(0xFF1E1E1E)
+            )
+
+            AppTheme.OKYANUS -> lightColorScheme(
+                primary = Color(0xFF0077B6),
+                secondary = Color(0xFF48CAE4),
+                background = Color(0xFFEFFAFF),
+                surface = Color(0xFFE0F7FA)
+            )
+
+            AppTheme.ZUMRUT -> lightColorScheme(
+                primary = Color(0xFF00897B),
+                secondary = Color(0xFF4DB6AC),
+                background = Color(0xFFF2FBF8),
+                surface = Color(0xFFE0F2F1)
+            )
+
+            AppTheme.GRAFIT -> darkColorScheme(
+                primary = Color(0xFF78909C),
+                secondary = Color(0xFFB0BEC5),
+                background = Color(0xFF17191C),
+                surface = Color(0xFF25282C)
+            )
+
+            AppTheme.ACIK -> lightColorScheme(
+                primary = Color(0xFF6750A4),
+                secondary = Color(0xFF7E57C2),
+                background = Color(0xFFFFF8FF),
+                surface = Color(0xFFF0EAF2)
+            )
+        }
+    ) {
+
+        Scaffold(
+
+            topBar = {
+
+                TopAppBar(
+
+                    title = {
+
+                        Column {
+
+                            Text(
+                                text = "Şoför Takip",
+                                fontWeight = FontWeight.Bold
+                            )
+
+                            Text(
+                                text = "Sefer yönetimi",
+                                fontSize = 12.sp,
+                                color = Color.Gray
+                            )
+                        }
+                    },
+
+                    actions = {
+
+                        TextButton(
+                            onClick = {
+                                temaMenusuAcik = true
+                            }
+                        ) {
+                            Text("Tema")
+                        }
+
+                        DropdownMenu(
+                            expanded = temaMenusuAcik,
+                            onDismissRequest = {
+                                temaMenusuAcik = false
+                            }
+                        ) {
+
+                            DropdownMenuItem(
+                                text = {
+                                    Text("🌙 Gece Moru")
+                                },
+                                onClick = {
+                                    seciliTema = AppTheme.GECE_MORU
+                                    temaMenusuAcik = false
+                                }
+                            )
+
+                            DropdownMenuItem(
+                                text = {
+                                    Text("🌊 Okyanus")
+                                },
+                                onClick = {
+                                    seciliTema = AppTheme.OKYANUS
+                                    temaMenusuAcik = false
+                                }
+                            )
+
+                            DropdownMenuItem(
+                                text = {
+                                    Text("💚 Zümrüt")
+                                },
+                                onClick = {
+                                    seciliTema = AppTheme.ZUMRUT
+                                    temaMenusuAcik = false
+                                }
+                            )
+
+                            DropdownMenuItem(
+                                text = {
+                                    Text("🩶 Grafit")
+                                },
+                                onClick = {
+                                    seciliTema = AppTheme.GRAFIT
+                                    temaMenusuAcik = false
+                                }
+                            )
+
+                            DropdownMenuItem(
+                                text = {
+                                    Text("☀️ Açık")
+                                },
+                                onClick = {
+                                    seciliTema = AppTheme.ACIK
+                                    temaMenusuAcik = false
+                                }
+                            )
+                        }
+
+                        TextButton(
+                            onClick = {
+                                notlarAcik = true
+                            }
+                        ) {
+                            Text("Notlar")
+                        }
+                    }
+                )
+            }
+
+        ) { padding ->
+
+            LazyColumn(
+
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(horizontal = 16.dp),
+
+                verticalArrangement =
+                    Arrangement.spacedBy(12.dp)
+
+            ) {
+
+                item {
+
+                    Spacer(
+                        modifier = Modifier.height(8.dp)
+                    )
+                }
+
+
+                // ------------------------------------------------
+                // AKTİF SEFER KARTI
+                // ------------------------------------------------
+
+                item {
+
+                    Card(
+
+                        modifier = Modifier.fillMaxWidth(),
+
+                        shape = RoundedCornerShape(24.dp),
+
+                        colors = CardDefaults.cardColors(
+
+                            containerColor =
+                                if (aktif)
+                                    Color(0xFFE8F5E9)
+                                else
+                                    Color(0xFFEDE9EF)
+                        )
+
+                    ) {
+
+                        Column(
+                            modifier = Modifier.padding(20.dp)
+                        ) {
+
+                            Row(
+                                verticalAlignment =
+                                    Alignment.CenterVertically
+                            ) {
+
+                                Icon(
+                                    imageVector =
+                                        Icons.Default.DirectionsCar,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .width(48.dp)
+                                        .height(48.dp)
+                                )
+
+                                Spacer(
+                                    modifier =
+                                        Modifier.width(14.dp)
+                                )
+
+                                Column {
+
+                                    Text(
+                                        text =
+                                            if (aktif)
+                                                "Aktif Sefer"
+                                            else
+                                                "Yeni Sefer",
+                                        fontSize = 24.sp,
+                                        fontWeight =
+                                            FontWeight.Bold
+                                    )
+
+                                    Text(
+                                        text =
+                                            if (aktif)
+                                                "$guzergah • $cikisKm KM"
+                                            else
+                                                "Yeni bir sefer başlatın",
+                                        fontSize = 16.sp,
+                                        color = Color.Gray
+                                    )
+                                }
+                            }
+
+                            Spacer(
+                                modifier =
+                                    Modifier.height(18.dp)
+                            )
+
+
+                            if (!aktif) {
+
+                                Button(
+
+                                    onClick = {
+
+                                        hataMesaji = ""
+
+                                        if (guzergah.isBlank()) {
+
+                                            hataMesaji =
+                                                "Güzergâh girin."
+
+                                            return@Button
+                                        }
+
+                                        if (
+                                            cikisKm.toIntOrNull()
+                                                == null
+                                        ) {
+
+                                            hataMesaji =
+                                                "Geçerli bir çıkış KM girin."
+
+                                            return@Button
+                                        }
+
+                                        aktif = true
+
+                                        cikisSaati = saat()
+
+                                        baslangicZamani =
+                                            System.currentTimeMillis()
+                                    },
+
+                                    modifier =
+                                        Modifier.fillMaxWidth(),
+
+                                    shape =
+                                        RoundedCornerShape(18.dp)
+
+                                ) {
+
+                                    Icon(
+                                        Icons.Default.PlayArrow,
+                                        contentDescription = null
+                                    )
+
+                                    Spacer(
+                                        modifier =
+                                            Modifier.width(8.dp)
+                                    )
+
+                                    Text(
+                                        "SEFERİ BAŞLAT",
+                                        fontWeight =
+                                            FontWeight.Bold
+                                    )
+                                }
+
+                            } else {
+
+                                Text(
+                                    text =
+                                        "Sefer devam ediyor",
+                                    fontWeight =
+                                        FontWeight.Bold,
+                                    color =
+                                        Color(0xFF2E7D32)
+                                )
+
+                                Spacer(
+                                    modifier =
+                                        Modifier.height(8.dp)
+                                )
+
+                                Text(
+                                    "Çıkış: $cikisKm KM • $cikisSaati",
+                                    color = Color.Gray
+                                )
+
+                                Spacer(
+                                    modifier =
+                                        Modifier.height(12.dp)
+                                )
+
+                                Button(
+
+                                    onClick = {
+                                        bitirAcik = true
+                                    },
+
+                                    modifier =
+                                        Modifier.fillMaxWidth(),
+
+                                    shape =
+                                        RoundedCornerShape(18.dp)
+
+                                ) {
+
+                                    Icon(
+                                        Icons.Default.Stop,
+                                        contentDescription = null
+                                    )
+
+                                    Spacer(
+                                        modifier =
+                                            Modifier.width(8.dp)
+                                    )
+
+                                    Text(
+                                        "SEFERİ BİTİR",
+                                        fontWeight =
+                                            FontWeight.Bold
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+                // ------------------------------------------------
+                // GÜZERGAH
+                // ------------------------------------------------
+
+                if (!aktif) {
+
+                    item {
+
+                        OutlinedTextField(
+
+                            value = guzergah,
+
+                            onValueChange = {
+                                guzergah = it
+                            },
+
+                            modifier =
+                                Modifier.fillMaxWidth(),
+
+                            label = {
+                                Text("Güzergâh")
+                            },
+
+                            placeholder = {
+                                Text(
+                                    "Örn. Akseki - Antalya"
+                                )
+                            },
+
+                            leadingIcon = {
+
+                                Icon(
+                                    Icons.Default.Route,
+                                    contentDescription = null
+                                )
+                            },
+
+                            singleLine = true,
+
+                            shape =
+                                RoundedCornerShape(16.dp)
+                        )
+                    }
+
+
+                    // ------------------------------------------------
+                    // ÇIKIŞ KM
+                    // ------------------------------------------------
+
+                    item {
+
+                        OutlinedTextField(
+
+                            value = cikisKm,
+
+                            onValueChange = {
+
+                                cikisKm =
+                                    it.filter { karakter ->
+                                        karakter.isDigit()
+                                    }
+                            },
+
+                            modifier =
+                                Modifier.fillMaxWidth(),
+
+                            label = {
+                                Text("Çıkış KM")
+                            },
+
+                            placeholder = {
+                                Text("Örn. 125430")
+                            },
+
+                            leadingIcon = {
+
+                                Icon(
+                 }  
     }
 
 @OptIn(
