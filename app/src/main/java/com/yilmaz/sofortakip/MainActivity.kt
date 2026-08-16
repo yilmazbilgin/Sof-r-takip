@@ -114,14 +114,47 @@ fun SoforTakip() {
 
     val toplamKm = seferler.sumOf { it.toplamKm }
 
-    MaterialTheme {
+    MaterialTheme(
+        colorScheme = when (seciliTema) {
+            AppTheme.GECE_MORU -> androidx.compose.material3.darkColorScheme(
+                primary = Color(0xFF7C4DFF),
+                secondary = Color(0xFFB39DDB),
+                background = Color(0xFF121212),
+                surface = Color(0xFF1E1E1E)
+            )
+            AppTheme.OKYANUS -> androidx.compose.material3.lightColorScheme(
+                primary = Color(0xFF0077B6),
+                secondary = Color(0xFF48CAE4),
+                background = Color(0xFFEFFAFF),
+                surface = Color(0xFFE0F7FA)
+            )
+            AppTheme.ZUMRUT -> androidx.compose.material3.lightColorScheme(
+                primary = Color(0xFF00897B),
+                secondary = Color(0xFF4DB6AC),
+                background = Color(0xFFF2FBF8),
+                surface = Color(0xFFE0F2F1)
+            )
+            AppTheme.GRAFIT -> androidx.compose.material3.darkColorScheme(
+                primary = Color(0xFF78909C),
+                secondary = Color(0xFFB0BEC5),
+                background = Color(0xFF17191C),
+                surface = Color(0xFF25282C)
+            )
+            AppTheme.ACIK -> androidx.compose.material3.lightColorScheme(
+                primary = Color(0xFF6750A4),
+                secondary = Color(0xFF7E57C2),
+                background = Color(0xFFFFF8FF),
+                surface = Color(0xFFF0EAF2)
+            )
+        }
+    ) {
         Scaffold(
             topBar = {
                 TopAppBar(
                     title = {
                         Column {
-                            Text("艦of枚r Takip", fontWeight = FontWeight.Bold)
-                            Text("Sefer y枚netimi", fontSize = 12.sp, color = Color.Gray)
+                            Text("\u015Eof\u00F6r Takip", fontWeight = FontWeight.Bold)
+                            Text("Sefer y\u00F6netimi", fontSize = 12.sp, color = Color.Gray)
                         }
                     },
                     actions = {
@@ -132,9 +165,9 @@ fun SoforTakip() {
                         ) {
                             DropdownMenuItem(text = { Text("馃寵 Gece Moru") }, onClick = { seciliTema = AppTheme.GECE_MORU; temaMenusuAcik = false })
                             DropdownMenuItem(text = { Text("馃寠 Okyanus") }, onClick = { seciliTema = AppTheme.OKYANUS; temaMenusuAcik = false })
-                            DropdownMenuItem(text = { Text("馃挌 Z眉mr眉t") }, onClick = { seciliTema = AppTheme.ZUMRUT; temaMenusuAcik = false })
+                            DropdownMenuItem(text = { Text("馃挌 Z\u00FCmr\u00FCt") }, onClick = { seciliTema = AppTheme.ZUMRUT; temaMenusuAcik = false })
                             DropdownMenuItem(text = { Text("馃┒ Grafit") }, onClick = { seciliTema = AppTheme.GRAFIT; temaMenusuAcik = false })
-                            DropdownMenuItem(text = { Text("鈽€锔� A莽谋k") }, onClick = { seciliTema = AppTheme.ACIK; temaMenusuAcik = false })
+                            DropdownMenuItem(text = { Text("鈽€锔� A\u00E7\u0131k") }, onClick = { seciliTema = AppTheme.ACIK; temaMenusuAcik = false })
                         }
                         TextButton(onClick = { notlarAcik = true }) { Text("Notlar") }
                     }
@@ -162,7 +195,7 @@ fun SoforTakip() {
                                 Column {
                                     Text(if (aktif) "Aktif Sefer" else "Yeni Sefer", fontSize = 24.sp, fontWeight = FontWeight.Bold)
                                     Text(
-                                        if (aktif) "$guzergah 鈥� $cikisKm KM" else "Yeni bir sefer ba艧lat谋n",
+                                        if (aktif) "$guzergah 鈥� $cikisKm KM" else "Yeni bir sefer ba\u015Flat\u0131n",
                                         fontSize = 16.sp,
                                         color = Color.Gray
                                     )
@@ -173,15 +206,12 @@ fun SoforTakip() {
                             if (!aktif) {
                                 Button(
                                     onClick = {
-                                        hataMesaji = ""
-                                        if (guzergah.isBlank()) {
-                                            hataMesaji = "G眉zerg芒h girin."
-                                            return@Button
+                                        hataMesaji = when {
+                                            guzergah.isBlank() -> "G\u00FCzerg\u00E2h girin."
+                                            cikisKm.toIntOrNull() == null -> "Ge\u00E7erli bir \u00E7\u0131k\u0131\u015F KM girin."
+                                            else -> ""
                                         }
-                                        if (cikisKm.toIntOrNull() == null) {
-                                            hataMesaji = "Ge莽erli bir 莽谋k谋艧 KM girin."
-                                            return@Button
-                                        }
+                                        if (hataMesaji.isNotBlank()) return@Button
                                         aktif = true
                                         cikisSaati = saat()
                                         baslangicZamani = System.currentTimeMillis()
@@ -191,12 +221,12 @@ fun SoforTakip() {
                                 ) {
                                     Icon(Icons.Default.PlayArrow, null)
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Text("SEFER陌 BA艦LAT", fontWeight = FontWeight.Bold)
+                                    Text("SEFER\u0130 BA\u015ELAT", fontWeight = FontWeight.Bold)
                                 }
                             } else {
                                 Text("Sefer devam ediyor", fontWeight = FontWeight.Bold, color = Color(0xFF2E7D32))
                                 Spacer(modifier = Modifier.height(8.dp))
-                                Text("脟谋k谋艧: $cikisKm KM 鈥� $cikisSaati", color = Color.Gray)
+                                Text("\u00C7\u0131k\u0131\u015F: $cikisKm KM 鈥� $cikisSaati", color = Color.Gray)
                                 Spacer(modifier = Modifier.height(12.dp))
                                 Button(
                                     onClick = { bitirAcik = true },
@@ -205,7 +235,7 @@ fun SoforTakip() {
                                 ) {
                                     Icon(Icons.Default.Stop, null)
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Text("SEFER陌 B陌T陌R", fontWeight = FontWeight.Bold)
+                                    Text("SEFER\u0130 B\u0130T\u0130R", fontWeight = FontWeight.Bold)
                                 }
                             }
                         }
@@ -218,20 +248,22 @@ fun SoforTakip() {
                             value = guzergah,
                             onValueChange = { guzergah = it },
                             modifier = Modifier.fillMaxWidth(),
-                            label = { Text("G眉zerg芒h") },
-                            placeholder = { Text("脰rn. Akseki - Antalya") },
+                            label = { Text("G\u00FCzerg芒h") },
+                            placeholder = { Text("\u00D6rn. Akseki - Antalya") },
                             leadingIcon = { Icon(Icons.Default.Route, null) },
                             singleLine = true,
                             shape = RoundedCornerShape(16.dp)
                         )
                     }
+                
+
                     item {
                         OutlinedTextField(
                             value = cikisKm,
                             onValueChange = { cikisKm = it.filter(Char::isDigit) },
                             modifier = Modifier.fillMaxWidth(),
-                            label = { Text("脟谋k谋艧 KM") },
-                            placeholder = { Text("脰rn. 125430") },
+                            label = { Text("\u00C7\u0131k\u0131\u015F KM") },
+                            placeholder = { Text("\u00D6rn. 125430") },
                             leadingIcon = { Icon(Icons.Default.Speed, null) },
                             singleLine = true,
                             shape = RoundedCornerShape(16.dp)
@@ -263,7 +295,7 @@ fun SoforTakip() {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(Icons.Default.History, null)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Sefer Ge莽mi艧i", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                        Text("Sefer Ge\u00E7mi\u015Fi", fontSize = 22.sp, fontWeight = FontWeight.Bold)
                     }
                 }
 
@@ -276,7 +308,7 @@ fun SoforTakip() {
                             ) {
                                 Icon(Icons.Default.History, null)
                                 Spacer(modifier = Modifier.height(8.dp))
-                                Text("Hen眉z tamamlanm谋艧 sefer yok.", color = Color.Gray)
+                                Text("Hen\u00FCz tamamlanm\u0131\u015F sefer yok.", color = Color.Gray)
                             }
                         }
                     }
@@ -312,7 +344,7 @@ fun SoforTakip() {
                                     Text("Not: ${sefer.notMetni}", color = Color.Gray)
                                 }
                                 Spacer(modifier = Modifier.height(8.dp))
-                                Text("Silmek i莽in uzun bas谋n", fontSize = 11.sp, color = Color.Gray)
+                                Text("Silmek i\u00E7in uzun bas\u0131n", fontSize = 11.sp, color = Color.Gray)
                             }
                         }
                     }
@@ -371,13 +403,13 @@ fun SoforTakip() {
                 title = { Text("Seferi Tamamla", fontWeight = FontWeight.Bold) },
                 text = {
                     Column {
-                        Text("G眉zerg芒h: $guzergah", fontWeight = FontWeight.Bold)
+                        Text("G\u00FCzerg芒h: $guzergah", fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.height(12.dp))
                         OutlinedTextField(
                             value = donusKm,
                             onValueChange = { donusKm = it.filter(Char::isDigit) },
                             modifier = Modifier.fillMaxWidth(),
-                            label = { Text("D枚n眉艧 KM") },
+                            label = { Text("D\u00F6n\u00FC\u015F KM") },
                             singleLine = true
                         )
                         Spacer(modifier = Modifier.height(10.dp))
@@ -386,7 +418,7 @@ fun SoforTakip() {
                             onValueChange = { notMetni = it },
                             modifier = Modifier.fillMaxWidth(),
                             label = { Text("Not") },
-                            placeholder = { Text("脰rn. Evrak teslim edildi") },
+                            placeholder = { Text("\u00D6rn. Evrak teslim edildi") },
                             minLines = 3
                         )
                     }
@@ -396,11 +428,11 @@ fun SoforTakip() {
                         val cikis = cikisKm.toIntOrNull()
                         val donus = donusKm.toIntOrNull()
                         if (cikis == null || donus == null) {
-                            hataMesaji = "脟谋k谋艧 ve d枚n眉艧 KM bilgilerini girin."
+                            hataMesaji = "\u00C7\u0131k\u0131\u015F ve d\u00F6n\u00FC\u015F KM bilgilerini girin."
                             return@Button
                         }
                         if (donus < cikis) {
-                            hataMesaji = "D枚n眉艧 KM, 莽谋k谋艧 KM'den k眉莽眉k olamaz."
+                            hataMesaji = "D\u00F6n\u00FC\u015F KM, \u00E7\u0131k\u0131\u015F KM'den k\u00FC\u00E7\u00FCk olamaz."
                             return@Button
                         }
                         val bitis = System.currentTimeMillis()
@@ -425,10 +457,10 @@ fun SoforTakip() {
                         notMetni = ""
                         cikisSaati = ""
                         baslangicZamani = 0L
-                    }) { Text("SEFER陌 TAMAMLA") }
+                    }) { Text("SEFER\u0130 TAMAMLA") }
                 },
                 dismissButton = {
-                    TextButton(onClick = { bitirAcik = false }) { Text("Vazge莽") }
+                    TextButton(onClick = { bitirAcik = false }) { Text("Vazge\u00E7") }
                 }
             )
         }
@@ -437,7 +469,7 @@ fun SoforTakip() {
             AlertDialog(
                 onDismissRequest = { silinecekSefer = null },
                 title = { Text("Sefer silinsin mi?") },
-                text = { Text("Bu sefer ge莽mi艧ten kal谋c谋 olarak silinecek.") },
+                text = { Text("Bu sefer ge\u00E7mi\u015Ften kal\u0131c\u0131 olarak silinecek.") },
                 confirmButton = {
                     Button(onClick = {
                         val silinecek = silinecekSefer
@@ -446,10 +478,10 @@ fun SoforTakip() {
                             kaydetSeferler(context, seferler)
                         }
                         silinecekSefer = null
-                    }) { Text("S陌L") }
+                    }) { Text("S\u0130L") }
                 },
                 dismissButton = {
-                    TextButton(onClick = { silinecekSefer = null }) { Text("VAZGE脟") }
+                    TextButton(onClick = { silinecekSefer = null }) { Text("VAZGE\u00C7") }
                 }
             )
         }
