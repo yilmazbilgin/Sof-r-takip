@@ -146,6 +146,13 @@ fun SoforTakip() {
 var notlarAcik by remember {
     mutableStateOf(false)
 }
+var notlar by remember {
+    mutableStateOf(listOf<NotKaydi>())
+}
+
+var yeniNot by remember {
+    mutableStateOf("")
+}
 
 val toplamKm = seferler.sumOf { it.toplamKm }
 
