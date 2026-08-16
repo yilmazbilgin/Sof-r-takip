@@ -96,8 +96,9 @@ class MainActivity : ComponentActivity() {
         setContent {
     MaterialTheme {
         SoforTakip()
+      }
     }
-        
+    }  
     }
 
 @OptIn(
