@@ -36,7 +36,11 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -76,6 +80,13 @@ data class NotKaydi(
     val id: Long,
     val metin: String
 )
+enum class AppTheme {
+    GECE_MORU,
+    OKYANUS,
+    ZUMRUT,
+    GRAFIT,
+    ACIK
+}
 
 class MainActivity : ComponentActivity() {
 
@@ -83,17 +94,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            MaterialTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = Color(0xFFF8F7FA)
-                ) {
-                    SoforTakip()
-                }
-            }
-        }
+    MaterialTheme {
+        SoforTakip()
     }
-}
+        
+    }
 
 @OptIn(
     ExperimentalFoundationApi::class,
@@ -102,6 +107,12 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun SoforTakip() {
     val context = LocalContext.current
+    var seciliTema by remember {
+    mutableStateOf(AppTheme.GECE_MORU)
+    }
+    var temaMenusuAcik by remember {
+    mutableStateOf(false)
+    }
 
     var seferler by remember {
         mutableStateOf(yukleSeferler(context))
@@ -178,13 +189,68 @@ val toplamKm = seferler.sumOf { it.toplamKm }
         }
     },
     actions = {
-        TextButton(
-            onClick = {
-                notlarAcik = true
-            }
-        ) {
-            Text("Notlar")
+    TextButton(
+        onClick = {
+            temaMenusuAcik = true
         }
+    ) {
+        Text("Tema")
+    }
+
+    DropdownMenu(
+        expanded = temaMenusuAcik,
+        onDismissRequest = {
+            temaMenusuAcik = false
+        }
+    ) {
+        DropdownMenuItem(
+            text = { Text("🌙 Gece Moru") },
+            onClick = {
+                seciliTema = AppTheme.GECE_MORU
+                temaMenusuAcik = false
+            }
+        )
+
+        DropdownMenuItem(
+            text = { Text("🌊 Okyanus") },
+            onClick = {
+                seciliTema = AppTheme.OKYANUS
+                temaMenusuAcik = false
+            }
+        )
+
+        DropdownMenuItem(
+            text = { Text("💚 Zümrüt") },
+            onClick = {
+                seciliTema = AppTheme.ZUMRUT
+                temaMenusuAcik = false
+            }
+        )
+
+        DropdownMenuItem(
+            text = { Text("🩶 Grafit") },
+            onClick = {
+                seciliTema = AppTheme.GRAFIT
+                temaMenusuAcik = false
+            }
+        )
+
+        DropdownMenuItem(
+            text = { Text("☀️ Açık") },
+            onClick = {
+                seciliTema = AppTheme.ACIK
+                temaMenusuAcik = false
+            }
+        )
+    }
+
+    TextButton(
+        onClick = {
+            notlarAcik = true
+        }
+    ) {
+        Text("Notlar")
+    }
     }
 )
         }
