@@ -51,6 +51,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.platform.LocalContext
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -163,11 +166,11 @@ fun SoforTakip() {
                             expanded = temaMenusuAcik,
                             onDismissRequest = { temaMenusuAcik = false }
                         ) {
-                            DropdownMenuItem(text = { Text("馃寵 Gece Moru") }, onClick = { seciliTema = AppTheme.GECE_MORU; temaMenusuAcik = false })
-                            DropdownMenuItem(text = { Text("馃寠 Okyanus") }, onClick = { seciliTema = AppTheme.OKYANUS; temaMenusuAcik = false })
-                            DropdownMenuItem(text = { Text("馃挌 Z\u00FCmr\u00FCt") }, onClick = { seciliTema = AppTheme.ZUMRUT; temaMenusuAcik = false })
-                            DropdownMenuItem(text = { Text("馃┒ Grafit") }, onClick = { seciliTema = AppTheme.GRAFIT; temaMenusuAcik = false })
-                            DropdownMenuItem(text = { Text("鈽€锔� A\u00E7\u0131k") }, onClick = { seciliTema = AppTheme.ACIK; temaMenusuAcik = false })
+                            DropdownMenuItem(text = { Text("Gece Moru") }, onClick = { seciliTema = AppTheme.GECE_MORU; temaMenusuAcik = false })
+                            DropdownMenuItem(text = { Text("Okyanus") }, onClick = { seciliTema = AppTheme.OKYANUS; temaMenusuAcik = false })
+                            DropdownMenuItem(text = { Text("Z\u00FCmr\u00FCt") }, onClick = { seciliTema = AppTheme.ZUMRUT; temaMenusuAcik = false })
+                            DropdownMenuItem(text = { Text("Grafit") }, onClick = { seciliTema = AppTheme.GRAFIT; temaMenusuAcik = false })
+                            DropdownMenuItem(text = { Text("A\u00C7IK") }, onClick = { seciliTema = AppTheme.ACIK; temaMenusuAcik = false })
                         }
                         TextButton(onClick = { notlarAcik = true }) { Text("Notlar") }
                     }
@@ -195,7 +198,7 @@ fun SoforTakip() {
                                 Column {
                                     Text(if (aktif) "Aktif Sefer" else "Yeni Sefer", fontSize = 24.sp, fontWeight = FontWeight.Bold)
                                     Text(
-                                        if (aktif) "$guzergah 鈥� $cikisKm KM" else "Yeni bir sefer ba\u015Flat\u0131n",
+                                        if (aktif) "$guzergah - $cikisKm KM" else "Yeni bir sefer ba\u015Flat\u0131n",
                                         fontSize = 16.sp,
                                         color = Color.Gray
                                     )
@@ -207,7 +210,7 @@ fun SoforTakip() {
                                 Button(
                                     onClick = {
                                         hataMesaji = when {
-                                            guzergah.isBlank() -> "G\u00FCzerg\u00E2h girin."
+                                            guzergah.isBlank() -> "G\u00FCzergah girin."
                                             cikisKm.toIntOrNull() == null -> "Ge\u00E7erli bir \u00E7\u0131k\u0131\u015F KM girin."
                                             else -> ""
                                         }
@@ -226,7 +229,7 @@ fun SoforTakip() {
                             } else {
                                 Text("Sefer devam ediyor", fontWeight = FontWeight.Bold, color = Color(0xFF2E7D32))
                                 Spacer(modifier = Modifier.height(8.dp))
-                                Text("\u00C7\u0131k\u0131\u015F: $cikisKm KM 鈥� $cikisSaati", color = Color.Gray)
+                                Text("\u00C7\u0131k\u0131\u015F: $cikisKm KM - $cikisSaati", color = Color.Gray)
                                 Spacer(modifier = Modifier.height(12.dp))
                                 Button(
                                     onClick = { bitirAcik = true },
@@ -246,12 +249,18 @@ fun SoforTakip() {
                     item {
                         OutlinedTextField(
                             value = guzergah,
-                            onValueChange = { guzergah = it },
+                            onValueChange = { guzergah = it; hataMesaji = "" },
                             modifier = Modifier.fillMaxWidth(),
-                            label = { Text("G\u00FCzerg芒h") },
+                            enabled = true,
+                            readOnly = false,
+                            label = { Text("G\u00FCzergah") },
                             placeholder = { Text("\u00D6rn. Akseki - Antalya") },
                             leadingIcon = { Icon(Icons.Default.Route, null) },
                             singleLine = true,
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Next
+                            ),
                             shape = RoundedCornerShape(16.dp)
                         )
                     }
@@ -260,13 +269,30 @@ fun SoforTakip() {
                     item {
                         OutlinedTextField(
                             value = cikisKm,
-                            onValueChange = { cikisKm = it.filter(Char::isDigit) },
+                            onValueChange = { cikisKm = it.filter(Char::isDigit); hataMesaji = "" },
                             modifier = Modifier.fillMaxWidth(),
+                            enabled = true,
+                            readOnly = false,
                             label = { Text("\u00C7\u0131k\u0131\u015F KM") },
                             placeholder = { Text("\u00D6rn. 125430") },
                             leadingIcon = { Icon(Icons.Default.Speed, null) },
                             singleLine = true,
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number,
+                                imeAction = ImeAction.Done
+                            ),
                             shape = RoundedCornerShape(16.dp)
+                        )
+                    }
+                }
+
+                if (hataMesaji.isNotBlank()) {
+                    item {
+                        Text(
+                            text = hataMesaji,
+                            color = MaterialTheme.colorScheme.error,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.padding(horizontal = 4.dp)
                         )
                     }
                 }
@@ -403,7 +429,7 @@ fun SoforTakip() {
                 title = { Text("Seferi Tamamla", fontWeight = FontWeight.Bold) },
                 text = {
                     Column {
-                        Text("G\u00FCzerg芒h: $guzergah", fontWeight = FontWeight.Bold)
+                        Text("G\u00FCzergah: $guzergah", fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.height(12.dp))
                         OutlinedTextField(
                             value = donusKm,
