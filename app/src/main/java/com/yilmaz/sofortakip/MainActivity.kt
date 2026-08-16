@@ -38,7 +38,13 @@ data class Sefer(
     val toplamSure: String,
     val notMetni: String
 )
-
+data class Arac(
+    val id: Long,
+    val ad: String,
+    val plaka: String,
+    val fotoUri: String = "",
+    val secili: Boolean = false
+)
 private enum class Tema { ACIK, MAVİ, GECE }
 
 class MainActivity : ComponentActivity() {
@@ -903,4 +909,63 @@ private fun kaydetNotlar(context: Context, notlar: String) {
 private fun yukleNotlar(context: Context): String {
     return context.getSharedPreferences("sofor_takip", Context.MODE_PRIVATE)
         .getString("genel_notlar", "") ?: ""
+}
+private fun kaydetAraclar(
+    context: Context,
+    araclar: List<Arac>
+) {
+    val veri = araclar.joinToString("\u001E") {
+        listOf(
+            it.id,
+            it.ad,
+            it.plaka,
+            it.fotoUri,
+            it.secili
+        ).joinToString("\u001F")
+    }
+
+    context.getSharedPreferences(
+        "sofor_takip",
+        Context.MODE_PRIVATE
+    )
+        .edit()
+        .putString("araclar", veri)
+        .apply()
+}
+
+private fun yukleAraclar(
+    context: Context
+): List<Arac> {
+    val veri = context.getSharedPreferences(
+        "sofor_takip",
+        Context.MODE_PRIVATE
+    )
+        .getString("araclar", "")
+        ?: ""
+
+    if (veri.isBlank()) {
+        return emptyList()
+    }
+
+    return veri
+        .split("\u001E")
+        .mapNotNull { satir ->
+            val p = satir.split("\u001F")
+
+            if (p.size != 5) {
+                return@mapNotNull null
+            }
+
+            try {
+                Arac(
+                    id = p[0].toLong(),
+                    ad = p[1],
+                    plaka = p[2],
+                    fotoUri = p[3],
+                    secili = p[4].toBoolean()
+                )
+            } catch (_: Exception) {
+                null
+            }
+        }
 }
