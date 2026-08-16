@@ -6,28 +6,28 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Note
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Route
 import androidx.compose.material.icons.filled.Speed
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -35,24 +35,23 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.text.SimpleDateFormat
@@ -71,15 +70,8 @@ data class Sefer(
     val notMetni: String
 )
 
-data class NotKaydi(
-    val id: Long,
-    val metin: String
-)
-
-enum class AppTheme {
-    OKYANUS,
-    GECE,
-    ZUMRUT
+private enum class Tema {
+    ACIK, GECE, MAVİ
 }
 
 class MainActivity : ComponentActivity() {
@@ -94,118 +86,113 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SoforTakip() {
-    val context = LocalContext.current
-
-    var seciliTema by remember { mutableStateOf(AppTheme.OKYANUS) }
-    var temaMenusuAcik by remember { mutableStateOf(false) }
+    val context = androidx.compose.ui.platform.LocalContext.current
 
     var seferler by remember { mutableStateOf(yukleSeferler(context)) }
-    var aktif by remember { mutableStateOf(false) }
+    var tema by remember { mutableStateOf(Tema.ACIK) }
+    var temaMenu by remember { mutableStateOf(false) }
+    var notlar by remember { mutableStateOf(yukleNotlar(context)) }
+    var notlarAcik by remember { mutableStateOf(false) }
 
+    var aktif by remember { mutableStateOf(false) }
     var guzergah by remember { mutableStateOf("") }
     var cikisKm by remember { mutableStateOf("") }
     var donusKm by remember { mutableStateOf("") }
     var notMetni by remember { mutableStateOf("") }
     var cikisSaati by remember { mutableStateOf("") }
-    var baslangicZamani by remember { mutableStateOf(0L) }
+    var baslangic by remember { mutableStateOf(0L) }
 
-    var bitirAcik by remember { mutableStateOf(false) }
-    var silinecekSefer by remember { mutableStateOf<Sefer?>(null) }
-    var hataMesaji by remember { mutableStateOf("") }
-
-    var notlarAcik by remember { mutableStateOf(false) }
-    var notlar by remember { mutableStateOf(listOf<NotKaydi>()) }
-    var yeniNot by remember { mutableStateOf("") }
+    var bitirDialog by remember { mutableStateOf(false) }
+    var bilgi by remember { mutableStateOf("") }
+    var silinecek by remember { mutableStateOf<Sefer?>(null) }
 
     val toplamKm = seferler.sumOf { it.toplamKm }
+    val sonSefer = seferler.firstOrNull()
 
-    val renkler = when (seciliTema) {
-        AppTheme.OKYANUS -> androidx.compose.material3.lightColorScheme(
-            primary = Color(0xFF087EA4),
-            secondary = Color(0xFF4EA8C7),
-            background = Color(0xFFF5FAFC),
-            surface = Color.White
-        )
-        AppTheme.GECE -> androidx.compose.material3.darkColorScheme(
+    val colorScheme = when (tema) {
+        Tema.GECE -> darkColorScheme(
             primary = Color(0xFF8AB4F8),
-            secondary = Color(0xFF9CC7FF),
-            background = Color(0xFF101418),
-            surface = Color(0xFF1A2026)
+            secondary = Color(0xFF9AA9FF),
+            background = Color(0xFF0B1016),
+            surface = Color(0xFF121A23),
+            surfaceVariant = Color(0xFF1B2632)
         )
-        AppTheme.ZUMRUT -> androidx.compose.material3.lightColorScheme(
-            primary = Color(0xFF087F73),
-            secondary = Color(0xFF42A89D),
-            background = Color(0xFFF3FAF8),
-            surface = Color.White
+        Tema.MAVİ -> lightColorScheme(
+            primary = Color(0xFF087EA4),
+            secondary = Color(0xFF0E7490),
+            background = Color(0xFFF4F8FA),
+            surface = Color.White,
+            surfaceVariant = Color(0xFFE7EFF3)
+        )
+        Tema.ACIK -> lightColorScheme(
+            primary = Color(0xFF5B43B5),
+            secondary = Color(0xFF7559C7),
+            background = Color(0xFFF8F7FC),
+            surface = Color.White,
+            surfaceVariant = Color(0xFFEEEAF5)
         )
     }
 
-    MaterialTheme(colorScheme = renkler) {
-        val anaRenk = MaterialTheme.colorScheme.primary
-        val kartRengi = MaterialTheme.colorScheme.surface
-        val softRenk = if (seciliTema == AppTheme.GECE) {
-            Color(0xFF222A31)
-        } else {
-            Color(0xFFF0EEF3)
-        }
-
+    MaterialTheme(colorScheme = colorScheme) {
         Scaffold(
+            containerColor = MaterialTheme.colorScheme.background,
             topBar = {
                 TopAppBar(
                     title = {
                         Column {
                             Text(
-                                text = "\u015Eof\u00F6r Takip",
-                                fontSize = 22.sp,
-                                fontWeight = FontWeight.Bold
+                                "Şoför Takip",
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.ExtraBold
                             )
                             Text(
-                                text = "Sefer y\u00F6netimi",
+                                "Günlük sefer paneli",
                                 fontSize = 12.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     },
                     actions = {
-                        TextButton(onClick = { temaMenusuAcik = true }) {
-                            Text("Tema")
+                        IconButton(onClick = { notlarAcik = true }) {
+                            Icon(Icons.Default.Note, contentDescription = "Notlar")
                         }
 
-                        DropdownMenu(
-                            expanded = temaMenusuAcik,
-                            onDismissRequest = { temaMenusuAcik = false }
-                        ) {
-                            DropdownMenuItem(
-                                text = { Text("Okyanus") },
-                                onClick = {
-                                    seciliTema = AppTheme.OKYANUS
-                                    temaMenusuAcik = false
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("Gece") },
-                                onClick = {
-                                    seciliTema = AppTheme.GECE
-                                    temaMenusuAcik = false
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("Z\u00FCmr\u00FCt") },
-                                onClick = {
-                                    seciliTema = AppTheme.ZUMRUT
-                                    temaMenusuAcik = false
-                                }
-                            )
-                        }
+                        Box {
+                            IconButton(onClick = { temaMenu = true }) {
+                                Icon(Icons.Default.Palette, contentDescription = "Tema")
+                            }
 
-                        TextButton(onClick = { notlarAcik = true }) {
-                            Text("Notlar")
+                            DropdownMenu(
+                                expanded = temaMenu,
+                                onDismissRequest = { temaMenu = false }
+                            ) {
+                                DropdownMenuItem(
+                                    text = { Text("Açık") },
+                                    onClick = {
+                                        tema = Tema.ACIK
+                                        temaMenu = false
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Mavi") },
+                                    onClick = {
+                                        tema = Tema.MAVİ
+                                        temaMenu = false
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Gece") },
+                                    onClick = {
+                                        tema = Tema.GECE
+                                        temaMenu = false
+                                    }
+                                )
+                            }
                         }
                     }
                 )
             }
         ) { padding ->
-
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -213,46 +200,35 @@ fun SoforTakip() {
                     .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
-
                 item {
-                    Spacer(modifier = Modifier.height(4.dp))
-                }
-
-                item {
-                    HeroCard(
+                    Spacer(Modifier.height(4.dp))
+                    DashboardHeader(
                         aktif = aktif,
-                        guzergah = guzergah,
-                        cikisKm = cikisKm,
-                        anaRenk = anaRenk,
-                        kartRengi = kartRengi,
-                        onStart = {
-                            hataMesaji = when {
-                                guzergah.isBlank() ->
-                                    "G\u00FCzergah girin."
-                                cikisKm.toIntOrNull() == null ->
-                                    "Ge\u00E7erli bir \u00E7\u0131k\u0131\u015F KM girin."
-                                else -> ""
-                            }
-
-                            if (hataMesaji.isBlank()) {
-                                aktif = true
-                                cikisSaati = saat()
-                                baslangicZamani = System.currentTimeMillis()
-                            }
-                        },
-                        onFinish = {
-                            bitirAcik = true
-                        }
+                        seferSayisi = seferler.size,
+                        toplamKm = toplamKm
                     )
                 }
 
                 if (!aktif) {
                     item {
-                        FormCard(
+                        NewTripCard(
                             guzergah = guzergah,
                             cikisKm = cikisKm,
-                            onGuzergahChange = { guzergah = it },
-                            onCikisKmChange = { cikisKm = it }
+                            onGuzergah = { guzergah = it },
+                            onKm = { cikisKm = it },
+                            onStart = {
+                                when {
+                                    guzergah.isBlank() ->
+                                        bilgi = "Lütfen güzergah girin."
+                                    cikisKm.toIntOrNull() == null ->
+                                        bilgi = "Geçerli bir çıkış KM girin."
+                                    else -> {
+                                        aktif = true
+                                        cikisSaati = saat()
+                                        baslangic = System.currentTimeMillis()
+                                    }
+                                }
+                            }
                         )
                     }
                 } else {
@@ -260,10 +236,33 @@ fun SoforTakip() {
                         ActiveTripCard(
                             guzergah = guzergah,
                             cikisKm = cikisKm,
-                            cikisSaati = cikisSaati,
-                            anaRenk = anaRenk
+                            cikisSaati = cikisSaati
                         )
                     }
+
+                    item {
+                        Button(
+                            onClick = { bitirDialog = true },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(56.dp),
+                            shape = RoundedCornerShape(17.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.error
+                            )
+                        ) {
+                            Icon(Icons.Default.Stop, null)
+                            Spacer(Modifier.width(8.dp))
+                            Text("SEFERİ BİTİR", fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+
+                item {
+                    SectionHeader(
+                        title = "Özet",
+                        subtitle = "Kayıtlı seferleriniz"
+                    )
                 }
 
                 item {
@@ -271,251 +270,219 @@ fun SoforTakip() {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        IstatistikKarti(
+                        DashboardStat(
                             modifier = Modifier.weight(1f),
-                            ikon = Icons.Default.DirectionsCar,
-                            deger = seferler.size.toString(),
-                            baslik = "Toplam Sefer",
-                            kartRengi = softRenk
+                            value = seferler.size.toString(),
+                            label = "Toplam Sefer",
+                            icon = Icons.Default.DirectionsCar
                         )
+                        DashboardStat(
+                            modifier = Modifier.weight(1f),
+                            value = "$toplamKm KM",
+                            label = "Toplam KM",
+                            icon = Icons.Default.Speed
+                        )
+                    }
+                }
 
-                        IstatistikKarti(
-                            modifier = Modifier.weight(1f),
-                            ikon = Icons.Default.Speed,
-                            deger = "$toplamKm KM",
-                            baslik = "Toplam KM",
-                            kartRengi = softRenk
-                        )
+                if (sonSefer != null) {
+                    item {
+                        LastTripCard(sonSefer)
                     }
                 }
 
                 item {
-                    SectionTitle(
-                        ikon = Icons.Default.History,
-                        baslik = "Sefer Ge\u00E7mi\u015Fi"
+                    SectionHeader(
+                        title = "Sefer Geçmişi",
+                        subtitle = if (seferler.isEmpty())
+                            "Henüz kayıt yok"
+                        else
+                            "${seferler.size} tamamlanmış sefer"
                     )
                 }
 
                 if (seferler.isEmpty()) {
-                    item {
-                        EmptyHistoryCard(kartRengi = softRenk)
-                    }
+                    item { EmptyCard() }
                 } else {
                     items(
                         items = seferler,
                         key = { it.id }
                     ) { sefer ->
-                        SeferKarti(
+                        TripCard(
                             sefer = sefer,
-                            kartRengi = softRenk,
-                            anaRenk = anaRenk,
-                            onLongClick = {
-                                silinecekSefer = sefer
-                            }
+                            onLongClick = { silinecek = sefer }
                         )
                     }
                 }
 
-                item {
-                    Spacer(modifier = Modifier.height(24.dp))
-                }
+                item { Spacer(Modifier.height(24.dp)) }
             }
         }
 
-        if (hataMesaji.isNotBlank()) {
+        if (bilgi.isNotBlank()) {
             AlertDialog(
-                onDismissRequest = { hataMesaji = "" },
-                title = { Text("Bilgi", fontWeight = FontWeight.Bold) },
-                text = { Text(hataMesaji) },
+                onDismissRequest = { bilgi = "" },
+                title = { Text("Bilgi") },
+                text = { Text(bilgi) },
                 confirmButton = {
-                    TextButton(onClick = { hataMesaji = "" }) {
+                    TextButton(onClick = { bilgi = "" }) {
                         Text("Tamam")
                     }
                 }
             )
         }
 
-        if (bitirAcik) {
+        if (bitirDialog) {
             AlertDialog(
-                onDismissRequest = { bitirAcik = false },
+                onDismissRequest = { bitirDialog = false },
                 title = {
-                    Text(
-                        "Seferi Tamamla",
-                        fontWeight = FontWeight.Bold
-                    )
+                    Text("Seferi Tamamla", fontWeight = FontWeight.Bold)
                 },
                 text = {
-                    Column {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
                         Text(
-                            "G\u00FCzergah: $guzergah",
+                            guzergah,
+                            fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
 
-                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(
+                            "Çıkış: $cikisKm KM  •  $cikisSaati",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
 
                         OutlinedTextField(
                             value = donusKm,
                             onValueChange = {
-                                donusKm = it.filter { karakter ->
-                                    karakter.isDigit()
-                                }
+                                donusKm = it.filter(Char::isDigit)
                             },
                             modifier = Modifier.fillMaxWidth(),
-                            label = { Text("D\u00F6n\u00FC\u015F KM") },
+                            label = { Text("Dönüş KM") },
+                            placeholder = { Text("Örn. 125520") },
+                            leadingIcon = {
+                                Icon(Icons.Default.Speed, null)
+                            },
                             singleLine = true,
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Number
-                            )
+                            ),
+                            shape = RoundedCornerShape(16.dp)
                         )
-
-                        Spacer(modifier = Modifier.height(10.dp))
 
                         OutlinedTextField(
                             value = notMetni,
                             onValueChange = { notMetni = it },
                             modifier = Modifier.fillMaxWidth(),
-                            label = { Text("Not") },
-                            minLines = 3
+                            label = { Text("Sefer Notu") },
+                            placeholder = {
+                                Text("Örn. Evrak teslim edildi")
+                            },
+                            leadingIcon = {
+                                Icon(Icons.Default.Description, null)
+                            },
+                            minLines = 3,
+                            maxLines = 5,
+                            shape = RoundedCornerShape(16.dp)
                         )
                     }
                 },
                 confirmButton = {
                     Button(
                         onClick = {
-                            val cikis = cikisKm.toIntOrNull()
-                            val donus = donusKm.toIntOrNull()
+                            val c = cikisKm.toIntOrNull()
+                            val d = donusKm.toIntOrNull()
 
-                            if (cikis == null || donus == null) {
-                                hataMesaji =
-                                    "\u00C7\u0131k\u0131\u015F ve d\u00F6n\u00FC\u015F KM bilgilerini girin."
-                                return@Button
-                            }
+                            when {
+                                c == null || d == null ->
+                                    bilgi = "Çıkış ve dönüş KM bilgilerini girin."
+                                d < c ->
+                                    bilgi = "Dönüş KM, çıkış KM'den küçük olamaz."
+                                else -> {
+                                    val bitis = System.currentTimeMillis()
 
-                            if (donus < cikis) {
-                                hataMesaji =
-                                    "D\u00F6n\u00FC\u015F KM, \u00E7\u0131k\u0131\u015F KM'den k\u00FC\u00E7\u00FCk olamaz."
-                                return@Button
-                            }
+                                    val yeni = Sefer(
+                                        id = bitis,
+                                        guzergah = guzergah.trim(),
+                                        cikisKm = c,
+                                        donusKm = d,
+                                        cikisSaati = cikisSaati,
+                                        donusSaati = saat(),
+                                        toplamKm = d - c,
+                                        toplamSure = sureHesapla(baslangic, bitis),
+                                        notMetni = notMetni.trim()
+                                    )
 
-                            val bitis = System.currentTimeMillis()
+                                    seferler = listOf(yeni) + seferler
+                                    kaydetSeferler(context, seferler)
 
-                            val yeniSefer = Sefer(
-                                id = bitis,
-                                guzergah = guzergah.trim(),
-                                cikisKm = cikis,
-                                donusKm = donus,
-                                cikisSaati = cikisSaati,
-                                donusSaati = saat(),
-                                toplamKm = donus - cikis,
-                                toplamSure = sureHesapla(
-                                    baslangicZamani,
-                                    bitis
-                                ),
-                                notMetni = notMetni.trim()
-                            )
-
-                            seferler = listOf(yeniSefer) + seferler
-                            kaydetSeferler(context, seferler)
-
-                            aktif = false
-                            bitirAcik = false
-                            guzergah = ""
-                            cikisKm = ""
-                            donusKm = ""
-                            notMetni = ""
-                            cikisSaati = ""
-                            baslangicZamani = 0L
-                        }
-                    ) {
-                        Text("SEFER\u0130 TAMAMLA")
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = { bitirAcik = false }) {
-                        Text("VAZGE\u00C7")
-                    }
-                }
-            )
-        }
-
-        if (silinecekSefer != null) {
-            AlertDialog(
-                onDismissRequest = { silinecekSefer = null },
-                title = {
-                    Text("Sefer silinsin mi?")
-                },
-                text = {
-                    Text(
-                        "Bu sefer ge\u00E7mi\u015Ften kal\u0131c\u0131 olarak silinecek."
-                    )
-                },
-                confirmButton = {
-                    Button(
-                        onClick = {
-                            val silinecek = silinecekSefer
-                            if (silinecek != null) {
-                                seferler = seferler.filter {
-                                    it.id != silinecek.id
+                                    aktif = false
+                                    bitirDialog = false
+                                    guzergah = ""
+                                    cikisKm = ""
+                                    donusKm = ""
+                                    notMetni = ""
+                                    cikisSaati = ""
+                                    baslangic = 0L
                                 }
-                                kaydetSeferler(context, seferler)
                             }
-                            silinecekSefer = null
-                        }
+                        },
+                        shape = RoundedCornerShape(14.dp)
                     ) {
-                        Text("S\u0130L")
+                        Icon(Icons.Default.Check, null)
+                        Spacer(Modifier.width(6.dp))
+                        Text("KAYDET")
                     }
                 },
                 dismissButton = {
-                    TextButton(onClick = { silinecekSefer = null }) {
-                        Text("VAZGE\u00C7")
+                    TextButton(onClick = { bitirDialog = false }) {
+                        Text("VAZGEÇ")
                     }
                 }
             )
         }
 
         if (notlarAcik) {
+            NotesDialog(
+                notlar = notlar,
+                onClose = { notlarAcik = false },
+                onSave = { yeniNotlar ->
+                    notlar = yeniNotlar
+                    kaydetNotlar(context, yeniNotlar)
+                }
+            )
+        }
+
+        silinecek?.let { sefer ->
             AlertDialog(
-                onDismissRequest = { notlarAcik = false },
+                onDismissRequest = { silinecek = null },
                 title = {
-                    Text("Notlar", fontWeight = FontWeight.Bold)
+                    Text("Seferi sil", fontWeight = FontWeight.Bold)
                 },
                 text = {
-                    Column {
-                        OutlinedTextField(
-                            value = yeniNot,
-                            onValueChange = { yeniNot = it },
-                            label = { Text("Yeni not") },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        notlar.forEach { not ->
-                            Text(
-                                text = "\u2022 ${not.metin}",
-                                modifier = Modifier.padding(vertical = 4.dp)
-                            )
-                        }
-                    }
+                    Text("\"${sefer.guzergah}\" seferi geçmişten silinecek.")
                 },
                 confirmButton = {
-                    TextButton(
+                    Button(
                         onClick = {
-                            if (yeniNot.isNotBlank()) {
-                                notlar = notlar + NotKaydi(
-                                    id = System.currentTimeMillis(),
-                                    metin = yeniNot.trim()
-                                )
-                                yeniNot = ""
-                            }
-                        }
+                            seferler =
+                                seferler.filter { it.id != sefer.id }
+                            kaydetSeferler(context, seferler)
+                            silinecek = null
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.error
+                        )
                     ) {
-                        Text("Ekle")
+                        Icon(Icons.Default.Delete, null)
+                        Spacer(Modifier.width(5.dp))
+                        Text("SİL")
                     }
                 },
                 dismissButton = {
-                    TextButton(onClick = { notlarAcik = false }) {
-                        Text("Kapat")
+                    TextButton(onClick = { silinecek = null }) {
+                        Text("VAZGEÇ")
                     }
                 }
             )
@@ -524,74 +491,222 @@ fun SoforTakip() {
 }
 
 @Composable
-fun HeroCard(
+private fun DashboardHeader(
     aktif: Boolean,
-    guzergah: String,
-    cikisKm: String,
-    anaRenk: Color,
-    kartRengi: Color,
-    onStart: () -> Unit,
-    onFinish: () -> Unit
+    seferSayisi: Int,
+    toplamKm: Int
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(28.dp),
+        shape = RoundedCornerShape(26.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (aktif) Color(0xFFE8F5E9) else kartRengi
+            containerColor = MaterialTheme.colorScheme.primary
         )
     ) {
+        Row(
+            modifier = Modifier.padding(20.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Surface(
+                modifier = Modifier.size(58.dp),
+                shape = RoundedCornerShape(18.dp),
+                color = Color.White.copy(alpha = 0.16f)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        Icons.Default.DirectionsCar,
+                        null,
+                        Modifier.size(32.dp),
+                        tint = Color.White
+                    )
+                }
+            }
+
+            Spacer(Modifier.width(14.dp))
+
+            Column(Modifier.weight(1f)) {
+                Text(
+                    if (aktif) "Sefer devam ediyor" else "Bugün hazır mısınız?",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+                Spacer(Modifier.height(3.dp))
+                Text(
+                    if (aktif)
+                        "Aktif seferinizi tamamlayın."
+                    else
+                        "Yeni seferinizi hızlıca kaydedin.",
+                    fontSize = 13.sp,
+                    color = Color.White.copy(alpha = 0.82f)
+                )
+            }
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    start = 20.dp,
+                    end = 20.dp,
+                    bottom = 18.dp
+                ),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            MiniMetric(
+                value = seferSayisi.toString(),
+                label = "Sefer"
+            )
+            MiniMetric(
+                value = "$toplamKm",
+                label = "KM"
+            )
+        }
+    }
+}
+
+@Composable
+private fun MiniMetric(
+    value: String,
+    label: String
+) {
+    Surface(
+        modifier = Modifier.weight(1f),
+        shape = RoundedCornerShape(14.dp),
+        color = Color.White.copy(alpha = 0.12f)
+    ) {
+        Row(
+            modifier = Modifier.padding(
+                horizontal = 14.dp,
+                vertical = 9.dp
+            ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                value,
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+            Spacer(Modifier.width(6.dp))
+            Text(
+                label,
+                fontSize = 12.sp,
+                color = Color.White.copy(alpha = 0.78f)
+            )
+        }
+    }
+}
+
+@Composable
+private fun SectionHeader(
+    title: String,
+    subtitle: String
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.Bottom
+    ) {
+        Column(Modifier.weight(1f)) {
+            Text(
+                title,
+                fontSize = 21.sp,
+                fontWeight = FontWeight.ExtraBold
+            )
+            Text(
+                subtitle,
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@Composable
+private fun NewTripCard(
+    guzergah: String,
+    cikisKm: String,
+    onGuzergah: (String) -> Unit,
+    onKm: (String) -> Unit,
+    onStart: () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
         Column(
-            modifier = Modifier.padding(22.dp)
+            modifier = Modifier.padding(18.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    imageVector = if (aktif) Icons.Default.DirectionsCar
-                    else Icons.Default.Route,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .width(48.dp)
-                        .height(48.dp)
+                    Icons.Default.Add,
+                    null,
+                    tint = MaterialTheme.colorScheme.primary
                 )
-
-                Spacer(modifier = Modifier.width(14.dp))
-
-                Column(modifier = Modifier.weight(1f)) {
+                Spacer(Modifier.width(8.dp))
+                Column {
                     Text(
-                        text = if (aktif) "Aktif Sefer" else "Yeni Sefer",
-                        fontSize = 25.sp,
+                        "Yeni Sefer",
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-
                     Text(
-                        text = if (aktif) {
-                            "$guzergah  \u2022  $cikisKm KM"
-                        } else {
-                            "Yeni bir sefer ba\u015Flat\u0131n"
-                        },
-                        fontSize = 15.sp,
-                        color = Color.Gray
+                        "Çıkış bilgilerini girin",
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(18.dp))
+            OutlinedTextField(
+                value = guzergah,
+                onValueChange = onGuzergah,
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text("Güzergah") },
+                placeholder = { Text("Akseki - Antalya") },
+                leadingIcon = {
+                    Icon(Icons.Default.DirectionsCar, null)
+                },
+                singleLine = true,
+                shape = RoundedCornerShape(16.dp)
+            )
+
+            OutlinedTextField(
+                value = cikisKm,
+                onValueChange = {
+                    onKm(it.filter(Char::isDigit))
+                },
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text("Çıkış KM") },
+                placeholder = { Text("125430") },
+                leadingIcon = {
+                    Icon(Icons.Default.Speed, null)
+                },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
+                ),
+                shape = RoundedCornerShape(16.dp)
+            )
 
             Button(
-                onClick = if (aktif) onFinish else onStart,
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(18.dp)
+                onClick = onStart,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(54.dp),
+                shape = RoundedCornerShape(16.dp)
             ) {
-                Icon(
-                    imageVector = if (aktif) Icons.Default.Stop
-                    else Icons.Default.PlayArrow,
-                    contentDescription = null
-                )
-                Spacer(modifier = Modifier.width(8.dp))
+                Icon(Icons.Default.PlayArrow, null)
+                Spacer(Modifier.width(8.dp))
                 Text(
-                    text = if (aktif) "SEFER\u0130 B\u0130T\u0130R"
-                    else "SEFER\u0130 BA\u015ELAT",
+                    "SEFERİ BAŞLAT",
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -600,23 +715,182 @@ fun HeroCard(
 }
 
 @Composable
-fun FormCard(
+private fun DashboardStat(
+    modifier: Modifier,
+    value: String,
+    label: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector
+) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Surface(
+                modifier = Modifier.size(38.dp),
+                shape = RoundedCornerShape(12.dp),
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.10f)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        icon,
+                        null,
+                        Modifier.size(21.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(10.dp))
+
+            Text(
+                value,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.ExtraBold
+            )
+
+            Text(
+                label,
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@Composable
+private fun LastTripCard(sefer: Sefer) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(18.dp),
+        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.07f)
+    ) {
+        Row(
+            modifier = Modifier.padding(15.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                Icons.Default.History,
+                null,
+                Modifier.size(24.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+
+            Spacer(Modifier.width(11.dp))
+
+            Column(Modifier.weight(1f)) {
+                Text(
+                    "Son sefer",
+                    fontSize = 11.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    sefer.guzergah,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            Text(
+                "${sefer.toplamKm} KM",
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
+}
+
+@Composable
+private fun HeroCard(
+    aktif: Boolean,
     guzergah: String,
     cikisKm: String,
-    onGuzergahChange: (String) -> Unit,
-    onCikisKmChange: (String) -> Unit
+    cikisSaati: String
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(30.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (aktif) {
+                Color(0xFFE5F5EA)
+            } else {
+                MaterialTheme.colorScheme.surface
+            }
+        )
+    ) {
+        Column(
+            modifier = Modifier.padding(
+                start = 22.dp,
+                end = 22.dp,
+                top = 22.dp,
+                bottom = 20.dp
+            )
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Surface(
+                    modifier = Modifier.size(62.dp),
+                    shape = RoundedCornerShape(20.dp),
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.10f)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            Icons.Default.DirectionsCar,
+                            null,
+                            Modifier.size(36.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+
+                Spacer(Modifier.width(15.dp))
+
+                Column(Modifier.weight(1f)) {
+                    Text(
+                        if (aktif) "Aktif Sefer" else "Yeni Sefer",
+                        fontSize = 27.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Text(
+                        if (aktif) {
+                            "$guzergah • $cikisKm KM • $cikisSaati"
+                        } else {
+                            "Seferinizi hızlı ve düzenli kaydedin"
+                        },
+                        fontSize = 15.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun InputPanel(
+    guzergah: String,
+    cikisKm: String,
+    onGuzergah: (String) -> Unit,
+    onKm: (String) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         OutlinedTextField(
             value = guzergah,
-            onValueChange = onGuzergahChange,
+            onValueChange = onGuzergah,
             modifier = Modifier.fillMaxWidth(),
-            label = { Text("G\u00FCzergah") },
-            placeholder = { Text("\u00D6rn. Akseki - Antalya") },
+            label = { Text("Güzergah") },
+            placeholder = { Text("Örn. Akseki - Antalya") },
             leadingIcon = {
-                Icon(Icons.Default.Route, contentDescription = null)
+                Icon(Icons.Default.DirectionsCar, null)
             },
             singleLine = true,
             shape = RoundedCornerShape(18.dp)
@@ -625,15 +899,13 @@ fun FormCard(
         OutlinedTextField(
             value = cikisKm,
             onValueChange = {
-                onCikisKmChange(
-                    it.filter { karakter -> karakter.isDigit() }
-                )
+                onKm(it.filter(Char::isDigit))
             },
             modifier = Modifier.fillMaxWidth(),
-            label = { Text("\u00C7\u0131k\u0131\u015F KM") },
-            placeholder = { Text("\u00D6rn. 125430") },
+            label = { Text("Çıkış KM") },
+            placeholder = { Text("Örn. 125430") },
             leadingIcon = {
-                Icon(Icons.Default.Speed, contentDescription = null)
+                Icon(Icons.Default.Speed, null)
             },
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -645,111 +917,85 @@ fun FormCard(
 }
 
 @Composable
-fun ActiveTripCard(
+private fun ActiveTripCard(
     guzergah: String,
     cikisKm: String,
-    cikisSaati: String,
-    anaRenk: Color
+    cikisSaati: String
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFE8F5E9)
+            containerColor = Color(0xFFE5F5EA)
         )
     ) {
-        Column(modifier = Modifier.padding(18.dp)) {
-            Text(
-                "Sefer devam ediyor",
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF2E7D32)
+        Row(
+            modifier = Modifier.padding(18.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                Icons.Default.PlayArrow,
+                null,
+                Modifier.size(34.dp),
+                tint = Color(0xFF238636)
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(guzergah, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(6.dp))
-            Text(
-                "\u00C7\u0131k\u0131\u015F: $cikisKm KM  \u2022  $cikisSaati",
-                color = Color.Gray
-            )
+
+            Spacer(Modifier.width(12.dp))
+
+            Column {
+                Text(
+                    "SEFER DEVAM EDİYOR",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF238636)
+                )
+                Text(
+                    guzergah,
+                    fontSize = 19.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    "Çıkış $cikisKm KM • $cikisSaati",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }
 
 @Composable
-fun IstatistikKarti(
+private fun StatCard(
     modifier: Modifier,
-    ikon: androidx.compose.ui.graphics.vector.ImageVector,
-    deger: String,
-    baslik: String,
-    kartRengi: Color
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    value: String,
+    title: String
 ) {
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(22.dp),
         colors = CardDefaults.cardColors(
-            containerColor = kartRengi
-        )
-    ) {
-        Column(modifier = Modifier.padding(18.dp)) {
-            Icon(
-                imageVector = ikon,
-                contentDescription = null
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                deger,
-                fontSize = 25.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                baslik,
-                color = Color.Gray
-            )
-        }
-    }
-}
-
-@Composable
-fun SectionTitle(
-    ikon: androidx.compose.ui.graphics.vector.ImageVector,
-    baslik: String
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(ikon, contentDescription = null)
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            baslik,
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold
-        )
-    }
-}
-
-@Composable
-fun EmptyHistoryCard(kartRengi: Color) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(22.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = kartRengi
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
         )
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(28.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.padding(18.dp)
         ) {
             Icon(
-                Icons.Default.History,
-                contentDescription = null
+                icon,
+                null,
+                Modifier.size(25.dp),
+                tint = MaterialTheme.colorScheme.primary
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(Modifier.height(8.dp))
             Text(
-                "Hen\u00FCz tamamlanm\u0131\u015F sefer yok.",
-                color = Color.Gray
+                value,
+                fontSize = 26.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                title,
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -757,10 +1003,8 @@ fun EmptyHistoryCard(kartRengi: Color) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SeferKarti(
+private fun TripCard(
     sefer: Sefer,
-    kartRengi: Color,
-    anaRenk: Color,
     onLongClick: () -> Unit
 ) {
     Card(
@@ -770,90 +1014,213 @@ fun SeferKarti(
                 onClick = {},
                 onLongClick = onLongClick
             ),
-        shape = RoundedCornerShape(22.dp),
+        shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(
-            containerColor = kartRengi
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
         )
     ) {
-        Column(modifier = Modifier.padding(18.dp)) {
+        Column(
+            modifier = Modifier.padding(18.dp)
+        ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(modifier = Modifier.weight(1f)) {
+                Column(Modifier.weight(1f)) {
                     Text(
                         sefer.guzergah,
-                        fontSize = 19.sp,
+                        fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+
+                    Spacer(Modifier.height(5.dp))
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Icon(
                             Icons.Default.AccessTime,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .width(18.dp)
-                                .height(18.dp)
+                            null,
+                            Modifier.size(18.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        Spacer(modifier = Modifier.width(6.dp))
+                        Spacer(Modifier.width(5.dp))
                         Text(
-                            "${sefer.cikisSaati} - ${sefer.donusSaati}",
-                            color = Color.Gray
+                            "${sefer.cikisSaati}  →  ${sefer.donusSaati}",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
 
                 Text(
                     "${sefer.toplamKm} KM",
-                    fontSize = 20.sp,
+                    fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
-                    color = anaRenk
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(Modifier.height(13.dp))
             Divider()
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(Modifier.height(11.dp))
 
             Text(
-                "${sefer.cikisKm} KM - ${sefer.donusKm} KM",
-                color = Color.Gray
+                "${sefer.cikisKm} KM  →  ${sefer.donusKm} KM",
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(Modifier.height(7.dp))
 
             Text(
-                "${sefer.toplamKm} KM  \u2022  ${sefer.toplamSure}",
-                color = anaRenk,
-                fontWeight = FontWeight.Bold
+                "${sefer.toplamKm} KM  •  ${sefer.toplamSure}",
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
             )
 
             if (sefer.notMetni.isNotBlank()) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    "Not: ${sefer.notMetni}",
-                    color = Color.Gray
-                )
+                Spacer(Modifier.height(12.dp))
+
+                Surface(
+                    shape = RoundedCornerShape(13.dp),
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(11.dp),
+                        verticalAlignment = Alignment.Top
+                    ) {
+                        Icon(
+                            Icons.Default.Note,
+                            null,
+                            Modifier.size(18.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(Modifier.width(7.dp))
+                        Text(
+                            sefer.notMetni,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(Modifier.height(9.dp))
 
             Text(
-                "Silmek i\u00E7in uzun bas\u0131n",
+                "Silmek için uzun basın",
                 fontSize = 11.sp,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
 }
 
-fun saat(): String {
-    return SimpleDateFormat(
+@Composable
+private fun EmptyCard() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(30.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                Icons.Default.History,
+                null,
+                Modifier.size(38.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Spacer(Modifier.height(9.dp))
+            Text(
+                "Henüz tamamlanmış sefer yok.",
+                fontSize = 15.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@Composable
+private fun NotesDialog(
+    notlar: String,
+    onClose: () -> Unit,
+    onSave: (String) -> Unit
+) {
+    var metin by remember(notlar) { mutableStateOf(notlar) }
+
+    AlertDialog(
+        onDismissRequest = onClose,
+        title = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Surface(
+                    modifier = Modifier.size(38.dp),
+                    shape = RoundedCornerShape(11.dp),
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.10f)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            Icons.Default.Note,
+                            null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+
+                Spacer(Modifier.width(10.dp))
+
+                Column {
+                    Text("Notlar", fontWeight = FontWeight.Bold)
+                    Text(
+                        "Kendi notlarınızı saklayın",
+                        fontSize = 11.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        },
+        text = {
+            OutlinedTextField(
+                value = metin,
+                onValueChange = { metin = it },
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text("Not") },
+                placeholder = {
+                    Text("Örn. araç kontrolü, evrak, özel bilgi...")
+                },
+                minLines = 6,
+                maxLines = 10,
+                shape = RoundedCornerShape(16.dp)
+            )
+        },
+        confirmButton = {
+            Button(onClick = {
+                onSave(metin)
+                onClose()
+            }) {
+                Icon(Icons.Default.Check, null)
+                Spacer(Modifier.width(5.dp))
+                Text("KAYDET")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onClose) {
+                Text("VAZGEÇ")
+            }
+        }
+    )
+}
+
+private fun saat(): String =
+    SimpleDateFormat(
         "HH:mm",
         Locale.getDefault()
     ).format(Date())
-}
 
-fun sureHesapla(
+private fun sureHesapla(
     baslangic: Long,
     bitis: Long
 ): String {
@@ -861,22 +1228,17 @@ fun sureHesapla(
         return "0 saat 0 dakika"
     }
 
-    val dakika = ((bitis - baslangic) / 60000L)
-        .coerceAtLeast(0L)
+    val dakika =
+        ((bitis - baslangic) / 60000L).coerceAtLeast(0L)
 
-    val saat = dakika / 60
-    val kalan = dakika % 60
-
-    return "$saat saat $kalan dakika"
+    return "${dakika / 60} saat ${dakika % 60} dakika"
 }
 
-fun kaydetSeferler(
+private fun kaydetSeferler(
     context: Context,
     seferler: List<Sefer>
 ) {
-    val veri = seferler.joinToString(
-        separator = "\u001E"
-    ) {
+    val veri = seferler.joinToString("\u001E") {
         listOf(
             it.id,
             it.guzergah,
@@ -890,24 +1252,22 @@ fun kaydetSeferler(
         ).joinToString("\u001F")
     }
 
-    context
-        .getSharedPreferences(
-            "sofor_takip",
-            Context.MODE_PRIVATE
-        )
+    context.getSharedPreferences(
+        "sofor_takip",
+        Context.MODE_PRIVATE
+    )
         .edit()
         .putString("seferler", veri)
         .apply()
 }
 
-fun yukleSeferler(
+private fun yukleSeferler(
     context: Context
 ): List<Sefer> {
-    val veri = context
-        .getSharedPreferences(
-            "sofor_takip",
-            Context.MODE_PRIVATE
-        )
+    val veri = context.getSharedPreferences(
+        "sofor_takip",
+        Context.MODE_PRIVATE
+    )
         .getString("seferler", "")
         ?: ""
 
@@ -940,4 +1300,28 @@ fun yukleSeferler(
                 null
             }
         }
+}
+
+private fun kaydetNotlar(
+    context: Context,
+    notlar: String
+) {
+    context.getSharedPreferences(
+        "sofor_takip",
+        Context.MODE_PRIVATE
+    )
+        .edit()
+        .putString("genel_notlar", notlar)
+        .apply()
+}
+
+private fun yukleNotlar(
+    context: Context
+): String {
+    return context.getSharedPreferences(
+        "sofor_takip",
+        Context.MODE_PRIVATE
+    )
+        .getString("genel_notlar", "")
+        ?: ""
 }
