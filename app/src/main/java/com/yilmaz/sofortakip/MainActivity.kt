@@ -371,7 +371,7 @@ fun SoforTakip() {
             AlertDialog(
                 onDismissRequest = { silinecek = null },
                 title = { Text("Seferi sil", fontWeight = FontWeight.Bold) },
-                text = { Text(""${sefer.guzergah}" seferi geçmişten silinecek.") },
+                text = { Text("\"${sefer.guzergah}\" seferi geçmişten silinecek.") },
                 confirmButton = {
                     Button(
                         onClick = {
