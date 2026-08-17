@@ -920,7 +920,106 @@ private fun yukleSeferler(context: Context): List<Sefer> {
         }
     }
 }
+@Composable
+private fun AraclarDialog(
+    araclar: List<Arac>,
+    onClose: () -> Unit,
+    onSave: (Arac) -> Unit,
+    onDelete: (Arac) -> Unit
+) {
+    var aracAdi by remember { mutableStateOf("") }
+    var plaka by remember { mutableStateOf("") }
 
+    AlertDialog(
+        onDismissRequest = onClose,
+        title = {
+            Text(
+                "Araçlarım",
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                if (araclar.isEmpty()) {
+                    Text("Henüz araç eklenmedi.")
+                } else {
+                    araclar.forEach { arac ->
+                        Surface(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(12.dp),
+                            color = MaterialTheme.colorScheme.surfaceVariant
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(12.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Column {
+                                    Text(
+                                        arac.ad,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(arac.plaka)
+                                }
+
+                                TextButton(
+                                    onClick = {
+                                        onDelete(arac)
+                                    }
+                                ) {
+                                    Text("Sil")
+                                }
+                            }
+                        }
+                    }
+                }
+
+                OutlinedTextField(
+                    value = aracAdi,
+                    onValueChange = { aracAdi = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text("Araç adı") },
+                    singleLine = true
+                )
+
+                OutlinedTextField(
+                    value = plaka,
+                    onValueChange = { plaka = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text("Plaka") },
+                    singleLine = true
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    if (aracAdi.isNotBlank() && plaka.isNotBlank()) {
+                        onSave(
+                            Arac(
+                                id = System.currentTimeMillis(),
+                                ad = aracAdi,
+                                plaka = plaka
+                            )
+                        )
+                        aracAdi = ""
+                        plaka = ""
+                    }
+                }
+            ) {
+                Text("Araç Ekle")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onClose) {
+                Text("Kapat")
+            }
+        }
+    )
+}
 private fun kaydetNotlar(context: Context, notlar: String) {
     context.getSharedPreferences("sofor_takip", Context.MODE_PRIVATE)
         .edit()
