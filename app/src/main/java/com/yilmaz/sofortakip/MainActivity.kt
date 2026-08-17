@@ -64,6 +64,7 @@ fun SoforTakip() {
     var tema by remember { mutableStateOf(Tema.ACIK) }
     var temaMenu by remember { mutableStateOf(false) }
     var notlarAcik by remember { mutableStateOf(false) }
+    var araclarAcik by remember { mutableStateOf(false) }
     var aktif by remember { mutableStateOf(false) }
 
     var guzergah by remember { mutableStateOf("") }
@@ -216,9 +217,11 @@ fun SoforTakip() {
                             Modifier.weight(1f),
                             Icons.Default.DirectionsCar,
                             "Araç Bilgisi",
-                            "Yakında"
+                            "Araçlarım"
                         ) {
-                            bilgi = "Araç seçme ve kendi araç fotoğrafını ekleme bölümü bir sonraki aşamada eklenecek."
+                            {
+                                araclarAcik = true
+                            }
                         }
                     }
                 }
