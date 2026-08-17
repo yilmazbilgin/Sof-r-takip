@@ -65,6 +65,9 @@ fun SoforTakip() {
     var temaMenu by remember { mutableStateOf(false) }
     var notlarAcik by remember { mutableStateOf(false) }
     var araclarAcik by remember { mutableStateOf(false) }
+    var araclar by remember {
+    mutableStateOf(yukleAraclar(context))
+    }
     var aktif by remember { mutableStateOf(false) }
 
     var guzergah by remember { mutableStateOf("") }
@@ -279,6 +282,22 @@ fun SoforTakip() {
                     TextButton(onClick = { bilgi = "" }) { Text("Tamam") }
                 }
             )
+        }
+        if (araclarAcik) {
+    AraclarDialog(
+        araclar = araclar,
+        onClose = { araclarAcik = false },
+        onSave = { yeniArac ->
+            araclar = araclar + yeniArac
+            kaydetAraclar(context, araclar)
+        },
+        onDelete = { silinecekArac ->
+            araclar = araclar.filter {
+                it.id != silinecekArac.id
+            }
+            kaydetAraclar(context, araclar)
+        }
+    )
         }
 
         if (bitirDialog) {
