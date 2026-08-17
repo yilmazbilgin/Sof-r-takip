@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -724,8 +725,7 @@ private fun SmallAction(
     onClick: () -> Unit = {}
 ) {
     Card(
-        modifier = modifier,
-        onClick = onClick,
+        modifier = modifier.clickable(onClick = onClick),
         shape = RoundedCornerShape(19.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -1149,8 +1149,9 @@ private fun SettingCard(
     onClick: () -> Unit
 ) {
     Card(
-        Modifier.fillMaxWidth(),
-        onClick = onClick,
+        Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
         shape = RoundedCornerShape(21.dp)
     ) {
         Row(
@@ -1494,8 +1495,9 @@ private fun AraclarDialog(
                 if (araclar.isNotEmpty()) {
                     araclar.forEach { arac ->
                         Card(
-                            Modifier.fillMaxWidth(),
-                            onClick = { onSelect(arac) },
+                            Modifier
+                                .fillMaxWidth()
+                                .clickable { onSelect(arac) },
                             shape = RoundedCornerShape(16.dp),
                             colors = CardDefaults.cardColors(
                                 containerColor = if (arac.secili) {
