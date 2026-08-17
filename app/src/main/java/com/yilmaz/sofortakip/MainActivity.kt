@@ -222,11 +222,9 @@ fun SoforTakip() {
                             "Araç Bilgisi",
                             "Araçlarım"
                         ) {
-                            {
                                 araclarAcik = true
                             }
                         }
-                    }
                 }
 
                 item {
