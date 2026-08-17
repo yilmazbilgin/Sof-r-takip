@@ -467,6 +467,7 @@ private fun AnaSayfa(
         verticalArrangement = Arrangement.spacedBy(13.dp),
         contentPadding = PaddingValues(top = 10.dp, bottom = 22.dp)
     ) {
+        // 1) ÜST: Bugün hazır mısınız?
         item {
             HeroHeader(
                 aktif = aktif,
@@ -476,6 +477,38 @@ private fun AnaSayfa(
             )
         }
 
+        // 2) HEMEN ALTINDA: Yeni Sefer
+        item {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    "Yeni Sefer",
+                    Modifier.weight(1f),
+                    fontSize = 23.sp,
+                    fontWeight = FontWeight.ExtraBold
+                )
+                TextButton(onClick = onVehicles) {
+                    Icon(Icons.Default.DirectionsCar, null)
+                    Spacer(Modifier.width(4.dp))
+                    Text("Araç Bilgisi")
+                }
+            }
+        }
+
+        item {
+            NewTripCard(
+                guzergah = guzergah,
+                cikisKm = cikisKm,
+                cikisSaati = cikisSaati,
+                aktif = aktif,
+                seciliArac = seciliArac,
+                onGuzergah = onGuzergah,
+                onKm = onKm,
+                onStart = onStart,
+                onFinish = onFinish
+            )
+        }
+
+        // 3) YENİ SEFERİN ALTINDA: toplam sefer / KM / süre / ortalama
         item {
             StatsRow(
                 seferSayisi = seferler.size,
@@ -484,6 +517,15 @@ private fun AnaSayfa(
                     seferler.sumOf { sureDakika(it.toplamSure) }
                 ),
                 ortalamaKm = ortalamaKm
+            )
+        }
+
+        // 4) HIZLI İŞLEMLER
+        item {
+            Text(
+                "Hızlı İşlemler",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.ExtraBold
             )
         }
 
@@ -531,36 +573,7 @@ private fun AnaSayfa(
             }
         }
 
-        item {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    "Yeni Sefer",
-                    Modifier.weight(1f),
-                    fontSize = 23.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
-                TextButton(onClick = onVehicles) {
-                    Icon(Icons.Default.DirectionsCar, null)
-                    Spacer(Modifier.width(4.dp))
-                    Text("Araç Bilgisi")
-                }
-            }
-        }
-
-        item {
-            NewTripCard(
-                guzergah = guzergah,
-                cikisKm = cikisKm,
-                cikisSaati = cikisSaati,
-                aktif = aktif,
-                seciliArac = seciliArac,
-                onGuzergah = onGuzergah,
-                onKm = onKm,
-                onStart = onStart,
-                onFinish = onFinish
-            )
-        }
-
+        // 5) SEFER GEÇMİŞİ
         item {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
