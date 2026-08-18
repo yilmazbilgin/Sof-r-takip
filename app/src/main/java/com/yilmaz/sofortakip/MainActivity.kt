@@ -536,33 +536,38 @@ private fun Header(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 2.dp, vertical = 6.dp),
+                .padding(vertical = 5.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            // Hamburger menü
-            Surface(
-                modifier = Modifier.size(48.dp),
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.10f)
+            // Menü
+            IconButton(
+                onClick = { },
+                modifier = Modifier.size(44.dp)
             ) {
-                Box(
-                    contentAlignment = Alignment.Center
+                Surface(
+                    modifier = Modifier.size(44.dp),
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.10f)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Menu,
-                        contentDescription = "Menü",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(28.dp)
-                    )
+                    Box(
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Menu,
+                            contentDescription = "Menü",
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(27.dp)
+                        )
+                    }
                 }
             }
 
-            Spacer(Modifier.width(10.dp))
+            Spacer(Modifier.width(5.dp))
 
             // Logo
             Surface(
-                modifier = Modifier.size(58.dp),
+                modifier = Modifier.size(50.dp),
                 shape = CircleShape,
                 color = MaterialTheme.colorScheme.primary
             ) {
@@ -573,12 +578,12 @@ private fun Header(
                         imageVector = Icons.Default.DirectionsCar,
                         contentDescription = "Şoför Takip",
                         tint = Color.White,
-                        modifier = Modifier.size(34.dp)
+                        modifier = Modifier.size(30.dp)
                     )
                 }
             }
 
-            Spacer(Modifier.width(10.dp))
+            Spacer(Modifier.width(7.dp))
 
             // Başlık
             Column(
@@ -586,7 +591,7 @@ private fun Header(
             ) {
                 Text(
                     text = "Şoför Takip",
-                    fontSize = 27.sp,
+                    fontSize = 22.sp,
                     fontWeight = FontWeight.ExtraBold,
                     maxLines = 1,
                     softWrap = false
@@ -594,7 +599,7 @@ private fun Header(
 
                 Text(
                     text = "Günlük sefer paneli",
-                    fontSize = 15.sp,
+                    fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
                     softWrap = false
@@ -603,21 +608,25 @@ private fun Header(
 
             // Notlar
             IconButton(
-                onClick = onNotes
+                onClick = onNotes,
+                modifier = Modifier.size(42.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Note,
-                    contentDescription = "Notlar"
+                    contentDescription = "Notlar",
+                    modifier = Modifier.size(25.dp)
                 )
             }
 
             // Tema
             IconButton(
-                onClick = onTheme
+                onClick = onTheme,
+                modifier = Modifier.size(42.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Palette,
-                    contentDescription = "Tema"
+                    contentDescription = "Tema",
+                    modifier = Modifier.size(25.dp)
                 )
             }
         }
@@ -649,7 +658,7 @@ private fun Header(
         }
     }
 }
-
+    
 @Composable
 private fun WelcomeBanner(
     arac: Arac?,
