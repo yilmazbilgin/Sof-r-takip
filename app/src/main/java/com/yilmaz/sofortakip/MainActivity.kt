@@ -977,19 +977,43 @@ private fun BottomItem(
     label: String,
     onSelected: (Int) -> Unit
 ) {
-    NavigationBarItem(
-        selected = selected == index,
-        onClick = { onSelected(index) },
-        icon = { Icon(icon, null, modifier = Modifier.size(25.dp)) },
-        label = { Text(label, fontSize = 10.sp) },
-        colors = NavigationBarItemDefaults.colors(
-            selectedIconColor = Color.White,
-            selectedTextColor = Color.White,
-            indicatorColor = Mor.copy(alpha = .28f),
-            unselectedIconColor = Color(0xFFAEB9CC),
-            unselectedTextColor = Color(0xFFAEB9CC)
+    val isSelected = selected == index
+
+    Column(
+        modifier = Modifier
+            .width(76.dp)
+            .fillMaxHeight()
+            .clickable { onSelected(index) }
+            .padding(top = 8.dp, bottom = 4.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Surface(
+            shape = RoundedCornerShape(14.dp),
+            color = if (isSelected) Mor.copy(alpha = 0.28f) else Color.Transparent
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(width = 48.dp, height = 32.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = label,
+                    modifier = Modifier.size(24.dp),
+                    tint = if (isSelected) Color.White else Color(0xFFAEB9CC)
+                )
+            }
+        }
+
+        Text(
+            text = label,
+            fontSize = 10.sp,
+            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+            color = if (isSelected) Color.White else Color(0xFFAEB9CC),
+            maxLines = 1
         )
-    )
+    }
 }
 
 @Composable
