@@ -198,11 +198,11 @@ private fun SoforTakipApp() {
                     onStart = {
                         val km = cikisKm.toIntOrNull()
                         when {
-                            seciliArac == null -> bilgi = "脰nce Ara莽 Bilgisi b枚l眉m眉nden bir ara莽 ekleyin."
-                            guzergah.isBlank() -> bilgi = "L眉tfen g眉zergah girin."
-                            km == null -> bilgi = "Ge莽erli bir 莽谋k谋艧 KM girin."
+                            seciliArac == null -> bilgi = "鑴皀ce Ara鑾� Bilgisi b鏋歭鐪塵鐪塶den bir ara鑾� ekleyin."
+                            guzergah.isBlank() -> bilgi = "L鐪塼fen g鐪墇ergah girin."
+                            km == null -> bilgi = "Ge鑾絜rli bir 鑾借皨k璋嬭墽 KM girin."
                             seciliArac.sonKm > 0 && km < seciliArac.sonKm ->
-                                bilgi = "脟谋k谋艧 KM, arac谋n son KM bilgisinden k眉莽眉k olamaz."
+                                bilgi = "鑴熻皨k璋嬭墽 KM, arac璋媙 son KM bilgisinden k鐪夎幗鐪塳 olamaz."
                             aktif != null -> bilgi = "Zaten devam eden bir sefer var."
                             else -> {
                                 val yeni = AktifSefer(
@@ -279,17 +279,17 @@ private fun SoforTakipApp() {
                 kaydetAraclar(context, araclar)
             },
             onDelete = { sil ->
-                araclar = araclar.filterNot { it.id == sil.id }
-                if (araclar.isNotEmpty() && araclar.none { it.secili }) {
-                    araclar = araclar.mapIndexed { i, a -> if (i == 0) a.copy(secili = true) else a }
+                araclar = araclar.filterNot { arac: Arac -> arac.id == sil.id }
+                if (araclar.isNotEmpty() && araclar.none { arac: Arac -> arac.secili }) {
+                    araclar = araclar.mapIndexed { i: Int, arac: Arac -> if (i == 0) arac.copy(secili = true) else arac }
                 }
                 kaydetAraclar(context, araclar)
             },
-            onSelect = { sec ->
-                araclar = araclar.map { it.copy(secili = it.id == sec.id) }
+            onSelect = { sec: Arac ->
+                araclar = araclar.map { arac: Arac -> arac.copy(secili = arac.id == sec.id) }
                 kaydetAraclar(context, araclar)
             },
-            onEdit = { duzenlenenArac = it }
+            onEdit = { arac: Arac -> duzenlenenArac = arac }
         )
     }
 
@@ -298,7 +298,7 @@ private fun SoforTakipApp() {
             arac = arac,
             onClose = { duzenlenenArac = null },
             onSave = { guncel ->
-                araclar = araclar.map { if (it.id == guncel.id) guncel else it }
+                araclar = araclar.map { arac: Arac -> if (arac.id == guncel.id) guncel else arac }
                 kaydetAraclar(context, araclar)
                 duzenlenenArac = null
             }
@@ -321,8 +321,8 @@ private fun SoforTakipApp() {
                 val d = donusKm.toIntOrNull()
                 val c = aktif!!.cikisKm
                 when {
-                    d == null -> bilgi = "Ge莽erli bir d枚n眉艧 KM girin."
-                    d < c -> bilgi = "D枚n眉艧 KM, 莽谋k谋艧 KM'den k眉莽眉k olamaz."
+                    d == null -> bilgi = "Ge鑾絜rli bir d鏋歯鐪夎墽 KM girin."
+                    d < c -> bilgi = "D鏋歯鐪夎墽 KM, 鑾借皨k璋嬭墽 KM'den k鐪夎幗鐪塳 olamaz."
                     else -> {
                         val bitis = System.currentTimeMillis()
                         val yeni = Sefer(
@@ -375,7 +375,7 @@ private fun SoforTakipApp() {
             onDismissRequest = { silinecek = null },
             icon = { Icon(Icons.Default.Delete, null, tint = Kirmizi) },
             title = { Text("Seferi sil", fontWeight = FontWeight.ExtraBold) },
-            text = { Text("\"${sefer.guzergah}\" seferi ge莽mi艧ten silinecek.") },
+            text = { Text("\"${sefer.guzergah}\" seferi ge鑾絤i鑹en silinecek.") },
             confirmButton = {
                 Button(
                     onClick = {
@@ -384,9 +384,9 @@ private fun SoforTakipApp() {
                         silinecek = null
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Kirmizi)
-                ) { Text("S陌L") }
+                ) { Text("S闄孡") }
             },
-            dismissButton = { TextButton(onClick = { silinecek = null }) { Text("VAZGE脟") } }
+            dismissButton = { TextButton(onClick = { silinecek = null }) { Text("VAZGE鑴�") } }
         )
     }
 }
@@ -472,7 +472,7 @@ private fun AnaSayfa(
         }
 
         item {
-            Text("H谋zl谋 陌艧lemler", fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
+            Text("H璋媧l璋� 闄岃墽lemler", fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
         }
 
         item {
@@ -499,13 +499,13 @@ private fun AnaSayfa(
                 Icon(Icons.Default.History, null, modifier = Modifier.size(27.dp))
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    "Sefer Ge莽mi艧i",
+                    "Sefer Ge鑾絤i鑹",
                     modifier = Modifier.weight(1f),
                     fontSize = 23.sp,
                     fontWeight = FontWeight.ExtraBold
                 )
                 TextButton(onClick = onHistory) {
-                    Text("T眉m眉n眉 G枚r", fontWeight = FontWeight.Bold)
+                    Text("T鐪塵鐪塶鐪� G鏋歳", fontWeight = FontWeight.Bold)
                     Icon(Icons.Default.ChevronRight, null)
                 }
             }
@@ -514,7 +514,7 @@ private fun AnaSayfa(
         if (seferler.isEmpty()) {
             item { EmptyHistoryCard() }
         } else {
-            items(seferler.take(4), key = { it.id }) { sefer ->
+            items(seferler.take(4), key = { sefer: Sefer -> sefer.id }) { sefer: Sefer ->
                 HistoryCard(sefer)
             }
         }
@@ -547,8 +547,8 @@ private fun TopHeader(
             Spacer(Modifier.width(10.dp))
 
             Column(Modifier.weight(1f)) {
-                Text("艦of枚r Takip", fontSize = 27.sp, fontWeight = FontWeight.ExtraBold)
-                Text("G眉nl眉k sefer paneli", fontSize = 14.sp, color = Ikincil)
+                Text("鑹f鏋歳 Takip", fontSize = 27.sp, fontWeight = FontWeight.ExtraBold)
+                Text("G鐪塶l鐪塳 sefer paneli", fontSize = 14.sp, color = Ikincil)
             }
 
             HeaderPill(Icons.Default.Note, "Notlar", onNotes)
@@ -558,7 +558,7 @@ private fun TopHeader(
 
         DropdownMenu(expanded = themeMenu, onDismissRequest = onDismissTheme) {
             DropdownMenuItem(
-                text = { Text("A莽谋k tema") },
+                text = { Text("A鑾借皨k tema") },
                 leadingIcon = { Icon(Icons.Default.LightMode, null) },
                 onClick = { onThemeSelect(Tema.ACIK) }
             )
@@ -616,13 +616,13 @@ private fun WelcomeCard(gun: String, ayYil: String, hafta: String) {
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
-                    Text("鈽€  Merhaba Y谋lmaz 馃憢", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.ExtraBold)
-                    Text("Yola 莽谋kmaya haz谋r m谋s谋n?", color = Color.White.copy(alpha = .95f), fontSize = 14.sp)
+                    Text("閳解偓  Merhaba Y璋媗maz 棣冩啟", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.ExtraBold)
+                    Text("Yola 鑾借皨kmaya haz璋媟 m璋媠璋媙?", color = Color.White.copy(alpha = .95f), fontSize = 14.sp)
                     Spacer(Modifier.height(5.dp))
-                    Text("G眉venli s眉r眉艧ler dilerim...", color = Color.White.copy(alpha = .82f), fontSize = 12.sp)
+                    Text("G鐪塿enli s鐪塺鐪夎墽ler dilerim...", color = Color.White.copy(alpha = .82f), fontSize = 12.sp)
                     Spacer(Modifier.height(13.dp))
                     Text("$gun", color = Color.White, fontSize = 30.sp, fontWeight = FontWeight.Black)
-                    Text("$ayYil 鈥� $hafta", color = Color.White.copy(alpha = .86f), fontSize = 12.sp)
+                    Text("$ayYil 閳ワ拷 $hafta", color = Color.White.copy(alpha = .86f), fontSize = 12.sp)
                 }
                 Surface(
                     modifier = Modifier.size(82.dp),
@@ -648,9 +648,9 @@ private fun StatsRow(sefer: Int, km: Int, sure: Int, ortalama: Int, yakit: Int) 
     ) {
         StatCard(126.dp, Mor, Icons.Default.DirectionsCar, sefer.toString(), "Toplam Sefer")
         StatCard(126.dp, Mavi, Icons.Default.Speed, formatKm(km), "Toplam KM")
-        StatCard(136.dp, Yesil, Icons.Default.Timer, "${sure / 60}s ${sure % 60}dk", "Toplam S眉re")
+        StatCard(136.dp, Yesil, Icons.Default.Timer, "${sure / 60}s ${sure % 60}dk", "Toplam S鐪塺e")
         StatCard(136.dp, Turuncu, Icons.Default.Speed, formatKm(ortalama), "Ort. Sefer KM")
-        StatCard(126.dp, Pembe, Icons.Default.LocalGasStation, "%$yakit", "Yak谋t Durumu")
+        StatCard(126.dp, Pembe, Icons.Default.LocalGasStation, "%$yakit", "Yak璋媡 Durumu")
     }
 }
 
@@ -701,7 +701,7 @@ private fun NewTripCard(
                         color = Ikincil
                     )
                     if (arac != null) {
-                        Text("${arac.ad} 鈥� ${arac.plaka}", fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                        Text("${arac.ad} 閳ワ拷 ${arac.plaka}", fontSize = 15.sp, fontWeight = FontWeight.Bold)
                     }
                 }
                 Icon(
@@ -715,8 +715,8 @@ private fun NewTripCard(
             AppField(
                 value = guzergah,
                 onValueChange = onGuzergah,
-                label = "G眉zerg芒h",
-                placeholder = "脰rn. Akseki - Antalya",
+                label = "G鐪墇erg鑺抙",
+                placeholder = "鑴皉n. Akseki - Antalya",
                 icon = Icons.Default.Place,
                 enabled = aktif == null
             )
@@ -724,8 +724,8 @@ private fun NewTripCard(
             AppField(
                 value = cikisKm,
                 onValueChange = onCikisKm,
-                label = "脟谋k谋艧 KM",
-                placeholder = "脰rn. 125430",
+                label = "鑴熻皨k璋嬭墽 KM",
+                placeholder = "鑴皉n. 125430",
                 icon = Icons.Default.Speed,
                 keyboardType = KeyboardType.Number,
                 enabled = aktif == null
@@ -742,7 +742,7 @@ private fun NewTripCard(
                         Spacer(Modifier.width(8.dp))
                         Column {
                             Text("Sefer aktif", fontWeight = FontWeight.Bold, color = Color(0xFF177A48))
-                            Text("脟谋k谋艧: ${aktif.cikisSaati}", fontSize = 12.sp, color = Color(0xFF177A48))
+                            Text("鑴熻皨k璋嬭墽: ${aktif.cikisSaati}", fontSize = 12.sp, color = Color(0xFF177A48))
                         }
                     }
                 }
@@ -759,7 +759,7 @@ private fun NewTripCard(
                 Icon(if (aktif == null) Icons.Default.PlayArrow else Icons.Default.Stop, null)
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    if (aktif == null) "SEFER陌 BA艦LAT" else "SEFER陌 B陌T陌R",
+                    if (aktif == null) "SEFER闄� BA鑹AT" else "SEFER闄� B闄孴闄孯",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Black
                 )
@@ -801,11 +801,11 @@ private fun QuickActions(
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(9.dp)) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(9.dp)) {
-            ActionCard(Modifier.weight(1f), Mavi, Icons.Default.Navigation, "Navigasyon", "Haritada A莽", onNavigation)
-            ActionCard(Modifier.weight(1f), Turuncu, Icons.Default.NoteAdd, "Not Ekle", "H谋zl谋 Not", onNotes)
+            ActionCard(Modifier.weight(1f), Mavi, Icons.Default.Navigation, "Navigasyon", "Haritada A鑾�", onNavigation)
+            ActionCard(Modifier.weight(1f), Turuncu, Icons.Default.NoteAdd, "Not Ekle", "H璋媧l璋� Not", onNotes)
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(9.dp)) {
-            ActionCard(Modifier.weight(1f), Yesil, Icons.Default.BarChart, "Raporlar", "Detayl谋 G枚r", onReports)
+            ActionCard(Modifier.weight(1f), Yesil, Icons.Default.BarChart, "Raporlar", "Detayl璋� G鏋歳", onReports)
             ActionCard(Modifier.weight(1f), Lacivert, Icons.Default.Settings, "Ayarlar", "Uygulama", onSettings)
         }
     }
@@ -848,12 +848,12 @@ private fun VehicleCard(arac: Arac?, onClick: () -> Unit) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.DirectionsCar, null, tint = Mor)
                     Spacer(Modifier.width(7.dp))
-                    Text("Ara莽 Bilgisi", fontSize = 19.sp, fontWeight = FontWeight.ExtraBold)
+                    Text("Ara鑾� Bilgisi", fontSize = 19.sp, fontWeight = FontWeight.ExtraBold)
                 }
                 Spacer(Modifier.height(9.dp))
                 if (arac == null) {
-                    Text("Hen眉z ara莽 eklenmedi.", fontWeight = FontWeight.Bold)
-                    Text("Dokunarak ara莽 ekleyin.", fontSize = 12.sp, color = Ikincil)
+                    Text("Hen鐪墇 ara鑾� eklenmedi.", fontWeight = FontWeight.Bold)
+                    Text("Dokunarak ara鑾� ekleyin.", fontSize = 12.sp, color = Ikincil)
                 } else {
                     Text(arac.ad, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
                     Surface(
@@ -863,7 +863,7 @@ private fun VehicleCard(arac: Arac?, onClick: () -> Unit) {
                         Text(arac.plaka, Modifier.padding(horizontal = 8.dp, vertical = 4.dp), fontWeight = FontWeight.Bold)
                     }
                     Spacer(Modifier.height(7.dp))
-                    Text("Yak谋t Durumu  鈥�  %${arac.yakit}", fontSize = 12.sp, color = Ikincil)
+                    Text("Yak璋媡 Durumu  閳ワ拷  %${arac.yakit}", fontSize = 12.sp, color = Ikincil)
                     LinearProgressIndicator(
                         progress = arac.yakit / 100f,
                         modifier = Modifier.fillMaxWidth().height(8.dp).clip(RoundedCornerShape(5.dp)),
@@ -914,12 +914,12 @@ private fun HistoryCard(sefer: Sefer) {
             Spacer(Modifier.width(10.dp))
             Column(Modifier.weight(1f)) {
                 Text(sefer.guzergah, fontWeight = FontWeight.ExtraBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                Text("${sefer.tarih} 鈥� ${sefer.cikisSaati} 鈫� ${sefer.donusSaati}", fontSize = 11.sp, color = Ikincil)
-                Text("${formatKm(sefer.cikisKm)} 鈫� ${formatKm(sefer.donusKm)} KM", fontSize = 11.sp, color = Ikincil)
+                Text("${sefer.tarih} 閳ワ拷 ${sefer.cikisSaati} 閳拷 ${sefer.donusSaati}", fontSize = 11.sp, color = Ikincil)
+                Text("${formatKm(sefer.cikisKm)} 閳拷 ${formatKm(sefer.donusKm)} KM", fontSize = 11.sp, color = Ikincil)
             }
             Column(horizontalAlignment = Alignment.End) {
                 Surface(shape = RoundedCornerShape(14.dp), color = Color(0xFFDDF7E8)) {
-                    Text("Tamamland谋 鉁�", Modifier.padding(horizontal = 7.dp, vertical = 4.dp), fontSize = 9.sp, color = Color(0xFF187A48), fontWeight = FontWeight.Bold)
+                    Text("Tamamland璋� 閴侊拷", Modifier.padding(horizontal = 7.dp, vertical = 4.dp), fontSize = 9.sp, color = Color(0xFF187A48), fontWeight = FontWeight.Bold)
                 }
                 Spacer(Modifier.height(5.dp))
                 Text("${formatKm(sefer.toplamKm)} KM", fontWeight = FontWeight.Black, color = Yesil)
@@ -941,8 +941,8 @@ private fun EmptyHistoryCard() {
         ) {
             Icon(Icons.Default.History, null, tint = Mor, modifier = Modifier.size(42.dp))
             Spacer(Modifier.height(8.dp))
-            Text("Hen眉z tamamlanm谋艧 sefer yok.", fontWeight = FontWeight.Bold)
-            Text("陌lk seferiniz burada g枚r眉necek.", fontSize = 12.sp, color = Ikincil)
+            Text("Hen鐪墇 tamamlanm璋嬭墽 sefer yok.", fontWeight = FontWeight.Bold)
+            Text("闄宭k seferiniz burada g鏋歳鐪塶ecek.", fontSize = 12.sp, color = Ikincil)
         }
     }
 }
@@ -980,7 +980,7 @@ private fun BottomBar(
                 index = 1,
                 selected = selected,
                 icon = Icons.Default.History,
-                label = "Ge莽mi艧",
+                label = "Ge鑾絤i鑹�",
                 onSelected = onSelected
             )
 
@@ -1078,11 +1078,11 @@ private fun GecmisSayfasi(modifier: Modifier, seferler: List<Sefer>, onDelete: (
         contentPadding = PaddingValues(18.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        item { PageTitle("Sefer Ge莽mi艧i", "Tamamlanan t眉m seferler") }
+        item { PageTitle("Sefer Ge鑾絤i鑹", "Tamamlanan t鐪塵 seferler") }
         if (seferler.isEmpty()) {
             item { EmptyHistoryCard() }
         } else {
-            items(seferler, key = { it.id }) { sefer ->
+            items(seferler, key = { sefer: Sefer -> sefer.id }) { sefer: Sefer ->
                 Card(Modifier.fillMaxWidth(), shape = RoundedCornerShape(21.dp)) {
                     Column(Modifier.padding(16.dp)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -1093,7 +1093,7 @@ private fun GecmisSayfasi(modifier: Modifier, seferler: List<Sefer>, onDelete: (
                             Text("${formatKm(sefer.toplamKm)} KM", color = Mor, fontWeight = FontWeight.Black)
                         }
                         Spacer(Modifier.height(7.dp))
-                        Text("${formatKm(sefer.cikisKm)} 鈫� ${formatKm(sefer.donusKm)} KM 鈥� ${sefer.cikisSaati} 鈫� ${sefer.donusSaati}", fontSize = 12.sp)
+                        Text("${formatKm(sefer.cikisKm)} 閳拷 ${formatKm(sefer.donusKm)} KM 閳ワ拷 ${sefer.cikisSaati} 閳拷 ${sefer.donusSaati}", fontSize = 12.sp)
                         Text(sefer.toplamSure, fontSize = 11.sp, color = Ikincil)
                         if (sefer.notMetni.isNotBlank()) Text("Not: ${sefer.notMetni}", fontSize = 12.sp)
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
@@ -1123,7 +1123,7 @@ private fun RaporSayfasi(
         contentPadding = PaddingValues(18.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        item { PageTitle("Raporlar", "S眉r眉艧 performans 枚zeti") }
+        item { PageTitle("Raporlar", "S鐪塺鐪夎墽 performans 鏋歾eti") }
         item {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(9.dp)) {
                 ReportBox(Modifier.weight(1f), "Sefer", seferler.size.toString())
@@ -1132,7 +1132,7 @@ private fun RaporSayfasi(
         }
         item {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(9.dp)) {
-                ReportBox(Modifier.weight(1f), "S眉re", "${toplamSure / 60}s ${toplamSure % 60}dk")
+                ReportBox(Modifier.weight(1f), "S鐪塺e", "${toplamSure / 60}s ${toplamSure % 60}dk")
                 ReportBox(Modifier.weight(1f), "Ort. KM", formatKm(ortalamaKm))
             }
         }
@@ -1184,7 +1184,7 @@ private fun AyarlarSayfasi(
                     Text("Tema", fontSize = 19.sp, fontWeight = FontWeight.ExtraBold)
                     Spacer(Modifier.height(7.dp))
                     Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(7.dp)) {
-                        FilterChip(tema == Tema.ACIK, { onTema(Tema.ACIK) }, label = { Text("A莽谋k") })
+                        FilterChip(tema == Tema.ACIK, { onTema(Tema.ACIK) }, label = { Text("A鑾借皨k") })
                         FilterChip(tema == Tema.MAVI, { onTema(Tema.MAVI) }, label = { Text("Mavi") })
                         FilterChip(tema == Tema.GECE, { onTema(Tema.GECE) }, label = { Text("Gece") })
                     }
@@ -1192,10 +1192,10 @@ private fun AyarlarSayfasi(
             }
         }
         item {
-            SettingRow(Icons.Default.DirectionsCar, "Ara莽lar谋m", "$aracSayisi kay谋tl谋 ara莽", onVehicles)
+            SettingRow(Icons.Default.DirectionsCar, "Ara鑾絣ar璋媘", "$aracSayisi kay璋媡l璋� ara鑾�", onVehicles)
         }
         item {
-            SettingRow(Icons.Default.Note, "Genel Notlar", "Notlar谋n谋z谋 y枚netin", onNotes)
+            SettingRow(Icons.Default.Note, "Genel Notlar", "Notlar璋媙璋媧璋� y鏋歯etin", onNotes)
         }
     }
 }
@@ -1257,7 +1257,7 @@ private fun AraclarDialog(
 
     AlertDialog(
         onDismissRequest = onClose,
-        title = { Text("Ara莽lar谋m", fontWeight = FontWeight.ExtraBold) },
+        title = { Text("Ara鑾絣ar璋媘", fontWeight = FontWeight.ExtraBold) },
         text = {
             Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 araclar.forEach { arac ->
@@ -1284,14 +1284,14 @@ private fun AraclarDialog(
                                 Text(arac.ad, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
                                 Text(arac.plaka, fontSize = 11.sp)
                             }
-                            TextButton(onClick = { onSelect(arac) }) { Text(if (arac.secili) "Se莽ili" else "Se莽") }
+                            TextButton(onClick = { onSelect(arac) }) { Text(if (arac.secili) "Se鑾絠li" else "Se鑾�") }
                             IconButton(onClick = { onEdit(arac) }) { Icon(Icons.Default.Edit, null) }
                             IconButton(onClick = { onDelete(arac) }) { Icon(Icons.Default.Delete, null) }
                         }
                     }
                 }
 
-                OutlinedTextField(ad, { ad = it }, Modifier.fillMaxWidth(), label = { Text("Ara莽 ad谋") }, singleLine = true)
+                OutlinedTextField(ad, { ad = it }, Modifier.fillMaxWidth(), label = { Text("Ara鑾� ad璋�") }, singleLine = true)
                 OutlinedTextField(
                     plaka,
                     { plaka = it.uppercase(Locale.getDefault()) },
@@ -1303,7 +1303,7 @@ private fun AraclarDialog(
                     yakit,
                     { yakit = it.filter(Char::isDigit).take(3) },
                     Modifier.fillMaxWidth(),
-                    label = { Text("Yak谋t %") },
+                    label = { Text("Yak璋媡 %") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     singleLine = true
                 )
@@ -1328,7 +1328,7 @@ private fun AraclarDialog(
                 ) {
                     Icon(Icons.Default.Photo, null)
                     Spacer(Modifier.width(6.dp))
-                    Text(if (fotoUri.isBlank()) "Ara莽 foto臒raf谋 se莽" else "Foto臒raf se莽ildi")
+                    Text(if (fotoUri.isBlank()) "Ara鑾� foto鑷抮af璋� se鑾�" else "Foto鑷抮af se鑾絠ldi")
                 }
             }
         },
@@ -1356,7 +1356,7 @@ private fun AraclarDialog(
                         fotoUri = ""
                     }
                 }
-            ) { Text("Ara莽 Ekle") }
+            ) { Text("Ara鑾� Ekle") }
         },
         dismissButton = { TextButton(onClick = onClose) { Text("Kapat") } }
     )
@@ -1382,16 +1382,16 @@ private fun AracDuzenleDialog(arac: Arac, onClose: () -> Unit, onSave: (Arac) ->
 
     AlertDialog(
         onDismissRequest = onClose,
-        title = { Text("Ara莽 Bilgilerini D眉zenle", fontWeight = FontWeight.ExtraBold) },
+        title = { Text("Ara鑾� Bilgilerini D鐪墇enle", fontWeight = FontWeight.ExtraBold) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedTextField(ad, { ad = it }, Modifier.fillMaxWidth(), label = { Text("Ara莽 ad谋") }, singleLine = true)
+                OutlinedTextField(ad, { ad = it }, Modifier.fillMaxWidth(), label = { Text("Ara鑾� ad璋�") }, singleLine = true)
                 OutlinedTextField(plaka, { plaka = it.uppercase(Locale.getDefault()) }, Modifier.fillMaxWidth(), label = { Text("Plaka") }, singleLine = true)
                 OutlinedTextField(
                     yakit,
                     { yakit = it.filter(Char::isDigit).take(3) },
                     Modifier.fillMaxWidth(),
-                    label = { Text("Yak谋t %") },
+                    label = { Text("Yak璋媡 %") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     singleLine = true
                 )
@@ -1407,7 +1407,7 @@ private fun AracDuzenleDialog(arac: Arac, onClose: () -> Unit, onSave: (Arac) ->
                 OutlinedButton(onClick = { picker.launch(arrayOf("image/*")) }, Modifier.fillMaxWidth()) {
                     Icon(Icons.Default.Photo, null)
                     Spacer(Modifier.width(6.dp))
-                    Text("Foto臒raf de臒i艧tir")
+                    Text("Foto鑷抮af de鑷抜鑹ir")
                 }
             }
         },
@@ -1427,7 +1427,7 @@ private fun AracDuzenleDialog(arac: Arac, onClose: () -> Unit, onSave: (Arac) ->
                 }
             ) { Text("Kaydet") }
         },
-        dismissButton = { TextButton(onClick = onClose) { Text("Vazge莽") } }
+        dismissButton = { TextButton(onClick = onClose) { Text("Vazge鑾�") } }
     )
 }
 
@@ -1448,13 +1448,13 @@ private fun BitirDialog(
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(9.dp)) {
                 Text(aktif.guzergah, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
-                Text("脟谋k谋艧 KM: ${formatKm(aktif.cikisKm)}")
-                Text("脟谋k谋艧 saati: ${aktif.cikisSaati}", color = Ikincil)
+                Text("鑴熻皨k璋嬭墽 KM: ${formatKm(aktif.cikisKm)}")
+                Text("鑴熻皨k璋嬭墽 saati: ${aktif.cikisSaati}", color = Ikincil)
                 OutlinedTextField(
                     donusKm,
                     onDonusKm,
                     Modifier.fillMaxWidth(),
-                    label = { Text("D枚n眉艧 KM") },
+                    label = { Text("D鏋歯鐪夎墽 KM") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     singleLine = true
                 )
@@ -1475,7 +1475,7 @@ private fun BitirDialog(
                 Text("KAYDET")
             }
         },
-        dismissButton = { TextButton(onClick = onClose) { Text("VAZGE脟") } }
+        dismissButton = { TextButton(onClick = onClose) { Text("VAZGE鑴�") } }
     )
 }
 
@@ -1499,7 +1499,7 @@ private fun NotesDialog(notlar: String, onClose: () -> Unit, onSave: (String) ->
         confirmButton = {
             Button(onClick = { onSave(metin); onClose() }) { Text("KAYDET") }
         },
-        dismissButton = { TextButton(onClick = onClose) { Text("VAZGE脟") } }
+        dismissButton = { TextButton(onClick = onClose) { Text("VAZGE鑴�") } }
     )
 }
 
@@ -1517,7 +1517,7 @@ private fun UriImage(uri: Uri, modifier: Modifier) {
     if (bitmap != null) {
         Image(
             bitmap!!.asImageBitmap(),
-            contentDescription = "Ara莽 foto臒raf谋",
+            contentDescription = "Ara鑾� foto鑷抮af璋�",
             modifier = modifier,
             contentScale = ContentScale.Crop
         )
