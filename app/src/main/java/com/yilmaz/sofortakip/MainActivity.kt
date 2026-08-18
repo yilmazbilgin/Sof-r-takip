@@ -171,7 +171,7 @@ fun SoforTakip() {
                         }
                     },
                     onFinish = { bitirDialog = true },
-                    onNavigation = { navigasyonAc(context, guzergah) },
+                    onNavigation = { sayfa = 0 },
                     onNotes = { notlarAcik = true },
                     onReports = { sayfa = 2 },
                     onSettings = { sayfa = 3 },
