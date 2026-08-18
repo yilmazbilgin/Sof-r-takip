@@ -536,14 +536,11 @@ private fun Header(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    top = 8.dp,
-                    bottom = 8.dp
-                ),
+                .padding(horizontal = 2.dp, vertical = 6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            // Menü
+            // Hamburger menü
             Surface(
                 modifier = Modifier.size(48.dp),
                 shape = CircleShape,
@@ -556,7 +553,7 @@ private fun Header(
                         imageVector = Icons.Default.Menu,
                         contentDescription = "Menü",
                         tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(27.dp)
+                        modifier = Modifier.size(28.dp)
                     )
                 }
             }
@@ -581,7 +578,7 @@ private fun Header(
                 }
             }
 
-            Spacer(Modifier.width(12.dp))
+            Spacer(Modifier.width(10.dp))
 
             // Başlık
             Column(
@@ -591,13 +588,16 @@ private fun Header(
                     text = "Şoför Takip",
                     fontSize = 27.sp,
                     fontWeight = FontWeight.ExtraBold,
-                    color = MaterialTheme.colorScheme.onBackground
+                    maxLines = 1,
+                    softWrap = false
                 )
 
                 Text(
                     text = "Günlük sefer paneli",
                     fontSize = 15.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    softWrap = false
                 )
             }
 
@@ -607,9 +607,7 @@ private fun Header(
             ) {
                 Icon(
                     imageVector = Icons.Default.Note,
-                    contentDescription = "Notlar",
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(27.dp)
+                    contentDescription = "Notlar"
                 )
             }
 
@@ -619,14 +617,11 @@ private fun Header(
             ) {
                 Icon(
                     imageVector = Icons.Default.Palette,
-                    contentDescription = "Tema",
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(27.dp)
+                    contentDescription = "Tema"
                 )
             }
         }
 
-        // Tema menüsü
         DropdownMenu(
             expanded = themeMenu,
             onDismissRequest = onDismissTheme
@@ -654,6 +649,7 @@ private fun Header(
         }
     }
 }
+
 @Composable
 private fun WelcomeBanner(
     arac: Arac?,
