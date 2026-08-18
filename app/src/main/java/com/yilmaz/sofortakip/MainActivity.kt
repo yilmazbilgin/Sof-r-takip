@@ -530,71 +530,130 @@ private fun Header(
     onDismissTheme: () -> Unit,
     onThemeSelect: (Tema) -> Unit
 ) {
-    Box {
+    Box(
+        modifier = Modifier.fillMaxWidth()
+    ) {
         Row(
-            Modifier
+            modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 5.dp),
+                .padding(
+                    top = 8.dp,
+                    bottom = 8.dp
+                ),
             verticalAlignment = Alignment.CenterVertically
         ) {
+
+            // Menü
             Surface(
-                Modifier.size(54.dp),
-                CircleShape,
-                color = MaterialTheme.colorScheme.primary
+                modifier = Modifier.size(48.dp),
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.10f)
             ) {
-                Box(contentAlignment = Alignment.Center) {
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
                     Icon(
-                        Icons.Default.DirectionsCar,
-                        null,
-                        tint = Color.White,
-                        modifier = Modifier.size(31.dp)
+                        imageVector = Icons.Default.Menu,
+                        contentDescription = "Menü",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(27.dp)
                     )
                 }
             }
 
             Spacer(Modifier.width(10.dp))
 
-            Column(Modifier.weight(1f)) {
+            // Logo
+            Surface(
+                modifier = Modifier.size(58.dp),
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.primary
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.DirectionsCar,
+                        contentDescription = "Şoför Takip",
+                        tint = Color.White,
+                        modifier = Modifier.size(34.dp)
+                    )
+                }
+            }
+
+            Spacer(Modifier.width(12.dp))
+
+            // Başlık
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
                 Text(
-                    "Şoför Takip",
+                    text = "Şoför Takip",
                     fontSize = 27.sp,
-                    fontWeight = FontWeight.ExtraBold
+                    fontWeight = FontWeight.ExtraBold,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
+
                 Text(
-                    "Günlük sefer paneli",
+                    text = "Günlük sefer paneli",
+                    fontSize = 15.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
-            IconButton(onClick = onNotes) {
-                Icon(Icons.Default.Note, "Notlar")
+            // Notlar
+            IconButton(
+                onClick = onNotes
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Note,
+                    contentDescription = "Notlar",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(27.dp)
+                )
             }
 
-            IconButton(onClick = onTheme) {
-                Icon(Icons.Default.Palette, "Tema")
+            // Tema
+            IconButton(
+                onClick = onTheme
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Palette,
+                    contentDescription = "Tema",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(27.dp)
+                )
             }
         }
 
+        // Tema menüsü
         DropdownMenu(
             expanded = themeMenu,
             onDismissRequest = onDismissTheme
         ) {
             DropdownMenuItem(
                 text = { Text("Açık") },
-                onClick = { onThemeSelect(Tema.ACIK) }
+                onClick = {
+                    onThemeSelect(Tema.ACIK)
+                }
             )
+
             DropdownMenuItem(
                 text = { Text("Mavi") },
-                onClick = { onThemeSelect(Tema.MAVİ) }
+                onClick = {
+                    onThemeSelect(Tema.MAVİ)
+                }
             )
+
             DropdownMenuItem(
                 text = { Text("Gece") },
-                onClick = { onThemeSelect(Tema.GECE) }
+                onClick = {
+                    onThemeSelect(Tema.GECE)
+                }
             )
         }
     }
 }
-
 @Composable
 private fun WelcomeBanner(
     arac: Arac?,
