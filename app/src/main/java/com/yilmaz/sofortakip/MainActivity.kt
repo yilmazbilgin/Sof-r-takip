@@ -791,25 +791,34 @@ private fun StatsRow(
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         StatCard(120.dp, Icons.Default.DirectionsCar, sefer.toString(), "Toplam Sefer")
-        StatCard(120.dp, Icons.Default.Speed, km.toString(), "Toplam KM")
         StatCard(
-            130.dp,
-            Icons.Default.Timer,
-            "${sure / 60}s ${sure % 60}dk",
-            "Toplam Süre"
-        )
+    120.dp,
+    Icons.Default.Speed,
+    km.toString(),
+    "Toplam KM",
+    color = Color(0xFF2196F3)
+)
         StatCard(
-            125.dp,
-            Icons.Default.Speed,
-            ortalama.toString(),
-            "Ort. Sefer KM"
-        )
+    130.dp,
+    Icons.Default.Timer,
+    "${sure / 60}s ${sure % 60}dk",
+    "Toplam Süre",
+    color = Color(0xFF00C853)
+)
         StatCard(
-            120.dp,
-            Icons.Default.LocalGasStation,
-            "%$yakit",
-            "Yakıt"
-        )
+    125.dp,
+    Icons.Default.Speed,
+    ortalama.toString(),
+    "Ort. Sefer KM",
+    color = Color(0xFFFF9800)
+)
+        StatCard(
+    120.dp,
+    Icons.Default.LocalGasStation,
+    "%$yakit",
+    "Yakıt",
+    color = Color(0xFFE91E63)
+)
     }
 }
 
@@ -818,7 +827,8 @@ private fun StatCard(
     width: Dp,
     icon: ImageVector,
     value: String,
-    label: String
+    label: String,
+    color: Color
 ) {
     Card(
         Modifier
@@ -833,7 +843,7 @@ private fun StatCard(
             Surface(
                 Modifier.size(40.dp),
                 RoundedCornerShape(13.dp),
-                color = MaterialTheme.colorScheme.primary.copy(alpha = .10f)
+                color = color.copy(alpha = .18f)
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
