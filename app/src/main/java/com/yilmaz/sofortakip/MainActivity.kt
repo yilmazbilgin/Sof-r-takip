@@ -702,8 +702,7 @@ DropdownMenu(
         }
     }
 }
-    
-@Composable
+ @Composable
 private fun WelcomeBanner(
     arac: Arac?,
     seferSayisi: Int,
@@ -717,23 +716,25 @@ private fun WelcomeBanner(
         )
     ) {
         Row(
-            Modifier.padding(18.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(18.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (arac?.fotoUri?.isNotBlank() == true) {
-                UriImage(
-                    Uri.parse(arac.fotoUri),
-                    Modifier
-                        .size(106.dp)
-                        .clip(RoundedCornerShape(22.dp))
-                )
-            } else {
-                Surface(
-                    Modifier.size(106.dp),
-                    RoundedCornerShape(22.dp),
-                    color = Color.White.copy(alpha = .13f)
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
+            Surface(
+                Modifier.size(106.dp),
+                RoundedCornerShape(22.dp),
+                color = Color.White.copy(alpha = .13f)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    if (arac?.fotoUri?.isNotBlank() == true) {
+                        UriImage(
+                            Uri.parse(arac.fotoUri),
+                            Modifier
+                                .size(106.dp)
+                                .clip(RoundedCornerShape(22.dp))
+                        )
+                    } else {
                         Icon(
                             Icons.Default.DirectionsCar,
                             null,
@@ -754,12 +755,13 @@ private fun WelcomeBanner(
                     color = Color.White
                 )
 
+                Spacer(Modifier.height(5.dp))
+
                 Text(
-                    if (arac == null) {
+                    if (arac == null)
                         "Aracınızı ekleyerek başlayın."
-                    } else {
-                        "${arac.ad} • ${arac.plaka}"
-                    },
+                    else
+                        "${arac.ad} • ${arac.plaka}",
                     color = Color.White.copy(alpha = .88f),
                     fontSize = 14.sp
                 )
@@ -774,8 +776,7 @@ private fun WelcomeBanner(
             }
         }
     }
-}
-
+}   
 @Composable
 private fun StatsRow(
     sefer: Int,
