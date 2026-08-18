@@ -529,6 +529,8 @@ private fun AnaSayfa(
 private fun Header(
     onNotes: () -> Unit,
     onTheme: () -> Unit,
+    onMenu: () -> Unit,
+onDismissMenu: () -> Unit,
     anaMenu: Boolean,
     themeMenu: Boolean,
     onDismissTheme: () -> Unit,
