@@ -413,6 +413,11 @@ private fun AnaSayfa(
         item {
             Header(
     onNotes = onNotes,
+                onNavigation = onNavigation,
+onReports = onReports,
+onSettings = onSettings,
+onVehicles = onVehicles,
+onHistory = onHistory,
     onMenu = { anaMenu = true },
     anaMenu = anaMenu,
     onDismissMenu = { anaMenu = false },
@@ -528,6 +533,11 @@ private fun AnaSayfa(
 @Composable
 private fun Header(
     onNotes: () -> Unit,
+    onNavigation: () -> Unit,
+onReports: () -> Unit,
+onSettings: () -> Unit,
+onVehicles: () -> Unit,
+onHistory: () -> Unit,
     onTheme: () -> Unit,
     onMenu: () -> Unit,
 onDismissMenu: () -> Unit,
@@ -642,27 +652,27 @@ DropdownMenu(
 ) {
     DropdownMenuItem(
         text = { Text("Ana Sayfa") },
-        onClick = onDismissMenu
+        onClick = onNavigation
     )
 
     DropdownMenuItem(
         text = { Text("Geçmiş") },
-        onClick = onDismissMenu
+        onClick = onHistory
     )
 
     DropdownMenuItem(
         text = { Text("Raporlar") },
-        onClick = onDismissMenu
+        onClick = onReports
     )
 
     DropdownMenuItem(
         text = { Text("Araçlar") },
-        onClick = onDismissMenu
+        onClick = onVehicles
     )
 
     DropdownMenuItem(
         text = { Text("Ayarlar") },
-        onClick = onDismissMenu
+        onClick = onSettings
     )
 }
         DropdownMenu(
