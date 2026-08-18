@@ -399,7 +399,7 @@ private fun AnaSayfa(
     onThemeSelect: (Tema) -> Unit
 ) {
     var temaMenu by remember { mutableStateOf(false) }
-
+    var anaMenu by remember { mutableStateOf(false) }
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(
@@ -412,7 +412,10 @@ private fun AnaSayfa(
     ) {
         item {
             Header(
-                onNotes = onNotes,
+    onNotes = onNotes,
+    onMenu = { anaMenu = true },
+    anaMenu = anaMenu,
+    onDismissMenu = { anaMenu = false },
                 onTheme = {
                     temaMenu = true
                     onTheme()
@@ -526,6 +529,7 @@ private fun AnaSayfa(
 private fun Header(
     onNotes: () -> Unit,
     onTheme: () -> Unit,
+    anaMenu: Boolean,
     themeMenu: Boolean,
     onDismissTheme: () -> Unit,
     onThemeSelect: (Tema) -> Unit
@@ -630,7 +634,35 @@ private fun Header(
                 )
             }
         }
+DropdownMenu(
+    expanded = anaMenu,
+    onDismissRequest = onDismissMenu
+) {
+    DropdownMenuItem(
+        text = { Text("Ana Sayfa") },
+        onClick = onDismissMenu
+    )
 
+    DropdownMenuItem(
+        text = { Text("Geçmiş") },
+        onClick = onDismissMenu
+    )
+
+    DropdownMenuItem(
+        text = { Text("Raporlar") },
+        onClick = onDismissMenu
+    )
+
+    DropdownMenuItem(
+        text = { Text("Araçlar") },
+        onClick = onDismissMenu
+    )
+
+    DropdownMenuItem(
+        text = { Text("Ayarlar") },
+        onClick = onDismissMenu
+    )
+}
         DropdownMenu(
             expanded = themeMenu,
             onDismissRequest = onDismissTheme
