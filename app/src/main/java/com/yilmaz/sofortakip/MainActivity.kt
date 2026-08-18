@@ -948,29 +948,85 @@ private fun EmptyHistoryCard() {
 }
 
 @Composable
-private fun BottomBar(selected: Int, onSelected: (Int) -> Unit, onAdd: () -> Unit) {
-    Box {
-        NavigationBar(containerColor = Lacivert, tonalElevation = 0.dp) {
-            BottomItem(0, selected, Icons.Default.Home, "Ana Sayfa", onSelected)
-            BottomItem(1, selected, Icons.Default.History, "Ge莽mi艧", onSelected)
-            Spacer(Modifier.width(65.dp))
-            BottomItem(2, selected, Icons.Default.BarChart, "Raporlar", onSelected)
-            BottomItem(3, selected, Icons.Default.Settings, "Ayarlar", onSelected)
+private fun BottomBar(
+    selected: Int,
+    onSelected: (Int) -> Unit,
+    onAdd: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(82.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(82.dp)
+                .background(Lacivert)
+                .padding(horizontal = 6.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            BottomItem(
+                modifier = Modifier.weight(1f),
+                index = 0,
+                selected = selected,
+                icon = Icons.Default.Home,
+                label = "Ana Sayfa",
+                onSelected = onSelected
+            )
+
+            BottomItem(
+                modifier = Modifier.weight(1f),
+                index = 1,
+                selected = selected,
+                icon = Icons.Default.History,
+                label = "Ge莽mi艧",
+                onSelected = onSelected
+            )
+
+            Spacer(Modifier.width(68.dp))
+
+            BottomItem(
+                modifier = Modifier.weight(1f),
+                index = 2,
+                selected = selected,
+                icon = Icons.Default.BarChart,
+                label = "Raporlar",
+                onSelected = onSelected
+            )
+
+            BottomItem(
+                modifier = Modifier.weight(1f),
+                index = 3,
+                selected = selected,
+                icon = Icons.Default.Settings,
+                label = "Ayarlar",
+                onSelected = onSelected
+            )
         }
+
         FloatingActionButton(
             onClick = onAdd,
-            modifier = Modifier.align(Alignment.TopCenter).offset(y = (-18).dp),
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .offset(y = (-18).dp)
+                .size(62.dp),
             containerColor = Mor,
             contentColor = Color.White,
             shape = CircleShape
         ) {
-            Icon(Icons.Default.Add, null, modifier = Modifier.size(31.dp))
+            Icon(
+                Icons.Default.Add,
+                contentDescription = "Yeni sefer",
+                modifier = Modifier.size(32.dp)
+            )
         }
     }
 }
 
 @Composable
 private fun BottomItem(
+    modifier: Modifier,
     index: Int,
     selected: Int,
     icon: ImageVector,
@@ -980,35 +1036,34 @@ private fun BottomItem(
     val isSelected = selected == index
 
     Column(
-        modifier = Modifier
-            .width(76.dp)
+        modifier = modifier
             .fillMaxHeight()
             .clickable { onSelected(index) }
-            .padding(top = 8.dp, bottom = 4.dp),
+            .padding(top = 7.dp, bottom = 5.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Surface(
-            shape = RoundedCornerShape(14.dp),
-            color = if (isSelected) Mor.copy(alpha = 0.28f) else Color.Transparent
+            shape = RoundedCornerShape(15.dp),
+            color = if (isSelected) Mor else Color.Transparent
         ) {
             Box(
                 modifier = Modifier
-                    .size(width = 48.dp, height = 32.dp),
+                    .size(width = 50.dp, height = 34.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = icon,
                     contentDescription = label,
-                    modifier = Modifier.size(24.dp),
+                    modifier = Modifier.size(25.dp),
                     tint = if (isSelected) Color.White else Color(0xFFAEB9CC)
                 )
             }
-        }
+        )
 
         Text(
             text = label,
-            fontSize = 10.sp,
+            fontSize = 11.sp,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
             color = if (isSelected) Color.White else Color(0xFFAEB9CC),
             maxLines = 1
