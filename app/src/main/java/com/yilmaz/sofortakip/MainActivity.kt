@@ -548,7 +548,7 @@ onDismissMenu: () -> Unit,
 
             // Menü
             IconButton(
-                onClick = { },
+                onClick = onMenu,
                 modifier = Modifier.size(44.dp)
             ) {
                 Surface(
