@@ -790,7 +790,13 @@ private fun StatsRow(
             .horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        StatCard(120.dp, Icons.Default.DirectionsCar, sefer.toString(), "Toplam Sefer")
+        StatCard(
+    120.dp,
+    Icons.Default.DirectionsCar,
+    sefer.toString(),
+    "Toplam Sefer",
+    color = Color(0xFF6C2BD9)
+)
         StatCard(
     120.dp,
     Icons.Default.Speed,
