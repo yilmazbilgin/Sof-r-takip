@@ -838,15 +838,15 @@ private fun StatCard(
     Card(
         Modifier
             .width(width)
-            .height(126.dp),
+            .height(92.dp),
         shape = RoundedCornerShape(22.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         )
     ) {
-        Column(Modifier.padding(15.dp)) {
+        Column(Modifier.padding(7.dp)) {
             Surface(
-                Modifier.size(40.dp),
+                Modifier.size(28.dp),
                 RoundedCornerShape(13.dp),
                 color = color.copy(alpha = .18f)
             ) {
@@ -859,17 +859,19 @@ private fun StatCard(
                 }
             }
 
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(4.dp))
 
             Text(
-                value,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.ExtraBold
-            )
+    value,
+    fontSize = 15.sp,
+    fontWeight = FontWeight.ExtraBold,
+    maxLines = 1,
+    softWrap = false
+)
 
             Text(
                 label,
-                fontSize = 12.sp,
+                fontSize = 9.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
