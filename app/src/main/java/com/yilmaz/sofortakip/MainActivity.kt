@@ -1086,6 +1086,7 @@ private fun SelectionField(
     }
 }
 
+
 @Composable
 private fun VehicleInfoCard(
     modifier: Modifier,
@@ -1093,7 +1094,9 @@ private fun VehicleInfoCard(
     onSelect: () -> Unit
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onSelect() },
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
@@ -1118,12 +1121,10 @@ private fun VehicleInfoCard(
                     imageVector = Icons.Default.DirectionsCar,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(22.dp)
+                    modifier = Modifier.size(24.dp)
                 )
 
-                Spacer(
-                    modifier = Modifier.width(7.dp)
-                )
+                Spacer(modifier = Modifier.width(7.dp))
 
                 Text(
                     text = "Araç Bilgisi",
@@ -1132,13 +1133,11 @@ private fun VehicleInfoCard(
                     color = MaterialTheme.colorScheme.primary
                 )
 
-                Spacer(
-                    modifier = Modifier.weight(1f)
-                )
+                Spacer(modifier = Modifier.weight(1f))
 
                 IconButton(
                     onClick = onSelect,
-                    modifier = Modifier.size(30.dp)
+                    modifier = Modifier.size(32.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.MoreHoriz,
@@ -1155,12 +1154,8 @@ private fun VehicleInfoCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(145.dp)
-                        .clip(
-                            RoundedCornerShape(18.dp)
-                        )
-                        .clickable(
-                            onClick = onSelect
-                        ),
+                        .clip(RoundedCornerShape(18.dp))
+                        .clickable { onSelect() },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -1175,11 +1170,7 @@ private fun VehicleInfoCard(
                     text = "Araç seçin",
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable(
-                            onClick = onSelect
-                        )
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 Text(
@@ -1197,9 +1188,7 @@ private fun VehicleInfoCard(
                         Modifier
                             .fillMaxWidth()
                             .height(112.dp)
-                            .clip(
-                                RoundedCornerShape(17.dp)
-                            )
+                            .clip(RoundedCornerShape(17.dp))
                     )
                 } else {
                     Surface(
@@ -1252,14 +1241,10 @@ private fun VehicleInfoCard(
                     Text(
                         text = "Yakıt",
                         fontSize = 11.sp,
-                        color = MaterialTheme
-                            .colorScheme
-                            .onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
-                    Spacer(
-                        modifier = Modifier.weight(1f)
-                    )
+                    Spacer(modifier = Modifier.weight(1f))
 
                     Text(
                         text = "%${arac.yakit}",
@@ -1269,20 +1254,14 @@ private fun VehicleInfoCard(
                     )
                 }
 
-                // Yakıt seviyesi
                 LinearProgressIndicator(
-                    progress = arac.yakit
-                        .coerceIn(0, 100) / 100f,
+                    progress = arac.yakit.coerceIn(0, 100) / 100f,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(6.dp)
-                        .clip(
-                            RoundedCornerShape(5.dp)
-                        ),
+                        .clip(RoundedCornerShape(5.dp)),
                     color = Color(0xFF25B85A),
-                    trackColor = MaterialTheme
-                        .colorScheme
-                        .surfaceVariant
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant
                 )
 
                 // Kilometre
@@ -1299,8 +1278,7 @@ private fun VehicleInfoCard(
             }
         }
     }
-}
-
+}                
 @Composable
 private fun VehicleInfoLine(
     label: String,
