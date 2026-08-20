@@ -863,7 +863,7 @@ private fun StatCard(
 
             Text(
     value,
-    fontSize = 15.sp,
+    fontSize = 13.sp,
     fontWeight = FontWeight.ExtraBold,
     maxLines = 1,
     softWrap = false
