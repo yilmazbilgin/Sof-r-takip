@@ -1098,92 +1098,123 @@ private fun VehicleInfoCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 2.dp
+        )
     ) {
         Column(
-            Modifier
+            modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(7.dp)
+                .padding(14.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+
+            // Kart başlığı
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Icon(
-                    Icons.Default.DirectionsCar,
-                    null,
-                    tint = MaterialTheme.colorScheme.primary
+                    imageVector = Icons.Default.DirectionsCar,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(22.dp)
                 )
-                Spacer(Modifier.width(7.dp))
+
+                Spacer(
+                    modifier = Modifier.width(7.dp)
+                )
+
                 Text(
-                    "Araç Bilgisi",
+                    text = "Araç Bilgisi",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = MaterialTheme.colorScheme.primary
                 )
-                Spacer(Modifier.weight(1f))
+
+                Spacer(
+                    modifier = Modifier.weight(1f)
+                )
+
                 IconButton(
                     onClick = onSelect,
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier.size(30.dp)
                 ) {
                     Icon(
-                        Icons.Default.MoreHoriz,
-                        "Araç seç",
-                        modifier = Modifier.size(24.dp)
+                        imageVector = Icons.Default.MoreHoriz,
+                        contentDescription = "Araç seç",
+                        modifier = Modifier.size(23.dp)
                     )
                 }
             }
 
             if (arac == null) {
+
+                // Araç seçilmemiş durum
                 Box(
-                    Modifier
+                    modifier = Modifier
                         .fillMaxWidth()
-                        .height(110.dp)
-                        .clip(RoundedCornerShape(17.dp))
-                        .clickable(onClick = onSelect),
+                        .height(145.dp)
+                        .clip(
+                            RoundedCornerShape(18.dp)
+                        )
+                        .clickable(
+                            onClick = onSelect
+                        ),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        Icons.Default.DirectionsCar,
-                        null,
+                        imageVector = Icons.Default.DirectionsCar,
+                        contentDescription = null,
                         tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(55.dp)
+                        modifier = Modifier.size(62.dp)
                     )
                 }
 
                 Text(
-                    "Araç seçin",
-                    fontSize = 14.sp,
+                    text = "Araç seçin",
+                    fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable(onClick = onSelect)
+                        .clickable(
+                            onClick = onSelect
+                        )
                 )
 
                 Text(
-                    "Araç eklemek veya seçmek için dokunun.",
+                    text = "Araç eklemek veya seçmek için dokunun.",
                     fontSize = 11.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+
             } else {
+
+                // Araç fotoğrafı
                 if (arac.fotoUri.isNotBlank()) {
                     UriImage(
                         Uri.parse(arac.fotoUri),
                         Modifier
                             .fillMaxWidth()
-                            .height(110.dp)
-                            .clip(RoundedCornerShape(17.dp))
+                            .height(112.dp)
+                            .clip(
+                                RoundedCornerShape(17.dp)
+                            )
                     )
                 } else {
                     Surface(
-                        Modifier
+                        modifier = Modifier
                             .fillMaxWidth()
-                            .height(110.dp),
+                            .height(112.dp),
                         shape = RoundedCornerShape(17.dp),
                         color = MaterialTheme.colorScheme.surfaceVariant
                     ) {
-                        Box(contentAlignment = Alignment.Center) {
+                        Box(
+                            contentAlignment = Alignment.Center
+                        ) {
                             Icon(
-                                Icons.Default.DirectionsCar,
-                                null,
+                                imageVector = Icons.Default.DirectionsCar,
+                                contentDescription = null,
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(58.dp)
                             )
@@ -1191,53 +1222,79 @@ private fun VehicleInfoCard(
                     }
                 }
 
+                // Araç adı
                 Text(
-                    arac.ad,
+                    text = arac.ad,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold
                 )
 
-                VehicleInfoLine("Plaka", arac.plaka)
+                // Plaka
                 VehicleInfoLine(
-                    "Yakıt Tipi",
-                    yakitTipi(arac.ad, arac.sonDolum)
+                    label = "Plaka",
+                    value = arac.plaka
                 )
 
+                // Yakıt tipi
+                VehicleInfoLine(
+                    label = "Yakıt Tipi",
+                    value = yakitTipi(
+                        arac.ad,
+                        arac.sonDolum
+                    )
+                )
+
+                // Yakıt yüzdesi
                 Row(
-                    Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        "Yakıt",
+                        text = "Yakıt",
                         fontSize = 11.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme
+                            .colorScheme
+                            .onSurfaceVariant
                     )
-                    Spacer(Modifier.weight(1f))
+
+                    Spacer(
+                        modifier = Modifier.weight(1f)
+                    )
+
                     Text(
-                        "%${arac.yakit}",
+                        text = "%${arac.yakit}",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF25B85A)
                     )
                 }
 
+                // Yakıt seviyesi
                 LinearProgressIndicator(
-                    progress = arac.yakit.coerceIn(0, 100) / 100f,
+                    progress = arac.yakit
+                        .coerceIn(0, 100) / 100f,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(6.dp)
-                        .clip(RoundedCornerShape(5.dp)),
+                        .clip(
+                            RoundedCornerShape(5.dp)
+                        ),
                     color = Color(0xFF25B85A),
-                    trackColor = MaterialTheme.colorScheme.surfaceVariant
+                    trackColor = MaterialTheme
+                        .colorScheme
+                        .surfaceVariant
                 )
 
+                // Kilometre
                 VehicleInfoLine(
-                    "Km",
-                    "${formatKm(arac.sonKm)} km"
+                    label = "Km",
+                    value = "${formatKm(arac.sonKm)} km"
                 )
+
+                // Periyodik bakım
                 VehicleInfoLine(
-                    "Periyodik Bakım",
-                    "12.500 km"
+                    label = "Periyodik Bakım",
+                    value = "12.500 km"
                 )
             }
         }
