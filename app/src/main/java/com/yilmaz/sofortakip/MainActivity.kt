@@ -453,25 +453,68 @@ onHistory = onHistory,
         }
 
         item {
-            Row(
-                Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    "Yeni Sefer",
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
+    Row(
+        Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            "Yeni Sefer",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.ExtraBold,
+            modifier = Modifier.weight(1f)
+        )
 
-                TextButton(onClick = onVehicles) {
-                    Icon(Icons.Default.DirectionsCar, null)
-                    Spacer(Modifier.width(5.dp))
-                    Text("Araç Bilgisi", fontWeight = FontWeight.Bold)
+        if (seciliArac != null) {
+            Card(
+                modifier = Modifier
+                    .width(150.dp)
+                    .height(64.dp)
+                    .clickable { onVehicles() },
+                shape = RoundedCornerShape(14.dp)
+            ) {
+                Row(
+                    modifier = Modifier.padding(7.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (seciliArac.fotoUri.isNotBlank()) {
+                        AsyncImage(
+                            model = Uri.parse(seciliArac.fotoUri),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(50.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                        )
+                    }
+
+                    Spacer(Modifier.width(7.dp))
+
+                    Column {
+                        Text(
+                            seciliArac.ad,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            softWrap = false
+                        )
+
+                        Text(
+                            seciliArac.plaka,
+                            fontSize = 9.sp,
+                            maxLines = 1,
+                            softWrap = false
+                        )
+
+                        Text(
+                            "Yakıt %${seciliArac.yakit}",
+                            fontSize = 8.sp
+                        )
+                    }
                 }
             }
         }
-
+    }
+        }
+        
         item {
             NewTripProfessional(
                 seciliArac = seciliArac,
@@ -710,7 +753,7 @@ private fun WelcomeBanner(
 ) {
     Card(
         Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(30.dp),
+        shape = RoundedCornerShape(22.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primary
         )
@@ -718,11 +761,11 @@ private fun WelcomeBanner(
         Row(
             Modifier
                 .fillMaxWidth()
-                .padding(18.dp),
+                .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Surface(
-                Modifier.size(106.dp),
+                Modifier.size(84.dp),
                 RoundedCornerShape(22.dp),
                 color = Color.White.copy(alpha = .13f)
             ) {
@@ -745,17 +788,17 @@ private fun WelcomeBanner(
                 }
             }
 
-            Spacer(Modifier.width(16.dp))
+            Spacer(Modifier.width(10.dp))
 
             Column {
                 Text(
                     "Bugün hazır mısınız?",
-                    fontSize = 24.sp,
+                    fontSize = 21.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = Color.White
                 )
 
-                Spacer(Modifier.height(5.dp))
+                Spacer(Modifier.height(3.dp))
 
                 Text(
                     if (arac == null)
@@ -763,10 +806,10 @@ private fun WelcomeBanner(
                     else
                         "${arac.ad} • ${arac.plaka}",
                     color = Color.White.copy(alpha = .88f),
-                    fontSize = 14.sp
+                    fontSize = 10.sp
                 )
 
-                Spacer(Modifier.height(9.dp))
+                Spacer(Modifier.height(3.dp))
 
                 Text(
                     "$seferSayisi sefer • $toplamKm KM",
@@ -787,38 +830,38 @@ private fun StatsRow(
 ) {
     Row(
     Modifier.fillMaxWidth(),
-    horizontalArrangement = Arrangement.spacedBy(6.dp)
+    horizontalArrangement = Arrangement.spacedBy(3.dp)
 ) {
         StatCard(
-    62.dp,
+    56.dp,
     Icons.Default.DirectionsCar,
     sefer.toString(),
     "Toplam Sefer",
     color = Color(0xFF6C2BD9)
 )
         StatCard(
-   62.dp,
+   56.dp,
     Icons.Default.Speed,
     km.toString(),
     "Toplam KM",
     color = Color(0xFF2196F3)
 )
         StatCard(
-    62.dp,
+    56.dp,
     Icons.Default.Timer,
     "${sure / 60}s ${sure % 60}dk",
     "Toplam Süre",
     color = Color(0xFF00C853)
 )
         StatCard(
-    62.dp,
+    56.dp,
     Icons.Default.Speed,
     ortalama.toString(),
     "Ort. Sefer KM",
     color = Color(0xFFFF9800)
 )
         StatCard(
-    62.dp,
+    56.dp,
     Icons.Default.LocalGasStation,
     "%$yakit",
     "Yakıt",
@@ -838,16 +881,16 @@ private fun StatCard(
     Card(
         Modifier
             .width(width)
-            .height(92.dp),
+            .height(88.dp),
         shape = RoundedCornerShape(22.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         )
     ) {
-        Column(Modifier.padding(7.dp)) {
+        Column(Modifier.padding(6.dp)) {
             Surface(
-                Modifier.size(28.dp),
-                RoundedCornerShape(13.dp),
+                Modifier.size(26.dp),
+                RoundedCornerShape(11.dp),
                 color = color.copy(alpha = .18f)
             ) {
                 Box(contentAlignment = Alignment.Center) {
@@ -859,11 +902,11 @@ private fun StatCard(
                 }
             }
 
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(2.dp))
 
             Text(
     value,
-    fontSize = 13.sp,
+    fontSize = 12.sp,
     fontWeight = FontWeight.ExtraBold,
     maxLines = 1,
     softWrap = false
@@ -871,7 +914,7 @@ private fun StatCard(
 
             Text(
                 label,
-                fontSize = 9.sp,
+                fontSize = 8.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
@@ -892,15 +935,15 @@ private fun NewTripProfessional(
 ) {
     Card(
         Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(28.dp),
+        shape = RoundedCornerShape(22.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
         elevation = CardDefaults.cardElevation(3.dp)
     ) {
         Column(
-            Modifier.padding(18.dp),
-            verticalArrangement = Arrangement.spacedBy(11.dp)
+            Modifier.padding(10.dp),
+            verticalArrangement = Arrangement.spacedBy(7.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (seciliArac?.fotoUri?.isNotBlank() == true) {
@@ -916,7 +959,7 @@ private fun NewTripProfessional(
                 Column(Modifier.weight(1f)) {
                     Text(
                         if (aktif) "Sefer Devam Ediyor" else "Yeni Sefer",
-                        fontSize = 23.sp,
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.ExtraBold
                     )
 
@@ -953,7 +996,7 @@ private fun NewTripProfessional(
                 placeholder = { Text("Örn. Akseki - Antalya") },
                 leadingIcon = { Icon(Icons.Default.Place, null) },
                 singleLine = true,
-                shape = RoundedCornerShape(17.dp)
+                shape = RoundedCornerShape(16.dp)
             )
 
             OutlinedTextField(
@@ -969,17 +1012,17 @@ private fun NewTripProfessional(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number
                 ),
-                shape = RoundedCornerShape(17.dp)
+                shape = RoundedCornerShape(16.dp)
             )
 
             if (aktif) {
                 Surface(
                     Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(15.dp),
+                    shape = RoundedCornerShape(14.dp),
                     color = Color(0xFFE9F7EE)
                 ) {
                     Row(
-                        Modifier.padding(13.dp),
+                        Modifier.padding(9.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
@@ -987,7 +1030,7 @@ private fun NewTripProfessional(
                             null,
                             tint = Color(0xFF238636)
                         )
-                        Spacer(Modifier.width(8.dp))
+                        Spacer(Modifier.width(6.dp))
                         Text(
                             "Çıkış saati: $cikisSaati",
                             fontWeight = FontWeight.Bold
