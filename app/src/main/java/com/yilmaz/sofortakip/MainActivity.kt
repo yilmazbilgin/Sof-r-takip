@@ -786,41 +786,39 @@ private fun StatsRow(
     yakit: Int
 ) {
     Row(
-        Modifier
-            .fillMaxWidth()
-            .horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
+    Modifier.fillMaxWidth(),
+    horizontalArrangement = Arrangement.spacedBy(6.dp)
+) {
         StatCard(
-    120.dp,
+    62.dp,
     Icons.Default.DirectionsCar,
     sefer.toString(),
     "Toplam Sefer",
     color = Color(0xFF6C2BD9)
 )
         StatCard(
-    120.dp,
+   62.dp,
     Icons.Default.Speed,
     km.toString(),
     "Toplam KM",
     color = Color(0xFF2196F3)
 )
         StatCard(
-    130.dp,
+    62.dp,
     Icons.Default.Timer,
     "${sure / 60}s ${sure % 60}dk",
     "Toplam Süre",
     color = Color(0xFF00C853)
 )
         StatCard(
-    125.dp,
+    62.dp,
     Icons.Default.Speed,
     ortalama.toString(),
     "Ort. Sefer KM",
     color = Color(0xFFFF9800)
 )
         StatCard(
-    120.dp,
+    62.dp,
     Icons.Default.LocalGasStation,
     "%$yakit",
     "Yakıt",
