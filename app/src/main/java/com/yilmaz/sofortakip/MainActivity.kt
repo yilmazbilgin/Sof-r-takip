@@ -797,7 +797,7 @@ private fun HomeTripCard(sefer: Sefer, arac: Arac?) {
                     Spacer(Modifier.width(7.dp)); Icon(Icons.Default.AccessTime, null, modifier = Modifier.size(10.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
                     Spacer(Modifier.width(3.dp)); Text(sefer.cikisSaati, fontSize = 8.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
-                Text("Süre: ${formatSure(sefer.toplamSure)} • ${formatKm(sefer.toplamKm)} KM", fontSize = 8.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
+                Text("Süre: ${sefer.toplamSure / 60}s ${sefer.toplamSure % 60}dk • ${formatKm(sefer.toplamKm)} KM", fontSize = 8.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
             }
             Surface(shape = RoundedCornerShape(10.dp), color = MaterialTheme.colorScheme.primary.copy(alpha=.10f)) { Text("${formatKm(sefer.toplamKm)} KM", Modifier.padding(horizontal=7.dp, vertical=4.dp), fontSize=9.sp, fontWeight=FontWeight.Bold, color=MaterialTheme.colorScheme.primary) }
             Icon(Icons.Default.ChevronRight, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(19.dp))
