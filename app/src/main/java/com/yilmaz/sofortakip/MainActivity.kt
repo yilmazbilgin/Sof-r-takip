@@ -504,9 +504,9 @@ private fun AnaSayfa(
             start = 16.dp,
             end = 16.dp,
             top = 2.dp,
-            bottom = 10.dp
+            bottom = 8.dp
         ),
-        verticalArrangement = Arrangement.spacedBy(7.dp)
+        verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         item {
             Header(
@@ -916,7 +916,7 @@ private fun StatCard(
     iconColor: Color
 ) {
     Card(
-        modifier = modifier.height(82.dp),
+        modifier = modifier.height(78.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -976,7 +976,7 @@ private fun NewTripCard(
     onFinish: () -> Unit
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier.height(304.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
@@ -986,8 +986,8 @@ private fun NewTripCard(
         Column(
             Modifier
                 .fillMaxWidth()
-                .padding(9.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
+                .padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
             Text(
                 if (aktif) "Sefer Devam Ediyor" else "Yeni Sefer",
@@ -1081,8 +1081,8 @@ private fun SelectionField(
         Row(
             Modifier
                 .fillMaxWidth()
-                .height(54.dp)
-                .padding(horizontal = 11.dp),
+                .height(42.dp)
+                .padding(horizontal = 9.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
@@ -1090,7 +1090,7 @@ private fun SelectionField(
                 null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            Spacer(Modifier.width(10.dp))
+            Spacer(Modifier.width(7.dp))
             Text(
                 text,
                 modifier = Modifier.weight(1f),
@@ -1120,9 +1120,10 @@ private fun VehicleInfoCard(
 ) {
     Card(
         modifier = modifier
+            .height(304.dp)
             .fillMaxWidth()
             .clickable { onSelect() },
-        shape = RoundedCornerShape(24.dp),
+        shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
@@ -1133,8 +1134,8 @@ private fun VehicleInfoCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp),
-            verticalArrangement = Arrangement.spacedBy(5.dp)
+                .padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
 
             // Kart başlığı
@@ -1178,7 +1179,7 @@ private fun VehicleInfoCard(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(105.dp)
+                        .height(96.dp)
                         .clip(RoundedCornerShape(18.dp))
                         .clickable { onSelect() },
                     contentAlignment = Alignment.Center
@@ -1193,7 +1194,7 @@ private fun VehicleInfoCard(
 
                 Text(
                     text = "Araç seçin",
-                    fontSize = 15.sp,
+                    fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -1212,14 +1213,14 @@ private fun VehicleInfoCard(
                         Uri.parse(arac.fotoUri),
                         Modifier
                             .fillMaxWidth()
-                            .height(82.dp)
+                            .height(78.dp)
                             .clip(RoundedCornerShape(17.dp))
                     )
                 } else {
                     Surface(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(82.dp),
+                            .height(78.dp),
                         shape = RoundedCornerShape(17.dp),
                         color = MaterialTheme.colorScheme.surfaceVariant
                     ) {
@@ -1239,7 +1240,7 @@ private fun VehicleInfoCard(
                 // Araç adı
                 Text(
                     text = arac.ad,
-                    fontSize = 15.sp,
+                    fontSize = 14.sp,
                     fontWeight = FontWeight.Bold
                 )
 
@@ -1423,11 +1424,11 @@ private fun ActionCard(
         Column(
             Modifier
                 .fillMaxWidth()
-                .padding(10.dp),
+                .padding(7.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Surface(
-                Modifier.size(45.dp),
+                Modifier.size(38.dp),
                 RoundedCornerShape(14.dp),
                 color = iconColor.copy(alpha = 0.12f)
             ) {
@@ -1436,23 +1437,23 @@ private fun ActionCard(
                         icon,
                         null,
                         tint = iconColor,
-                        modifier = Modifier.size(27.dp)
+                        modifier = Modifier.size(22.dp)
                     )
                 }
             }
 
-            Spacer(Modifier.height(7.dp))
+            Spacer(Modifier.height(4.dp))
 
             Text(
                 title,
-                fontSize = 12.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1
             )
 
             Text(
                 subtitle,
-                fontSize = 9.sp,
+                fontSize = 8.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1
             )
@@ -1473,20 +1474,20 @@ private fun HomeTripCard(
         )
     ) {
         Row(
-            Modifier.padding(8.dp),
+            Modifier.padding(6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (arac?.fotoUri?.isNotBlank() == true) {
                 UriImage(
                     Uri.parse(arac.fotoUri),
                     Modifier
-                        .size(76.dp)
-                        .clip(RoundedCornerShape(13.dp))
+                        .size(58.dp)
+                        .clip(RoundedCornerShape(11.dp))
                 )
             } else {
                 Surface(
-                    Modifier.size(76.dp),
-                    RoundedCornerShape(13.dp),
+                    Modifier.size(58.dp),
+                    RoundedCornerShape(11.dp),
                     color = MaterialTheme.colorScheme.surfaceVariant
                 ) {
                     Box(contentAlignment = Alignment.Center) {
@@ -1505,7 +1506,7 @@ private fun HomeTripCard(
             Column(Modifier.weight(1f)) {
                 Text(
                     sefer.guzergah,
-                    fontSize = 14.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.ExtraBold,
                     maxLines = 1
                 )
@@ -1519,7 +1520,7 @@ private fun HomeTripCard(
                     Spacer(Modifier.width(3.dp))
                     Text(
                         sefer.tarih,
-                        fontSize = 10.sp,
+                        fontSize = 9.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(Modifier.width(8.dp))
@@ -1531,14 +1532,14 @@ private fun HomeTripCard(
                     Spacer(Modifier.width(3.dp))
                     Text(
                         sefer.cikisSaati,
-                        fontSize = 10.sp,
+                        fontSize = 9.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
 
                 Text(
                     "Süre: ${sefer.toplamSure} • Ort. Hız: --",
-                    fontSize = 10.sp,
+                    fontSize = 9.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1
                 )
@@ -1554,7 +1555,7 @@ private fun HomeTripCard(
                         horizontal = 9.dp,
                         vertical = 5.dp
                     ),
-                    fontSize = 10.sp,
+                    fontSize = 9.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
