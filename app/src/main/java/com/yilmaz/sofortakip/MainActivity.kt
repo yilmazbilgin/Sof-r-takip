@@ -503,10 +503,10 @@ private fun AnaSayfa(
         contentPadding = PaddingValues(
             start = 16.dp,
             end = 16.dp,
-            top = 8.dp,
-            bottom = 32.dp
+            top = 2.dp,
+            bottom = 10.dp
         ),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+        verticalArrangement = Arrangement.spacedBy(7.dp)
     ) {
         item {
             Header(
@@ -777,7 +777,7 @@ private fun WelcomeBanner(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(27.dp),
+        shape = RoundedCornerShape(22.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primary
         )
@@ -785,12 +785,12 @@ private fun WelcomeBanner(
         Row(
             Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Surface(
                 modifier = Modifier
-                    .size(106.dp)
+                    .size(82.dp)
                     .clip(RoundedCornerShape(24.dp)),
                 color = Color.White.copy(alpha = 0.13f)
             ) {
@@ -813,18 +813,18 @@ private fun WelcomeBanner(
                 }
             }
 
-            Spacer(Modifier.width(14.dp))
+            Spacer(Modifier.width(9.dp))
 
             Column(Modifier.weight(1f)) {
                 Text(
                     "Bugün hazır\nmısınız?",
-                    fontSize = 25.sp,
-                    lineHeight = 27.sp,
+                    fontSize = 21.sp,
+                    lineHeight = 23.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = Color.White
                 )
 
-                Spacer(Modifier.height(7.dp))
+                Spacer(Modifier.height(4.dp))
 
                 Text(
                     if (arac == null) {
@@ -832,7 +832,7 @@ private fun WelcomeBanner(
                     } else {
                         "${arac.ad} • ${arac.plaka}"
                     },
-                    fontSize = 13.sp,
+                    fontSize = 11.sp,
                     color = Color.White.copy(alpha = 0.90f),
                     maxLines = 1
                 )
@@ -841,7 +841,7 @@ private fun WelcomeBanner(
 
                 Text(
                     "${seferSayisi} sefer • ${formatKm(toplamKm)} KM",
-                    fontSize = 18.sp,
+                    fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
@@ -851,7 +851,7 @@ private fun WelcomeBanner(
                 Icons.Default.Route,
                 null,
                 tint = Color.White.copy(alpha = 0.10f),
-                modifier = Modifier.size(75.dp)
+                modifier = Modifier.size(55.dp)
             )
         }
     }
@@ -867,7 +867,7 @@ private fun StatsRow(
 ) {
     Row(
         Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(7.dp)
+        horizontalArrangement = Arrangement.spacedBy(5.dp)
     ) {
         StatCard(
             modifier = Modifier.weight(1f),
@@ -916,7 +916,7 @@ private fun StatCard(
     iconColor: Color
 ) {
     Card(
-        modifier = modifier.height(112.dp),
+        modifier = modifier.height(82.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -929,7 +929,7 @@ private fun StatCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Surface(
-                modifier = Modifier.size(38.dp),
+                modifier = Modifier.size(30.dp),
                 shape = RoundedCornerShape(13.dp),
                 color = iconColor.copy(alpha = 0.12f)
             ) {
@@ -938,23 +938,23 @@ private fun StatCard(
                         icon,
                         null,
                         tint = iconColor,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(19.dp)
                     )
                 }
             }
 
-            Spacer(Modifier.height(5.dp))
+            Spacer(Modifier.height(3.dp))
 
             Text(
                 value,
-                fontSize = 15.sp,
+                fontSize = 13.sp,
                 fontWeight = FontWeight.ExtraBold,
                 maxLines = 1
             )
 
             Text(
                 label,
-                fontSize = 9.sp,
+                fontSize = 8.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1
             )
@@ -977,7 +977,7 @@ private fun NewTripCard(
 ) {
     Card(
         modifier = modifier,
-        shape = RoundedCornerShape(24.dp),
+        shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
@@ -986,19 +986,19 @@ private fun NewTripCard(
         Column(
             Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(9.dp)
+                .padding(9.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             Text(
                 if (aktif) "Sefer Devam Ediyor" else "Yeni Sefer",
-                fontSize = 20.sp,
+                fontSize = 17.sp,
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.primary
             )
 
             Text(
                 if (aktif) "Seferiniz devam ediyor" else "Seferinizi başlatın",
-                fontSize = 11.sp,
+                fontSize = 9.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
@@ -1133,8 +1133,8 @@ private fun VehicleInfoCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(14.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(10.dp),
+            verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
 
             // Kart başlığı
@@ -1153,7 +1153,7 @@ private fun VehicleInfoCard(
 
                 Text(
                     text = "Araç Bilgisi",
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -1178,7 +1178,7 @@ private fun VehicleInfoCard(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(145.dp)
+                        .height(105.dp)
                         .clip(RoundedCornerShape(18.dp))
                         .clickable { onSelect() },
                     contentAlignment = Alignment.Center
@@ -1212,14 +1212,14 @@ private fun VehicleInfoCard(
                         Uri.parse(arac.fotoUri),
                         Modifier
                             .fillMaxWidth()
-                            .height(112.dp)
+                            .height(82.dp)
                             .clip(RoundedCornerShape(17.dp))
                     )
                 } else {
                     Surface(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(112.dp),
+                            .height(82.dp),
                         shape = RoundedCornerShape(17.dp),
                         color = MaterialTheme.colorScheme.surfaceVariant
                     ) {
