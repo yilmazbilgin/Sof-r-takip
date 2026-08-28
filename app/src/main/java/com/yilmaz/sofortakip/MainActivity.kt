@@ -418,9 +418,17 @@ private fun BottomNavigation(
     onSettings: () -> Unit,
     onPlus: () -> Unit
 ) {
-    Box(Modifier.fillMaxWidth().height(82.dp)) {
+    // Sistem gezinme/gesture alanını uygulama alt menüsünden ayır.
+    // Alt menü artık telefonun sistem tuşlarının arkasına düşmez.
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .navigationBarsPadding()
+    ) {
         NavigationBar(
-            modifier = Modifier.fillMaxWidth().height(82.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(82.dp),
             containerColor = MaterialTheme.colorScheme.surface,
             windowInsets = WindowInsets(0, 0, 0, 0)
         ) {
