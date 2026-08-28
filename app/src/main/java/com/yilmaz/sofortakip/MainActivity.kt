@@ -785,12 +785,12 @@ private fun WelcomeBanner(
         Row(
             Modifier
                 .fillMaxWidth()
-                padding(6.dp),
+                .padding(6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Surface(
                 modifier = Modifier
-                    size(68.dp)
+                    .size(68.dp)
                     .clip(RoundedCornerShape(17.dp)),
                 color = Color.White.copy(alpha = 0.13f)
             ) {
