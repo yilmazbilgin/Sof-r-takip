@@ -55,6 +55,14 @@ data class Sefer(
     val tarih: String
 )
 
+data class AktifSefer(
+    val guzergah: String,
+    val cikisKm: Int,
+    val cikisSaati: String,
+    val baslangic: Long,
+    val notMetni: String = ""
+)
+
 data class Arac(
     val id: Long,
     val ad: String,
@@ -91,13 +99,17 @@ fun SoforTakip() {
     var aracDuzenle by remember { mutableStateOf<Arac?>(null) }
     var guzergahDialog by remember { mutableStateOf(false) }
 
-    var aktif by remember { mutableStateOf(false) }
-    var guzergah by remember { mutableStateOf("") }
-    var cikisKm by remember { mutableStateOf("") }
+    val kayitliAktifSefer = remember { yukleAktifSefer(context) }
+
+    var aktif by remember { mutableStateOf(kayitliAktifSefer != null) }
+    var guzergah by remember { mutableStateOf(kayitliAktifSefer?.guzergah ?: "") }
+    var cikisKm by remember {
+        mutableStateOf(kayitliAktifSefer?.cikisKm?.toString() ?: "")
+    }
     var donusKm by remember { mutableStateOf("") }
-    var notMetni by remember { mutableStateOf("") }
-    var cikisSaati by remember { mutableStateOf("") }
-    var baslangic by remember { mutableStateOf(0L) }
+    var notMetni by remember { mutableStateOf(kayitliAktifSefer?.notMetni ?: "") }
+    var cikisSaati by remember { mutableStateOf(kayitliAktifSefer?.cikisSaati ?: "") }
+    var baslangic by remember { mutableStateOf(kayitliAktifSefer?.baslangic ?: 0L) }
 
     var bilgi by remember { mutableStateOf("") }
     var silinecek by remember { mutableStateOf<Sefer?>(null) }
@@ -146,7 +158,6 @@ fun SoforTakip() {
                     onSettings = { sayfa = 3 },
                     onPlus = {
                         sayfa = 0
-                        aktif = false
                     }
                 )
             }
@@ -178,6 +189,17 @@ fun SoforTakip() {
                                 aktif = true
                                 cikisSaati = saat()
                                 baslangic = System.currentTimeMillis()
+
+                                kaydetAktifSefer(
+                                    context,
+                                    AktifSefer(
+                                        guzergah = guzergah.trim(),
+                                        cikisKm = cikisKm.toInt(),
+                                        cikisSaati = cikisSaati,
+                                        baslangic = baslangic,
+                                        notMetni = notMetni.trim()
+                                    )
+                                )
                             }
                         }
                     },
@@ -328,6 +350,9 @@ fun SoforTakip() {
 
                         aktif = false
                         bitirDialog = false
+
+                        silAktifSefer(context)
+
                         guzergah = ""
                         cikisKm = ""
                         donusKm = ""
@@ -2420,6 +2445,70 @@ private fun formatKm(value: Int): String {
     val symbols = DecimalFormatSymbols(Locale("tr", "TR"))
     val formatter = DecimalFormat("#,###", symbols)
     return formatter.format(value)
+}
+
+private fun kaydetAktifSefer(
+    context: Context,
+    aktifSefer: AktifSefer
+) {
+    val veri = listOf(
+        aktifSefer.guzergah,
+        aktifSefer.cikisKm,
+        aktifSefer.cikisSaati,
+        aktifSefer.baslangic,
+        aktifSefer.notMetni
+    ).joinToString("\u001F")
+
+    context.getSharedPreferences(
+        "sofor_takip",
+        Context.MODE_PRIVATE
+    )
+        .edit()
+        .putString("aktif_sefer", veri)
+        .apply()
+}
+
+private fun yukleAktifSefer(
+    context: Context
+): AktifSefer? {
+    val veri = context.getSharedPreferences(
+        "sofor_takip",
+        Context.MODE_PRIVATE
+    )
+        .getString("aktif_sefer", "")
+        ?: ""
+
+    if (veri.isBlank()) return null
+
+    val p = veri.split("\u001F")
+
+    return try {
+        if (p.size >= 4) {
+            AktifSefer(
+                guzergah = p[0],
+                cikisKm = p[1].toInt(),
+                cikisSaati = p[2],
+                baslangic = p[3].toLong(),
+                notMetni = p.getOrElse(4) { "" }
+            )
+        } else {
+            null
+        }
+    } catch (_: Exception) {
+        null
+    }
+}
+
+private fun silAktifSefer(
+    context: Context
+) {
+    context.getSharedPreferences(
+        "sofor_takip",
+        Context.MODE_PRIVATE
+    )
+        .edit()
+        .remove("aktif_sefer")
+        .apply()
 }
 
 private fun kaydetSeferler(
