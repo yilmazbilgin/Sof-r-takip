@@ -679,10 +679,10 @@ private fun WelcomeBanner(arac: Arac?, seferSayisi: Int, toplamKm: Int) {
                     lineHeight = 20.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = Color.White,
-                    maxLines = 1,
+                    maxLines = 2,
                     softWrap = false
-                )
-                Spacer(Modifier.height(5.dp))
+                   )
+                  Spacer(Modifier.height(5.dp))
                 Text(
                     if (arac == null) "Aracınızı ekleyerek başlayın." else "${arac.ad} • ${arac.plaka}",
                     fontSize = 10.sp,
