@@ -769,7 +769,7 @@ private fun NewTripCard(
     onFinish: () -> Unit
 ) {
     Card(
-        modifier.height(200.dp),
+        modifier.height(196.dp),
         shape = RoundedCornerShape(18.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(1.dp)
@@ -780,8 +780,8 @@ private fun NewTripCard(
         ) {
             Text(
                 if (aktif) "Sefer Devam Ediyor" else "Yeni Sefer",
-                fontSize = 14.sp,
-                lineHeight = 16.sp,
+                fontSize = 13.sp,
+                lineHeight = 15.sp,
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.primary,
                 maxLines = 1
@@ -927,7 +927,7 @@ private fun SelectionField(
 @Composable
 private fun VehicleInfoCard(modifier: Modifier, arac: Arac?, onSelect: () -> Unit) {
     Card(
-        modifier.height(200.dp).fillMaxWidth().clickable { onSelect() },
+        modifier.height(196.dp).fillMaxWidth().clickable { onSelect() },
         shape = RoundedCornerShape(18.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(1.dp)
@@ -946,7 +946,7 @@ private fun VehicleInfoCard(modifier: Modifier, arac: Arac?, onSelect: () -> Uni
                 Spacer(Modifier.width(5.dp))
                 Text(
                     "Araç Bilgisi",
-                    fontSize = 14.sp,
+                    fontSize = 13.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = MaterialTheme.colorScheme.primary,
                     maxLines = 1
@@ -959,7 +959,7 @@ private fun VehicleInfoCard(modifier: Modifier, arac: Arac?, onSelect: () -> Uni
 
             if (arac == null) {
                 Box(
-                    Modifier.fillMaxWidth().height(86.dp),
+                    Modifier.fillMaxWidth().height(76.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -1077,7 +1077,7 @@ private fun ActionCard(
     onClick: () -> Unit
 ) {
     Card(
-        modifier.height(68.dp).clickable(onClick = onClick),
+        modifier.height(64.dp).clickable(onClick = onClick),
         shape = RoundedCornerShape(13.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
@@ -1941,7 +1941,7 @@ private fun NotesDialog(
 @Composable
 private fun EmptyCard() {
     Card(
-        Modifier.fillMaxWidth().height(52.dp),
+        Modifier.fillMaxWidth().height(50.dp),
         shape = RoundedCornerShape(13.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
