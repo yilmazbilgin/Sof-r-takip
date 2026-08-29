@@ -675,12 +675,12 @@ private fun WelcomeBanner(arac: Arac?, seferSayisi: Int, toplamKm: Int) {
             Column(Modifier.weight(1f)) {
                 Text(
                     "Bugün hazır mısınız?",
-                    fontSize = 19.sp,
-                    lineHeight = 20.sp,
+                    fontSize = 18.sp,
+                    lineHeight = 19.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = Color.White,
                     maxLines = 2,
-                    softWrap = false
+                    softWrap = true
                    )
                   Spacer(Modifier.height(5.dp))
                 Text(
