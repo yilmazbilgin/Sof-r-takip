@@ -158,7 +158,12 @@ fun SoforTakip() {
                     onReports = { sayfa = 2 },
                     onSettings = { sayfa = 3 },
                     onPlus = {
-                        sayfa = 0
+    if (aktif) {
+        bilgi = "Şu anda aktif bir seferiniz devam ediyor."
+    } else {
+        sayfa = 0
+        guzergahDialog = true
+    }
                     }
                 )
             }
