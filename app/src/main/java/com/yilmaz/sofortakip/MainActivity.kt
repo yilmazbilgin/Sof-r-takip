@@ -146,7 +146,6 @@ fun SoforTakip() {
             surfaceVariant = Color(0xFF202833)
         )
     }
-
     MaterialTheme(colorScheme = scheme) {
     if (duaGoster) {
         DuaEkrani(
@@ -163,12 +162,12 @@ fun SoforTakip() {
                     onReports = { sayfa = 2 },
                     onSettings = { sayfa = 3 },
                     onPlus = {
-    if (aktif) {
-        bilgi = "Şu anda aktif bir seferiniz devam ediyor."
-    } else {
-        sayfa = 0
-        guzergahDialog = true
-    }
+                        if (aktif) {
+                            bilgi = "Şu anda aktif bir seferiniz devam ediyor."
+                        } else {
+                            sayfa = 0
+                            guzergahDialog = true
+                        }
                     }
                 )
             }
