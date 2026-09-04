@@ -418,7 +418,6 @@ fun SoforTakip() {
     }
 }
 }
-)
 @Composable
 private fun BottomNavigation(
     sayfa: Int,
@@ -2296,6 +2295,7 @@ private fun yukleNotlar(
     )
         .getString("genel_notlar", "")
         ?: ""
+}
 @Composable
 private fun DuaEkrani(
     onTamam: () -> Unit
