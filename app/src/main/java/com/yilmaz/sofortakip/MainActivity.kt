@@ -417,6 +417,7 @@ fun SoforTakip() {
         )
     }
 }
+    }
 
 @Composable
 private fun BottomNavigation(
