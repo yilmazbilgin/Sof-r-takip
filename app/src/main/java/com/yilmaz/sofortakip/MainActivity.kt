@@ -2296,7 +2296,6 @@ private fun yukleNotlar(
     )
         .getString("genel_notlar", "")
         ?: ""
-}
 @Composable
 private fun DuaEkrani(
     onTamam: () -> Unit
@@ -2308,40 +2307,41 @@ private fun DuaEkrani(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 24.dp, vertical = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .padding(horizontal = 20.dp, vertical = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(Modifier.weight(1f))
+
             Surface(
-                modifier = Modifier.size(82.dp),
+                modifier = Modifier.size(74.dp),
                 shape = CircleShape,
                 color = MaterialTheme.colorScheme.primary
             ) {
-                Box(
-                    contentAlignment = Alignment.Center
-                ) {
+                Box(contentAlignment = Alignment.Center) {
                     Icon(
                         Icons.Default.DirectionsCar,
                         contentDescription = null,
                         tint = Color.White,
-                        modifier = Modifier.size(46.dp)
+                        modifier = Modifier.size(42.dp)
                     )
                 }
             }
 
-            Spacer(Modifier.height(18.dp))
+            Spacer(Modifier.height(14.dp))
 
             Text(
                 "Yolculuk Duası",
-                fontSize = 26.sp,
+                fontSize = 25.sp,
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.primary
             )
 
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(16.dp))
 
             Card(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f, fill = false),
                 shape = RoundedCornerShape(24.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surface
@@ -2349,22 +2349,25 @@ private fun DuaEkrani(
                 elevation = CardDefaults.cardElevation(3.dp)
             ) {
                 Column(
-                    modifier = Modifier.padding(22.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState())
+                        .padding(20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         "سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَٰذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ ۝ وَإِنَّا إِلَىٰ رَبِّنَا لَمُنقَلِبُونَ",
-                        fontSize = 20.sp,
-                        lineHeight = 34.sp,
+                        fontSize = 19.sp,
+                        lineHeight = 32.sp,
                         fontWeight = FontWeight.Bold
                     )
 
-                    Spacer(Modifier.height(16.dp))
+                    Spacer(Modifier.height(14.dp))
 
                     Text(
                         "Sübhânellezî sahhara lenâ hâzâ ve mâ kunnâ lehû mukrinîn. Ve innâ ilâ rabbinâ le munkalibûn.",
-                        fontSize = 15.sp,
-                        lineHeight = 23.sp,
+                        fontSize = 14.sp,
+                        lineHeight = 22.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -2372,17 +2375,56 @@ private fun DuaEkrani(
                     Spacer(Modifier.height(16.dp))
 
                     Text(
-                        "Allah'ım, yolculuğumuzu hayırlı ve güvenli eyle. " +
-                                "Bizi kazalardan, belalardan ve her türlü kötülükten muhafaza eyle. " +
-                                "Yolumuzu açık, dönüşümüzü hayırlı eyle. Âmin.",
-                        fontSize = 15.sp,
-                        lineHeight = 24.sp,
+                        "اللَّهُمَّ إِنَّا نَسْأَلُكَ فِي سَفَرِنَا هَذَا الْبِرَّ وَالتَّقْوَى، وَمِنَ الْعَمَلِ مَا تَرْضَى. " +
+                                "اللَّهُمَّ هَوِّنْ عَلَيْنَا سَفَرَنَا هَذَا، وَاطْوِ عَنَّا بُعْدَهُ. " +
+                                "اللَّهُمَّ أَنْتَ الصَّاحِبُ فِي السَّفَرِ، وَالْخَلِيفَةُ فِي الْأَهْلِ. " +
+                                "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ وَعْثَاءِ السَّفَرِ، وَكَآبَةِ الْمَنْظَرِ، وَسُوءِ الْمُنْقَلَبِ فِي الْمَالِ وَالْأَهْلِ",
+                        fontSize = 18.sp,
+                        lineHeight = 31.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Spacer(Modifier.height(14.dp))
+
+                    Text(
+                        "Allahümme innâ nes'elüke fî seferinâ hâzel-birre vet-takvâ, ve minel-ameli mâ terdâ. " +
+                                "Allahümme hevvin aleynâ seferenâ hâzâ, vatvi annâ bu'dehû. " +
+                                "Allahümme entes-sâhibu fis-seferi, vel-halîfetü fil-ehli. " +
+                                "Allahümme innî eûzü bike min va'sâis-seferi, ve keâbetil-manzari, ve sûil-munkalebi fil-mâli vel-ehli.",
+                        fontSize = 14.sp,
+                        lineHeight = 22.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    Spacer(Modifier.height(16.dp))
+
+                    Text(
+                        "Anlamı",
+                        modifier = Modifier.fillMaxWidth(),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+
+                    Spacer(Modifier.height(6.dp))
+
+                    Text(
+                        "Bize bu bineği lütfeden Allah'ı tesbih ederiz. Biz buna güç yetiremezdik. " +
+                                "Şüphesiz biz Rabbimize döneceğiz.\n\n" +
+                                "Allah'ım! Bu yolculuğumuzda senden iyilik ve takva, hoşnut olacağın ameller diliyoruz. " +
+                                "Allah'ım! Bu yolculuğumuzu bize kolaylaştır, uzağını yakınlaştır. " +
+                                "Allah'ım! Yolculukta sahibimiz, geride bıraktığımız ailemizin koruyucusu sensin. " +
+                                "Allah'ım! Yolculuğun zorluklarından, üzücü şeylerle karşılaşmaktan ve dönüşte ailemizi ve malımızı kötü hâlde görmekten sana sığınırım.",
+                        modifier = Modifier.fillMaxWidth(),
+                        fontSize = 14.sp,
+                        lineHeight = 22.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
 
-            Spacer(Modifier.height(28.dp))
+            Spacer(Modifier.height(16.dp))
 
             Button(
                 onClick = onTamam,
@@ -2397,6 +2439,8 @@ private fun DuaEkrani(
                     fontWeight = FontWeight.Bold
                 )
             }
+
+            Spacer(Modifier.weight(1f))
         }
     }
 }
