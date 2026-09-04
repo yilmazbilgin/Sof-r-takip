@@ -94,7 +94,7 @@ fun SoforTakip() {
 
     var tema by remember { mutableStateOf(Tema.ACIK) }
     var sayfa by remember { mutableStateOf(0) }
-
+    var duaGoster by remember { mutableStateOf(true) }
     var notlarAcik by remember { mutableStateOf(false) }
     var araclarAcik by remember { mutableStateOf(false) }
     var aracDuzenle by remember { mutableStateOf<Arac?>(null) }
@@ -148,6 +148,11 @@ fun SoforTakip() {
     }
 
     MaterialTheme(colorScheme = scheme) {
+    if (duaGoster) {
+        DuaEkrani(
+            onTamam = { duaGoster = false }
+        )
+    } else {
         Scaffold(
             containerColor = MaterialTheme.colorScheme.background,
             bottomBar = {
@@ -2291,4 +2296,107 @@ private fun yukleNotlar(
     )
         .getString("genel_notlar", "")
         ?: ""
+}
+@Composable
+private fun DuaEkrani(
+    onTamam: () -> Unit
+) {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 24.dp, vertical = 32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Surface(
+                modifier = Modifier.size(82.dp),
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.primary
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        Icons.Default.DirectionsCar,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(46.dp)
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(18.dp))
+
+            Text(
+                "Yolculuk Duası",
+                fontSize = 26.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = MaterialTheme.colorScheme.primary
+            )
+
+            Spacer(Modifier.height(20.dp))
+
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
+                elevation = CardDefaults.cardElevation(3.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(22.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        "سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَٰذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ ۝ وَإِنَّا إِلَىٰ رَبِّنَا لَمُنقَلِبُونَ",
+                        fontSize = 20.sp,
+                        lineHeight = 34.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Spacer(Modifier.height(16.dp))
+
+                    Text(
+                        "Sübhânellezî sahhara lenâ hâzâ ve mâ kunnâ lehû mukrinîn. Ve innâ ilâ rabbinâ le munkalibûn.",
+                        fontSize = 15.sp,
+                        lineHeight = 23.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    Spacer(Modifier.height(16.dp))
+
+                    Text(
+                        "Allah'ım, yolculuğumuzu hayırlı ve güvenli eyle. " +
+                                "Bizi kazalardan, belalardan ve her türlü kötülükten muhafaza eyle. " +
+                                "Yolumuzu açık, dönüşümüzü hayırlı eyle. Âmin.",
+                        fontSize = 15.sp,
+                        lineHeight = 24.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(28.dp))
+
+            Button(
+                onClick = onTamam,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(54.dp),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Text(
+                    "TAMAM",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+    }
 }
