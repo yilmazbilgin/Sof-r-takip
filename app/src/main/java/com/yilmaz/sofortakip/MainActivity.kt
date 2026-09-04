@@ -417,8 +417,8 @@ fun SoforTakip() {
         )
     }
 }
-    }
-
+}
+)
 @Composable
 private fun BottomNavigation(
     sayfa: Int,
